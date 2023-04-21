@@ -1,39 +1,38 @@
-import react, {useState, useEffect } from 'react';
-
+import { useEffect, useState } from "react";
+import database from "./firebaseConfig";
+import { ref, onValue, off } from "firebase/database";
 const FactoryIoDisplay = () => {
-
-    const [factoryIoData, setFactoryIoData] = useState([]);
+    const [machineData, setMachineData] = useState(null);
 
     useEffect(() => {
-        const fetchFactoryIoData = async () => {
-            try {
-                const url = await fetch(
-                    'https://australia-southeast1-middleware-9544f.cloudfunctions.net/middlewareApp/factoryIoData'
-                );
-                console.log('Request url:', url);
-                const response = await fetch(url);
-                console.log('Response:', response);
-                const data = await response.json();
-                setFactoryIoData(data.data);
-                console.log('Data:', data);
-                console.log('Data.data:',data.data);
-            } catch (err) {
-                console.error('Error fetching Factory I/O data', err);
-            }
+        const machineRef = ref(database, "factory_io/machines/machine_1");
+
+        const handleDataChange = (snapshot) => {
+            setMachineData(snapshot.val());
         };
-        fetchFactoryIoData();
+
+        onValue(machineRef, handleDataChange);
+
+        return () => {
+            off(machineRef, "value", handleDataChange);
+        };
+
     }, []);
 
-    return (
+    return  (
         <div>
-        <h1>Factory IO Data</h1> 
-        {factoryIoData ? (
-            <pre>{JSON.stringify(factoryIoData, null, 2)}</pre> 
+        <h1>Machine Data</h1>
+        {machineData ? (
+          <>
+            <p>Temperature: {machineData.temperature}</p>
+            <p>Humidity: {machineData.humidity}</p>
+            <p>Timestamp: {machineData.timestamp}</p>
+          </>
         ) : (
-            <p>Fetching dummy data...</p>
+          <p>Loading data...</p>
         )}
-    </div>
-    );
+      </div>
+      );
 };
 
 export default FactoryIoDisplay;
