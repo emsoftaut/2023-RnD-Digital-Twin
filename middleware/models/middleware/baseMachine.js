@@ -38,24 +38,6 @@ let base = {
     }
 }
 
-/*
-function pollSensors() {
-  modbusClient.readDiscreteInputs(0, 10).then((response) => {
-    console.log(response.response.body.valuesAsArray);
-    console.log(previousSensorValues);
-    for (let i = 0; i < 10; i++) {
-      const currentValue = response.response.body.valuesAsArray[i];
-      if (currentValue !== previousSensorValues[i]) {
-        console.log(`Sensor ${i + 0} changed: ${currentValue}`);
-        previousSensorValues[i] = currentValue;
-      }
-    }
-  }).catch((error) => {
-    console.error('Error reading sensors:', error);
-  });
-};
-*/
-
 function getMachine(machineName) {
     const machineModelImport = require("./" + machineName);
     return {...base, ...machineModelImport};

@@ -87,10 +87,3 @@ let elevatorAdvanced = {
 };
 
 module.exports = elevatorAdvanced;
-
-/*
-
-name
-value
-register
-*/
