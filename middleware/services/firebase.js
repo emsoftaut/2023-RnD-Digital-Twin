@@ -1,7 +1,6 @@
-const fb = require('firebase/compat/app');
-require("firebase/compat/auth")
+const fb = require("firebase/compat/app");
 require("firebase/compat/database");
-const dbconfig = require('../config/config');
+const dbconfig = require("../config/config");
 const dbSchema = require("../config/schema");
 
 fb.initializeApp(dbconfig);
@@ -12,9 +11,9 @@ console.log("Connected to Realtime Database: " + dbSchema.getPath());
 function getMachine(machineID = null) {
     if (!machineID)
     {
-        return db.ref(dbSchema.getPath());
+            return db.ref(dbSchema.getPath());
     } else {
-        return db.ref(dbSchema.getPath() + machineID);
+            return  db.ref(dbSchema.getPath() + machineID);
     }
 }
 
