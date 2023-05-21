@@ -1,0 +1,39 @@
+body {
+    font-family: sans-serif;
+    margin: 0px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: #61dafb;
+    height: 2em;
+    color: whitesmoke;
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+.navElement {
+    display: flex;
+    margin: 15px;
+}
+
+.userbutton {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    border: none;
+    color: whitesmoke;
+    width: 40px;
+    height: 40px;
+}
+
+.userbutton svg {
+    width: 2.5em;
+    height: 2.5em;
+}
