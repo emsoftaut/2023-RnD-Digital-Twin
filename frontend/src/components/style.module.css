@@ -31,9 +31,67 @@ body {
     color: whitesmoke;
     width: 40px;
     height: 40px;
+    transition: 0.3s;
+}
+
+.userbutton:hover {
+    color: lightgray;
+}
+
+.userbutton:active {
+    color: gray;
 }
 
 .userbutton svg {
     width: 2.5em;
     height: 2.5em;
+}
+
+.dropdownprofile {
+    position: absolute;
+    top: 4.2rem;
+    right: 0.5rem;
+    width: 100px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: white;
+    border: solid 1px grey;
+    font-size: 15px;
+    color: grey;
+    box-shadow: 7px 7px 14px rgba(0, 0, 0, 0.2);
+}
+
+.dropdownprofile ul {
+    list-style-type: none;
+    padding: 5px;
+    padding-top: 10px;
+    margin: 0;
+}
+
+.dropdownprofile a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+.dropdownprofile li {
+    margin-right: 6px;
+    padding: 7px 3px;
+}
+
+.dropdownprofile li:hover {
+    background-color: lightgray;
+}
+
+.dropdownprofile::before {
+    content: "";
+    position: absolute;
+    top: -0.7rem;
+    right: 1.1rem;
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+    background-color: white;
+    border-left: solid 1px grey;
+    border-top: solid 1px grey;
 }
