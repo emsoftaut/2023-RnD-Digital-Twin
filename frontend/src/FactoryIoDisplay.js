@@ -20,15 +20,34 @@ const FactoryIoDisplay = () => {
     }, []);
 
 
-    function testClick () {
-      const machineRef = ref(database, "factory_io/machines/elevatorAdvanced/coils/Conveyor0/value");
+    function turnOnConveyor (conveyorId) {
+      const machineRef = ref(database, `factory_io/machines/elevatorAdvanced/coils/Conveyor${conveyorId}/value`);
       set(machineRef, 1);
     }
 
+    function turnOffConveyor (conveyorId) {
+      const machineRef = ref(database, `factory_io/machines/elevatorAdvanced/coils/Conveyor${conveyorId}/value`);
+      set(machineRef, 0);
+    }
+ 
     return  (
         <div>
         <h1>Machine Data</h1>
-        <button className="button" onClick={testClick}></button>
+        <div id="buttonDiv">
+          <button className="testButtonOn" onClick={() => turnOnConveyor('0')}>Conveyor 0: ON</button>
+          <button className="testButtonOff" onClick={() => turnOffConveyor('0')}>Conveyor 0: OFF</button>
+          <br />
+          <button className="testButtonOn" onClick={() => turnOnConveyor('1')}>Conveyor 1: ON</button>
+          <button className="testButtonOff" onClick={() => turnOffConveyor('1')}>Conveyor 1: OFF</button>
+          <br /> 
+          <button className="testButtonOn" onClick={() => turnOnConveyor('2')}>Conveyor 2: ON</button>
+          <button className="testButtonOff" onClick={() => turnOffConveyor('2')}>Conveyor 2: OFF</button>
+          <br />
+          <button className="testButtonOn" onClick={() => turnOnConveyor('3')}>Conveyor 3: ON</button>
+          <button className="testButtonOff" onClick={() => turnOffConveyor('3')}>Conveyor 3: OFF</button>
+          <br />
+
+        </div>
         {machineData ? (
           <>
             <p>elevatorAdvanced</p>
@@ -38,7 +57,7 @@ const FactoryIoDisplay = () => {
             <p>{machineData.coils.Conveyor3.name} : {machineData.coils.Conveyor3.value}</p>
           </>
         ) : (
-          <p>Loading data...</p>
+          <p>Factory IO is currently not running...</p>
         )}
       </div>
       );
