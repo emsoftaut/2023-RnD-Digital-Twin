@@ -11,8 +11,6 @@ const App = () => {
         <CssBaseline />
         <div className="App">
           <Navbar />
-          <ShowIPAddresses />
-          <p><DummyDataDisplay /></p>
           <p><FactoryIoDisplay /></p>
         </div>
       </ThemeProvider>

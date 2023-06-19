@@ -22,17 +22,17 @@ const Navbar = () => {
                 )}
             </Box>
             <Box display="flex">
-                <IconButton onClick={colorMode.toggleColorMode}>
+                <IconButton onClick={colorMode.toggleColorMode} aria-label="Display Mode Toggle">
                     {theme.palette.mode === 'dark' ? (
-                        <LightModeOutlinedIcon />
+                        <LightModeOutlinedIcon/>
                     ) : (
                         <DarkModeOutlinedIcon/>
                     )}
                 </IconButton>
-                <IconButton>
+                <IconButton aria-label="Settings">
                     <SettingsOutlinedIcon />
                 </IconButton>
-                <IconButton /*onClick={() => setOpenProfile((prev) => (!prev))}*/>
+                <IconButton aria-label="Profile" /*onClick={() => setOpenProfile((prev) => (!prev))}*/>
                     <PersonOutlinedIcon />
                 </IconButton>
                 {

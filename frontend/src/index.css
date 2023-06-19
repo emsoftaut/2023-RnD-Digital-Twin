@@ -10,8 +10,6 @@ code {
 }
 
 .testButtonOn {
-  background-color: lightgreen;
-  color: white;
   font-size: 20px;
   padding: 10px 20px;
   border: none;
@@ -21,8 +19,6 @@ code {
 }
 
 .testButtonOff {
-  background-color: lightsalmon;
-  color: white;
   font-size: 20px;
   padding: 10px 20px;
   border: none;
