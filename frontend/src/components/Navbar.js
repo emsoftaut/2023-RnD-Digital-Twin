@@ -1,24 +1,45 @@
-import React, { useState } from "react";
-import styles from "./style.module.css";
-import { FaUserCircle } from "react-icons/fa";
+import React, { useContext, useState } from "react";
 import DropdownProfile from "./DropdownProfile";
+import { ColorModeContext, tokens } from "../theme";
+import { Box, IconButton, useTheme } from "@mui/material";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 
 const Navbar = () => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+    const colorMode = useContext(ColorModeContext);
     const [openProfile, setOpenProfile] = useState(false);
     return (
-        <div>
-            <nav className={styles.navbar}>
-                <div className={styles.navElement}>
-                    <img src="./logo-1.png" alt="adas" width={50} />
-                </div>
-                <div className={styles.navElement}>
-                    <button className={styles.userbutton} onClick={() => setOpenProfile((prev) => (!prev))}><FaUserCircle/></button>
-                    {
-                        openProfile && ( <DropdownProfile/>)
-                    }
-                </div>
-            </nav>
-        </div>
+        <Box display="flex" justifyContent="space-between" padding={2}>
+            <Box display="flex">
+                {theme.palette.mode === 'dark' ? (
+                    <img src="./logo-dark.png" alt="adas" width={50} style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} />
+                ) : (
+                    <img src="./logo-light.png" alt="adas" width={50} style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} />
+                )}
+            </Box>
+            <Box display="flex">
+                <IconButton onClick={colorMode.toggleColorMode}>
+                    {theme.palette.mode === 'dark' ? (
+                        <LightModeOutlinedIcon />
+                    ) : (
+                        <DarkModeOutlinedIcon/>
+                    )}
+                </IconButton>
+                <IconButton>
+                    <SettingsOutlinedIcon />
+                </IconButton>
+                <IconButton /*onClick={() => setOpenProfile((prev) => (!prev))}*/>
+                    <PersonOutlinedIcon />
+                </IconButton>
+                {
+                    openProfile && ( <DropdownProfile/>)
+                }
+            </Box>
+        </Box>
     );
 }
 
