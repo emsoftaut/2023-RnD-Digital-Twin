@@ -1,5 +1,3 @@
-import ShowIPAddresses from "./ShowIPAddresses";
-import DummyDataDisplay from "./DummyDataDisplay";
 import FactoryIoDisplay from "./FactoryIoDisplay";
 import Navbar from "./components/Navbar";
 import { ColorModeContext, useMode } from "./theme.js";
