@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./controllers/middleware.js elevatorAdvanced",
-    "build": "node ./controllers/middleware.js elevatorAdvanced"
+    "start": "node ./controllers/middleware.js jadcupMachine",
+    "build": "node ./controllers/middleware.js jadcupMachine"
   },
   "author": "",
   "license": "ISC",

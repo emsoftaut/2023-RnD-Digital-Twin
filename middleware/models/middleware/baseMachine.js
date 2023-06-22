@@ -39,6 +39,7 @@ let base = {
 }
 
 function getMachine(machineName) {
+    console.log("Getting " + machineName);
     const machineModelImport = require("./" + machineName);
     return {...base, ...machineModelImport};
 }

@@ -6,7 +6,7 @@ const modbusClient = require("../services/modbusConnection.js");
 // Get the name of the machine from command line argument
 let machineNameArgument = process.argv[2];
 
-const machineFBRecord = fbMachineConnection.getMachine(machineNameArgument);
+machineFBRecord = fbMachineConnection.getMachine(machineNameArgument);
 const machineFactoryIOHandler = getMachineModel(machineNameArgument);
 
 sensorValues = machineFactoryIOHandler.getSensorValues();
@@ -36,8 +36,22 @@ function pollSensors() {
 
 setInterval(pollSensors, 1000);
 
+machineFBRecord.once('value', function(snapshot) {
+  if (snapshot.exists()) {
+      console.log('Machine ' + machineNameArgument + ' record exists')
+  } else {
+      console.log("Machine doesn't exist, posting");
+      database = fbMachineConnection.getMachine();
+      machineToCommit = {};
+      machineToCommit[machineNameArgument] = machineFactoryIOHandler.getAnemicModel();
+      database.update(machineToCommit);
+      machineFBRecord = fbMachineConnection.getMachine(machineNameArgument);
+      console.log("Machine successfully posted");
+  }
+});
 
 machineFBRecord.on('value', (updatedValues) => {
+  console.log(updatedValues);
   machineValues = updatedValues.val();
   innerMachineModel = getMachineModel(machineNameArgument);
   map(machineValues, innerMachineModel);
