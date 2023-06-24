@@ -1,6 +1,7 @@
 let base = {
     sensors: {},
     coils: {},
+    lastModified: "",
     getCoilValues: function() {
         Keys = Object.keys(this.coils);
         Values = [Keys.length];
