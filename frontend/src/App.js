@@ -1,4 +1,5 @@
 import FactoryIoDisplay from "./FactoryIoDisplay";
+import Homepage from "./Homepage";
 import Navbar from "./components/Navbar";
 import { ColorModeContext, useMode } from "./theme.js";
 import { CssBaseline, ThemeProvider } from "@mui/material";
