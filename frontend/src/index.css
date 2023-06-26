@@ -26,3 +26,127 @@ code {
   cursor: pointer;
 }
 
+.powerButton{
+  padding: 10px 40px;
+  justify-content: end;
+  text-align: end;
+}
+
+.allmachinePowerButton{
+  width: 200px;
+  font-size: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  background: green;
+}
+
+.allmachinePowerButton:hover{
+  border-color: greenyellow;
+}
+
+.container {
+  max-width: 1800px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: space-evenly;
+}
+
+.cards {
+  display: flex;
+  max-width: 850px;
+  width: 100%;
+}
+
+
+.card {
+  flex: 650px;
+  max-width: 650px;
+  width: 400px;
+  background: #cdcdcd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 5%;
+  transition: .3s;
+  display: flex;
+}
+
+.cards:hover{
+  border-color: aqua;
+}
+
+.Heading{
+  display: flex;
+  max-width: 350px;
+  width: 350px;
+  height: auto;
+}
+
+.moreDetailButton{
+  width: 120px;
+  height: auto;
+  margin: 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: lightblue;
+}
+
+.moreDetailButton:hover{
+  border-color: aqua;
+}
+
+.leftside{
+  max-width: 850;
+  width: 60%;
+  flex-direction: column;
+}
+
+.rightside{
+  max-width: 850px;
+  width: 40%;
+  justify-content: center;
+  text-align: center;
+}
+
+.graphDisplay{
+  width: auto;
+}
+
+.cardButton{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  max-width: 150px;
+  width: 80%;
+  margin-top: 5%;
+  padding: 50px 10px;
+
+}
+
+.machineStatus{
+  max-width: 500px;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  padding: 5px;
+  border-radius: 10px;
+  background: #ff0000;
+}
+
+.machinePowerButton{
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  border-radius: 10px;
+  height: auto;
+  cursor: pointer;
+}
+
+.machinePowerButton:hover{
+  border-color: blue;
+}

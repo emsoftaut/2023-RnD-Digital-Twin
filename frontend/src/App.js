@@ -11,7 +11,7 @@ const App = () => {
         <CssBaseline />
         <div className="App">
           <Navbar />
-          <p><FactoryIoDisplay /></p>
+          <p><Homepage/></p>
         </div>
       </ThemeProvider>
     </ColorModeContext.Provider>
