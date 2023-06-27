@@ -7,25 +7,25 @@ const Homepage = () => {
         {
             title:'Machine #0001',
             conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 70 + '40',
+            paperSuction:'Paper Suction: ' + 70 + ' / 40',
             temperature:'Temperature: ' + 60 + ' degrees'
         },        
         {
             title:'Machine #0002',
             conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 70 + '40',
-            temperature:'Temperature: ' + 60 + ' degrees'
+            paperSuction:'Paper Suction: ' + 1 + ' / 40',
+            temperature:'Temperature: ' + 50 + ' degrees'
         },
         {
             title:'Machine #0003',
             conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 70 + '40',
-            temperature:'Temperature: ' + 60 + ' degrees'
+            paperSuction:'Paper Suction: ' + 60 + ' / 40',
+            temperature:'Temperature: ' + 70 + ' degrees'
         },
         {
             title:'Machine #0004',
             conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 70 + '40',
+            paperSuction:'Paper Suction: ' + 70 + ' / 40',
             temperature:'Temperature: ' + 60 + ' degrees'
         }
     ])
