@@ -8,7 +8,7 @@ const db = fb.database();
 
 console.log("Connected to Realtime Database: " + dbSchema.getPath());
 
-function getMachineRecord(machineID = null) {
+function getMachineRecord(machineID = null, machineFactoryIOHandler = null) {
     if (!machineID)
     {
             return db.ref(dbSchema.getPath());
@@ -23,9 +23,9 @@ function getMachineRecord(machineID = null) {
                 console.log("Machine doesn't exist, posting local model");
                 database = getMachineRecord();
                 machineToCommit = {};
-                machineToCommit[machineNameArgument] = machineFactoryIOHandler.getAnemicModel();
+                machineToCommit[machineID] = machineFactoryIOHandler.getAnemicModel();
                 database.update(machineToCommit);
-                machineFBRecord = fbMachineConnection.getMachine(machineNameArgument);
+                machineFBRecord = getMachineRecord(machineID);
                 console.log("Machine successfully posted.");
             }});
         return db.ref(dbSchema.getPath() + machineID);

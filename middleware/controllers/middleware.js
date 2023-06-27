@@ -7,9 +7,10 @@ const ModbusService = require("../services/ModbusService.js");
 // command line arguments are currently handled in middleware/package.json
 let MachineName = process.argv[2];
 
-const pollFrequency = 500;
+const pollFrequency = 10;
 let FactoryIOMachineModel;
 let FirebaseMachineConnection
+
 
 
 function Setup() {
@@ -20,25 +21,31 @@ function Setup() {
   console.log("Starting listeners");
   ListenFirebaseChanges();
   ListenModbusChanges();
+
+  setInterval(function() {
+    ModbusService.WriteToModbus(FactoryIOMachineModel);
+  }, pollFrequency);
 }
 
 function ListenFirebaseChanges()
 {
   FirebaseMachineConnection.on('value', (updatedValues) => {
+    console.log(updatedValues.val());
     map(updatedValues.val(), FactoryIOMachineModel);
     FactoryIOMachineModel.lastModified = GetCurrentDateTime();
-    ModbusService.WriteToModbus(FactoryIOMachineModel);
     });
 }
 
 function ListenModbusChanges() {
   setInterval(function() {
-    var pollResponse = ModbusService.ReadFromModbus(FactoryIOMachineModel);
-    if (pollResponse)
-    {
-      pollResponse.lastModified = GetCurrentDateTime();
-      FirebaseService.updateMachine(pollResponse, FirebaseMachineConnection);
-    }
+    ModbusService.ReadFromModbus(FactoryIOMachineModel).then((pollResponse) => {
+      if (pollResponse)
+      {
+        console.log("Poll response found:" + pollResponse);
+        pollResponse.lastModified = GetCurrentDateTime();
+        FirebaseService.updateMachine(pollResponse, FirebaseMachineConnection);
+      }
+    });
   }, pollFrequency);
 };
 
