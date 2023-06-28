@@ -17,25 +17,34 @@ fs.readdir(savePath, "buffer", (err, files) => {
 					if (key.startsWith("BitInput")) {
 						let bitNum = key.replace("BitInput", ""); // Extracting the bit number from the key
 						let pointIOKey = driverDetails[key]._attributes.PointIOKey;
-						// console.log(bitNum + "    " + pointIOKey);
 						keyList[pointIOKey] = "S" + bitNum; // Storing the PointIOKey in the new object
 					} else if (key.startsWith("BitOutput")) {
 						let bitNum = key.replace("BitOutput", ""); // Extracting the bit number from the key
 						let pointIOKey = driverDetails[key]._attributes.PointIOKey;
-						// console.log(bitNum + "    " + pointIOKey);
 						(keyList["K" + bitNum] = pointIOKey), "test"; // Storing the PointIOKey in the new object
 					}
 				}
-				console.log(keyList);
-				let keys = Object.keys(keyList);
-				// console.log(keys);
-				// console.log("--------------------------------");
-				// console.log(objectDetails._attributes.GroupKey);
+
 				for (let objKey in objectDetails) {
-					for (contrlKey in keyList) {
+					if (checkNested(objectDetails[objKey], "OperatingMode", "GroupIO", "BinaryOutput", "_attributes", "Key")) {
+						console.log(objectDetails[objKey]);
+					} else if (checkNested(objectDetails[objKey], "OperatingMode", "GroupIO", "BinaryOutput", "_attributes", "Key")) {
+						console.log(objectDetails[objKey]);
 					}
 				}
 			})
 		);
 	}
 });
+
+function checkNested(obj /*, level1, level2, ... levelN*/) {
+	var args = Array.prototype.slice.call(arguments, 1);
+
+	for (var i = 0; i < args.length; i++) {
+		if (!obj || !obj.hasOwnProperty(args[i])) {
+			return false;
+		}
+		obj = obj[args[i]];
+	}
+	return true;
+}
