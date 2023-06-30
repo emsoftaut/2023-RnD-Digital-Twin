@@ -1,5 +1,5 @@
 ﻿<FactoryIO Type="MySavedScene" Year="2023" Month="5" Day="27" Hour="11" Minute="38" Second="17" Version="2.5.4" GUID="00000000-0000-0000-0000-000000000000">
-  <Description Data="josh was here" />
+  <Description Data="Sensor Machine" />
   <Camera>
     <CameraPosition Name="Current" Type="OrbitCamera">
       <Data>

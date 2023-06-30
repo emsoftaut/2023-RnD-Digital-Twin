@@ -1,5 +1,5 @@
 ﻿<FactoryIO Type="MySavedScene" Year="2023" Month="6" Day="27" Hour="19" Minute="58" Second="49" Version="2.5.4" GUID="00000000-0000-0000-0000-000000000000">
-  <Description Data="Collect up to five items into a stackable box using an elevator. Each item arrives randomly at a different floor." />
+  <Description Data="Elevator(Advanced)" />
   <Camera>
     <CameraPosition Name="Electric Board" Type="OrbitCamera">
       <Data>
