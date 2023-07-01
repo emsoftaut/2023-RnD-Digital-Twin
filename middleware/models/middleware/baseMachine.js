@@ -1,6 +1,7 @@
 let base = {
     sensors: {},
     coils: {},
+    lastModified: "",
     getCoilValues: function() {
         Keys = Object.keys(this.coils);
         Values = [Keys.length];
@@ -39,6 +40,7 @@ let base = {
 }
 
 function getMachine(machineName) {
+    console.log("Getting " + machineName);
     const machineModelImport = require("./" + machineName);
     return {...base, ...machineModelImport};
 }

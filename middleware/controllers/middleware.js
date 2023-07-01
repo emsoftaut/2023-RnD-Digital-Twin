@@ -1,45 +1,58 @@
-const fbMachineConnection = require("../services/firebase.js");
+const FirebaseService = require("../services/FirebaseService.js");
 const map = require("../services/mapper");
-const getMachineModel = require("../models/middleware/baseMachine");
-const modbusClient = require("../services/modbusConnection.js");
+const getFactoryIOMachineModel = require("../models/middleware/baseMachine");
+const ModbusService = require("../services/ModbusService.js");
 
 // Get the name of the machine from command line argument
-let machineNameArgument = process.argv[2];
+// command line arguments are currently handled in middleware/package.json
+let MachineName = process.argv[2];
 
-const machineFBRecord = fbMachineConnection.getMachine(machineNameArgument);
-const machineFactoryIOHandler = getMachineModel(machineNameArgument);
+const pollFrequency = 10;
+let FactoryIOMachineModel;
+let FirebaseMachineConnection
 
-sensorValues = machineFactoryIOHandler.getSensorValues();
 
-function pollSensors() {
-  sensorCount = Object.keys(machineFactoryIOHandler.sensors).length;
-  console.log(sensorCount);
 
-  modbusClient.readDiscreteInputs(0, sensorCount).then((response) => {
-    for (let i = 0; i < sensorCount; i++) {
-      const currentValue = response.response.body.valuesAsArray[i];
-      if (currentValue !== sensorValues[i]) {
-        console.log(`Sensor ${i} changed: ${currentValue}`);
-        sensorValues[i] = currentValue;
-        machineFactoryIOHandler.setSensorValues(sensorValues);
-        machineFBRecord.update(machineFactoryIOHandler.getAnemicModel()).then(() => {
-          console.log('Machine record updated successfully');
-        }).catch((error) => {
-          console.error('Error updating machine record:', error);
-        });
+function Setup() {
+  FactoryIOMachineModel = getFactoryIOMachineModel(MachineName);
+  FirebaseMachineConnection = FirebaseService.getMachineRecord(MachineName, FactoryIOMachineModel);
+  
+  console.log("Machine Setup at " + GetCurrentDateTime());
+  console.log("Starting listeners");
+  ListenFirebaseChanges();
+  ListenModbusChanges();
+
+  setInterval(function() {
+    ModbusService.WriteToModbus(FactoryIOMachineModel);
+  }, pollFrequency);
+}
+
+function ListenFirebaseChanges()
+{
+  FirebaseMachineConnection.on('value', (updatedValues) => {
+    console.log(updatedValues.val());
+    map(updatedValues.val(), FactoryIOMachineModel);
+    FactoryIOMachineModel.lastModified = GetCurrentDateTime();
+    });
+}
+
+function ListenModbusChanges() {
+  setInterval(function() {
+    ModbusService.ReadFromModbus(FactoryIOMachineModel).then((pollResponse) => {
+      if (pollResponse)
+      {
+        console.log("Poll response found:" + pollResponse);
+        pollResponse.lastModified = GetCurrentDateTime();
+        FirebaseService.updateMachine(pollResponse, FirebaseMachineConnection);
       }
-    }
-  }).catch((error) => {
-    console.error('Error reading sensors:', error);
-  });
+    });
+  }, pollFrequency);
 };
 
-setInterval(pollSensors, 1000);
+function GetCurrentDateTime()
+{
+  var currentDateTime = new Date();
+  return currentDateTime.toLocaleString() + " (NZT)";
+}
 
-
-machineFBRecord.on('value', (updatedValues) => {
-  machineValues = updatedValues.val();
-  innerMachineModel = getMachineModel(machineNameArgument);
-  map(machineValues, innerMachineModel);
-  modbusClient.writeMultipleCoils(0, innerMachineModel.getCoilValues());
-  });
+Setup();
