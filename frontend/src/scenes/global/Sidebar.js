@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, IconButton, useTheme } from "@mui/material";
+import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { Box, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
@@ -57,13 +57,20 @@ const Sidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
-                        <Item
-                            title="Individual Machines"
+                        <SubMenu
+                            title="Machine Details"
                             to="/"
                             icon={<PrecisionManufacturingIcon />}
                             selected={selected}
                             setSelected={setSelected}
-                        />
+                        >
+                            <Item
+                                title="Machine 1"
+                                to="/machineDetails"
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                        </SubMenu>
                     </Box>
                 </Menu>
             </ProSidebar>

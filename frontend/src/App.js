@@ -1,12 +1,11 @@
 import FactoryIoDisplay from "./FactoryIoDisplay";
-import Homepage from "./scenes/dashboard/Homepage";
 import Navbar from "./scenes/global/Navbar";
 import Sidebar from "./scenes/global/Sidebar";
 import { ColorModeContext, useMode } from "./theme.js";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "./scenes/dashboard";
-//import MachineDetail from "./scenes/machinedetail";
+import MachineDetails from "./scenes/machineDetails";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -19,8 +18,8 @@ const App = () => {
           <div className="app">
             <Sidebar />
             <Routes>
-              <Route path="/" element={<Homepage />} />
-              {/*<Route path="/machineDetail" element={<MachineDetail/>}/>*/}
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/machineDetails" element={<MachineDetails/>}/>
             </Routes>
           </div>
         </main>
