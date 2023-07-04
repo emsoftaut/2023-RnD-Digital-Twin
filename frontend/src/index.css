@@ -4,7 +4,24 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+html,
+body,
+#root,
+.app,
+.content {
+  height: 100%;
+  width: 100%;
+  font-family: "Source Sans Pro", sans-serif;
+}
 
+.app {
+  display: flex;
+  position: relative;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
@@ -45,7 +62,6 @@ code {
 }
 
 .container {
-  max-width: 1800px;
   width: 100%;
   margin: auto;
   display: flex;
@@ -56,15 +72,15 @@ code {
 
 .cards {
   display: flex;
-  max-width: 850px;
+  max-width: 700px;
   width: 100%;
 }
 
 
 .card {
-  flex: 650px;
-  max-width: 650px;
-  width: 400px;
+  flex: 600px;
+  max-width: 600px;
+  width: 380px;
   background: #cdcdcd;
   border-radius: 10px;
   padding: 20px;
