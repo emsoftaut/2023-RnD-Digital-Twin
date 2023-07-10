@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import database from "./firebaseConfig";
+import {database} from "./firebaseConfig";
 import { set, ref, onValue, off } from "firebase/database";
 import { ColorModeContext, tokens } from "./theme";
 import { useTheme } from "@mui/material";
