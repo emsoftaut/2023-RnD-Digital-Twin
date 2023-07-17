@@ -1,10 +1,10 @@
 
 import {app} from "../firebaseConfig";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
-
 import React, {useState}  from "react";
 import {useNavigate} from "react-router-dom";
 import {TextField, Button} from "@mui/material";
+import styles from "./style.module.css";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -35,10 +35,11 @@ const Login = () => {
     };
   
     return (
-      <div>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
+      <div className={styles.container}>
+        <h2 className={styles.title}>Digital Twin Login</h2>
+        <form className={styles.form} onSubmit={handleLogin}>
           <TextField
+            className={styles.input}
             label="Email"
             type="email"
             value={email}
@@ -47,6 +48,7 @@ const Login = () => {
           />
           <br />
           <TextField
+            className={styles.input}
             label="Password"
             type="password"
             value={password}
@@ -54,11 +56,11 @@ const Login = () => {
             required
           />
           <br />
-          <Button variant="contained" type="submit">
+          <Button className={styles.button} variant="contained" type="submit">
             Log In
           </Button>
         </form>
-        {error && <p>{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
       </div>
     );
   };
