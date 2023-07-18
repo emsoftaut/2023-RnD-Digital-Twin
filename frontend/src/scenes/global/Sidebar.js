@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { Box, useTheme } from "@mui/material";
+import { ProSidebar, Menu, MenuItem, SubMenu} from "react-pro-sidebar";
+import { Box, useTheme} from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
@@ -8,12 +8,9 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
     return (
         <MenuItem
             active={selected === title}
-            style={{ color: colors.grey[100] }}
             onClick={() => setSelected(title)}
             icon={icon}
         >
@@ -30,8 +27,11 @@ const Sidebar = () => {
     return (
         <Box
             sx={{
+                "& .pro-sidebar": {
+                    background: `${colors.surface[700]} !important`,
+                },
                 "& .pro-sidebar-inner": {
-                    background: `${colors.primary[400]} !important`,
+                    background: `${colors.surface[700]} !important`,
                 },
                 "& .pro-icon-wrapper": {
                     backgroundColor: "transparent !important",
@@ -39,17 +39,25 @@ const Sidebar = () => {
                 "& .pro-inner-item": {
                     padding: "5px 35px 5px 20px !important",
                 },
+                "& .pro-menu-item .pro-arrow": {
+                    borderColor: `inherit !important`,
+                },
                 "& .pro-inner-item:hover": {
-                    color: "#868dfb !important",
+                    background: `${colors.surface[600]} !important`,
+                    color: `${colors.onSurface[100]} !important`,
+                },
+                "& .pro-menu-item": {
+                    color: `${colors.onSurface[100]} !important`,
                 },
                 "& .pro-menu-item.active": {
-                    color: "#6870fa !important",
+                    background: `${colors.surface[500]} !important`,
+                    color: `${colors.onSurface[200]} !important`,
                 },
             }}
         >
-            <ProSidebar width="250px" >
+            <ProSidebar width="250px">
                 <Menu iconShape="square">
-                    <Box paddingLeft="5px">
+                    <Box paddingLeft="5px" paddingRight="5px">
                         <Item
                             title="All Machines"
                             to="/"

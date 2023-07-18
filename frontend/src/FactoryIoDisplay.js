@@ -40,17 +40,17 @@ const FactoryIoDisplay = () => {
     <div>
       <h1>Machine Data</h1>
       <div id="buttonDiv">
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('0')}>Conveyor 0: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('0')}>Conveyor 0: OFF</button>
+        <button className="testButtonOn" style={{backgroundColor: colors.primary}} onClick={() => turnOnConveyor('0')}>Conveyor 0: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.primary}} onClick={() => turnOffConveyor('0')}>Conveyor 0: OFF</button>
         <br />
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('1')}>Conveyor 1: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('1')}>Conveyor 1: OFF</button>
+        <button className="testButtonOn" style={{backgroundColor: colors.primary}} onClick={() => turnOnConveyor('1')}>Conveyor 1: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.primary}} onClick={() => turnOffConveyor('1')}>Conveyor 1: OFF</button>
         <br />
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('2')}>Conveyor 2: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('2')}>Conveyor 2: OFF</button>
+        <button className="testButtonOn" style={{backgroundColor: colors.primary}} onClick={() => turnOnConveyor('2')}>Conveyor 2: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.primary}} onClick={() => turnOffConveyor('2')}>Conveyor 2: OFF</button>
         <br />
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('3')}>Conveyor 3: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('3')}>Conveyor 3: OFF</button>
+        <button className="testButtonOn" style={{backgroundColor: colors.primary}} onClick={() => turnOnConveyor('3')}>Conveyor 3: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.primary}} onClick={() => turnOffConveyor('3')}>Conveyor 3: OFF</button>
         <br />
 
       </div>
