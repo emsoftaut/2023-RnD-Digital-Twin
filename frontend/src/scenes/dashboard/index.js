@@ -1,6 +1,6 @@
-import { lightGreen, yellow } from '@mui/material/colors';
+// import { lightGreen, yellow } from '@mui/material/colors';
 import React, { useState } from 'react';
-import { FaAlignJustify } from 'react-icons/fa';
+// import { FaAlignJustify } from 'react-icons/fa';
 
 const Homepage = () => {
     const [cards] = useState([
@@ -46,7 +46,7 @@ const Homepage = () => {
                                 <div className='Heading'>
                                     <h2>{card.title}</h2>
                                     <button className="moreDetailButton">
-                                        <p>More Detail</p>
+                                        More Detail
                                     </button>
                                 </div>
                                 <div className='info'>
