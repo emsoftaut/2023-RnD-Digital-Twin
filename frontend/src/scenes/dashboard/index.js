@@ -56,8 +56,8 @@ const Homepage = () => {
                                 </div>
                             </div>
                             <div className="rightside">
-                                <h2 style={{fontSize: 20}}>Cups per min</h2>
-                                <div className='graphDisplay'>
+                                <h2> Cups per min</h2>
+                                <div>
                                     <p style={{fontSize: 20}}>X amount</p>
                                     <img src="./dummy-graph.png" alt="adas" width={200} />
                                 </div>    
@@ -68,7 +68,7 @@ const Homepage = () => {
                                     <h4>Machine Status</h4>
                                 </div>
                                 <button className="machinePowerButton">
-                                    <h4>Turn machine on </h4>
+                                    Turn machine on
                                 </button>
                             </div>
                     </div>

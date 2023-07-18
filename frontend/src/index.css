@@ -74,6 +74,7 @@ code {
   display: flex;
   max-width: 700px;
   width: 100%;
+  background-color: black;
 }
 
 
@@ -83,7 +84,7 @@ code {
   width: 600px;
   background: #cdcdcd;
   border-radius: 10px;
-  padding: 15px;
+  padding: 10px;
   margin-top: 5%;
   transition: .3s;
   display: flex;
@@ -95,10 +96,8 @@ code {
 
 .Heading{
   display: flex;
-  max-width: 350px;
+  max-width: 300px;
   justify-content: space-evenly;
-  width: 350px;
-  height: auto;
 }
 
 .moreDetailButton{
@@ -115,39 +114,30 @@ code {
 }
 
 .leftside{
-  max-width: 850px;
+  max-width: 600px;
   width: 60%;
   flex-direction: column;
 }
 
 .rightside{
-  max-width: 850px;
+  max-width: 600px;
   width: 40%;
   justify-content: center;
   text-align: center;
 }
 
-.graphDisplay{
-  width: auto;
-}
-
 .cardButton{
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
   text-align: center;
   align-items: center;
   max-width: 150px;
-  width: 80%;
   margin-top: 5%;
   padding: 50px 10px;
 
 }
 
 .machineStatus{
-  max-width: 500px;
-  width: 100%;
   justify-content: center;
   text-align: center;
   padding: 5px;
@@ -156,14 +146,12 @@ code {
 }
 
 .machinePowerButton{
-  width: 100%;
+  padding: 10px;
   justify-content: center;
-  text-align: center;
   border-radius: 10px;
-  height: auto;
   cursor: pointer;
 }
 
 .machinePowerButton:hover{
-  border-color: blue;
+  border-color: aqua;
 }
