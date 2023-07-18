@@ -18,7 +18,7 @@ const MachineTabs = () => {
                 aria-label="machine page tabs"
                 sx={{
                     "& Tab": {
-                        color: colors.greenAccent[600],
+                        color: colors.secondaryVar,
                     }
                 }}
             >

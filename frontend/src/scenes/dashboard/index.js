@@ -32,7 +32,7 @@ const Homepage = () => {
     
     return (
     
-        <div>
+        <div /*style={{borderColor: "black", borderStyle: "solid"}}*/>
             <div className="powerButton">
                 <button className='allmachinePowerButton'>
                     <p>Stop All Machine</p>
