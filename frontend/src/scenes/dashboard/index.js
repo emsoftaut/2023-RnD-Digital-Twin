@@ -56,6 +56,9 @@ const Homepage = () => {
                                 <h2 style={{ fontSize: 20 }}>Cups per min</h2>
                                 <div className='graphDisplay'>
                                     <p style={{ fontSize: 20 }}>X amount</p>
+                                <h2> Cups per min</h2>
+                                <div>
+                                    <p style={{fontSize: 20}}>X amount</p>
                                     <img src="./dummy-graph.png" alt="adas" width={200} />
                                 </div>
                             </div>
@@ -63,6 +66,13 @@ const Homepage = () => {
                         <div className="cardButton">
                             <div className="machineStatus">
                                 <h4>Machine Status</h4>
+                            <div className="cardButton">
+                                <div className="machineStatus">
+                                    <h4>Machine Status</h4>
+                                </div>
+                                <button className="machinePowerButton">
+                                    Turn machine on
+                                </button>
                             </div>
                             <button className="machinePowerButton">
                                 <h4>Turn machine on </h4>
