@@ -7,20 +7,21 @@ body {
 html,
 body,
 #root,
-.app,
 .content {
   height: 100%;
   width: 100%;
-  font-family: "Source Sans Pro", sans-serif;
+  overflow: hidden;
 }
 
 .app {
+  height: 100%;
+  width: 100%;
   display: flex;
   position: relative;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 0px;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;

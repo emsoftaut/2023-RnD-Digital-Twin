@@ -13,7 +13,7 @@ const Navbar = () => {
     const colorMode = useContext(ColorModeContext);
     const [openProfile, setOpenProfile] = useState(false);
     return (
-        <Box display="flex" justifyContent="space-between" padding={2}>
+        <Box display="flex" justifyContent="space-between" padding={2} borderBottom="1px solid white">
             <Box display="flex">
                 {theme.palette.mode === 'dark' ? (
                     <img src="./logo-dark.png" alt="adas" width={50} style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} />

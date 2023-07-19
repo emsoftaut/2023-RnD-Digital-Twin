@@ -1,38 +1,35 @@
 // import { lightGreen, yellow } from '@mui/material/colors';
-import React, { useState } from 'react';
-// import { FaAlignJustify } from 'react-icons/fa';
+import { Box, useTheme } from "@mui/material";
+import { Row, Col } from 'react-simple-flex-grid';
+import "react-simple-flex-grid/lib/main.css";
+import SummaryCard from '../../components/SummaryCard';
+import Header from "../../components/Header";
+import mockData from "../../data/mockData.json";
 
 const Homepage = () => {
-    const [cards] = useState([
-        {
-            title:'Machine #0001',
-            conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 70 + ' / 40',
-            temperature:'Temperature: ' + 60 + ' degrees'
-        },        
-        {
-            title:'Machine #0002',
-            conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 1 + ' / 40',
-            temperature:'Temperature: ' + 50 + ' degrees'
-        },
-        {
-            title:'Machine #0003',
-            conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 60 + ' / 40',
-            temperature:'Temperature: ' + 70 + ' degrees'
-        },
-        {
-            title:'Machine #0004',
-            conveyorSpeed:'Conveyor Speed: ' + 100 + ' m/s',
-            paperSuction:'Paper Suction: ' + 70 + ' / 40',
-            temperature:'Temperature: ' + 60 + ' degrees'
-        }
-    ])
+    const theme = useTheme();
     
     return (
-    
-        <div /*style={{borderColor: "black", borderStyle: "solid"}}*/>
+        <Box sx={{
+            mb: 10,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            overflowY: "scroll",
+          }} >
+            <Box width="100%" p="20px" >
+            <Header title="All machines" subtitle="{timestamp}" />
+            <Box>
+                <Row gutter={30}>
+                {mockData.map(data => 
+                <Col xs={{ span: 12 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <SummaryCard title={data.title} info={data.info} />                
+                </Col>)}
+                </Row>
+            </Box>
+                
+            </Box>
+            {/*
             <div className="powerButton">
                 <button className='allmachinePowerButton'>
                     <p>Stop All Machine</p>
@@ -56,27 +53,26 @@ const Homepage = () => {
                                 </div>
                             </div>
                             <div className="rightside">
-                                <h2 style={{fontSize: 20}}>Cups per min</h2>
+                                <h2 style={{ fontSize: 20 }}>Cups per min</h2>
                                 <div className='graphDisplay'>
-                                    <p style={{fontSize: 20}}>X amount</p>
+                                    <p style={{ fontSize: 20 }}>X amount</p>
                                     <img src="./dummy-graph.png" alt="adas" width={200} />
-                                </div>    
+                                </div>
                             </div>
                         </div>
-                            <div className="cardButton">
-                                <div className="machineStatus">
-                                    <h4>Machine Status</h4>
-                                </div>
-                                <button className="machinePowerButton">
-                                    <h4>Turn machine on </h4>
-                                </button>
+                        <div className="cardButton">
+                            <div className="machineStatus">
+                                <h4>Machine Status</h4>
                             </div>
+                            <button className="machinePowerButton">
+                                <h4>Turn machine on </h4>
+                            </button>
+                        </div>
                     </div>
                 ))}
-            </div>
-        </div>
-        );
-    };
-        
-        export default Homepage;
-    
+                </div>*/}
+        </Box>
+    );
+};
+
+export default Homepage;
