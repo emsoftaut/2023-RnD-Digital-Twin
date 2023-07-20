@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { app } from "../firebaseConfig";
+import { appAuth } from "../firebaseConfig"; // Use 'auth' from firebaseConfig.js
 import { useNavigate } from "react-router-dom"; 
 
 const AuthContext = createContext();
@@ -11,11 +11,11 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const handleLogin = (email, password) => {
-    const auth = getAuth(app); // Initialize the authentication service
+    const authInstance = getAuth(appAuth); // Initialize the authentication service
 
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(authInstance, email, password)
       .then(() => {
-        setUser(auth.currentUser); // Set the authenticated user
+        setUser(authInstance.currentUser); // Set the authenticated user
         setError(null);
         navigate("/"); // Redirect to the desired route upon successful login
       })
@@ -24,10 +24,14 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
-  const handleLogout = () => {
-    const auth = getAuth(app); // Initialize the authentication service
+  const setUserManually = (user) => {
+    setUser(user);
+  }
 
-    signOut(auth)
+  const handleLogout = () => {
+    const authInstance = getAuth(appAuth); // Initialize the authentication service
+
+    signOut(authInstance)
       .then(() => {
         setUser(null); // Clear the user's session
         setError(null);
@@ -45,6 +49,7 @@ export const AuthProvider = ({ children }) => {
         error,
         handleLogin,
         handleLogout,
+        setUserManually
       }}
     >
       {children}

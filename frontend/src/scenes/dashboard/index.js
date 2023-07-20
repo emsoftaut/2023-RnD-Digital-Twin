@@ -1,6 +1,6 @@
-import { lightGreen, yellow } from '@mui/material/colors';
 import React, { useState } from 'react';
-import { FaAlignJustify } from 'react-icons/fa';
+import FactoryIoDisplay from '../../FactoryIoDisplay';
+import DatabaseStatus from '../../DataBaseStatus';
 
 const Homepage = () => {
     const [cards] = useState([
@@ -33,6 +33,8 @@ const Homepage = () => {
     return (
     
         <div>
+            <DatabaseStatus></DatabaseStatus>
+            <FactoryIoDisplay></FactoryIoDisplay>
             <div className="powerButton">
                 <button className='allmachinePowerButton'>
                     <p>Stop All Machine</p>

@@ -1,12 +1,14 @@
 
-import {app} from "../firebaseConfig";
+import {appAuth, appDb} from "../firebaseConfig";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
-import React, {useState}  from "react";
+import React, {useContext, useState}  from "react";
 import {useNavigate} from "react-router-dom";
 import {TextField, Button} from "@mui/material";
 import styles from "./style.module.css";
+import AuthContext from "./AuthContext";
 
 const Login = () => {
+    const {setUserManually} = useContext(AuthContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -23,15 +25,19 @@ const Login = () => {
     const handleLogin = (e) => {
       e.preventDefault();
   
-      const auth = getAuth(app); // Initialize the authentication service
+      const authInstance = getAuth(appAuth); // Initialize the authentication service
+      const dbInstance = getAuth(appDb);
   
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
+      signInWithEmailAndPassword(authInstance, email, password)
+        .then((userCredential) => {
+          console.log(userCredential.user);
+          setUserManually(userCredential.user);
           navigate("/"); // Redirect to the desired route upon successful login
         })
         .catch((error) => {
           setError(error.message);
         });
+        
     };
   
     return (

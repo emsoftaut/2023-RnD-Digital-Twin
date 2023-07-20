@@ -1,70 +1,68 @@
-import { useContext, useEffect, useState } from "react";
-import {database} from "./firebaseConfig";
-import { set, ref, onValue, off } from "firebase/database";
-import { ColorModeContext, tokens } from "./theme";
-import { useTheme } from "@mui/material";
+import { useState } from "react";
+import { appDb } from "./firebaseConfig";
+import { ref, set } from "firebase/database";
+
 const FactoryIoDisplay = () => {
+  const [status, setStatus] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [beltSpeed, setBeltSpeed] = useState("");
+  const [jobsQueued, setJobsQueued] = useState("");
+  const [jobsDone, setJobsDone] = useState("");
+  const [running, setRunning] = useState("");
 
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  const colorMode = useContext(ColorModeContext);
-  const [machineData, setMachineData] = useState(null);
+  const handleDataUpdate = () => {
+    const database = ref(appDb, "factory_io/data"); // Reference to the database location where you want to store the data
 
-  useEffect(() => {
-    const machineRef = ref(database, "factory_io/machines/elevatorAdvanced");
-
-    const handleDataChange = (snapshot) => {
-      setMachineData(snapshot.val());
+    const data = {
+      status: status,
+      temperature: temperature,
+      beltSpeed: beltSpeed,
+      jobsQueued: jobsQueued,
+      jobsDone: jobsDone,
+      running: running,
     };
 
-    onValue(machineRef, handleDataChange);
-
-    return () => {
-      off(machineRef, "value", handleDataChange);
-    };
-
-  }, []);
-
-
-  function turnOnConveyor(conveyorId) {
-    const machineRef = ref(database, `factory_io/machines/elevatorAdvanced/coils/Conveyor${conveyorId}/value`);
-    set(machineRef, 1);
-  }
-
-  function turnOffConveyor(conveyorId) {
-    const machineRef = ref(database, `factory_io/machines/elevatorAdvanced/coils/Conveyor${conveyorId}/value`);
-    set(machineRef, 0);
-  }
+    set(database, data)
+      .then(() => {
+        console.log("Data updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating data:", error);
+      });
+  };
 
   return (
     <div>
-      <h1>Machine Data</h1>
-      <div id="buttonDiv">
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('0')}>Conveyor 0: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('0')}>Conveyor 0: OFF</button>
-        <br />
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('1')}>Conveyor 1: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('1')}>Conveyor 1: OFF</button>
-        <br />
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('2')}>Conveyor 2: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('2')}>Conveyor 2: OFF</button>
-        <br />
-        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('3')}>Conveyor 3: ON</button>
-        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('3')}>Conveyor 3: OFF</button>
-        <br />
-
+      <h1>Factory IO Display</h1>
+      <div>
+        <label>Status:</label>
+        <input type="text" value={status} disabled />
       </div>
-      {machineData ? (
-        <>
-          <p>elevatorAdvanced</p>
-          <p>{machineData.coils.Conveyor0.name} : {machineData.coils.Conveyor0.value}</p>
-          <p>{machineData.coils.Conveyor1.name} : {machineData.coils.Conveyor1.value}</p>
-          <p>{machineData.coils.Conveyor2.name} : {machineData.coils.Conveyor2.value}</p>
-          <p>{machineData.coils.Conveyor3.name} : {machineData.coils.Conveyor3.value}</p>
-        </>
-      ) : (
-        <p>Factory IO is currently not running...</p>
-      )}
+      <div>
+        <label>Temperature:</label>
+        <input type="text" value={temperature} disabled />
+      </div>
+      <div>
+        <label>Belt Speed:</label>
+        <input type="text" value={beltSpeed} disabled />
+      </div>
+      <div>
+        <label>Jobs Queued:</label>
+        <input
+          type="text"
+          value={jobsQueued}
+          onChange={(e) => setJobsQueued(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Jobs Done:</label>
+        <input type="text" value={jobsDone} disabled />
+      </div>
+      <div>
+        <label>Running:</label>
+        <input type="text" value={running} disabled />
+      </div>
+      <button onClick={handleDataUpdate}>Update Jobs Queued</button>
     </div>
   );
 };

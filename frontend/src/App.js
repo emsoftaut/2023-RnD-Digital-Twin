@@ -1,4 +1,4 @@
-import {app} from "./firebaseConfig";
+import {appAuth} from "./firebaseConfig";
 import { Routes, Route } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme.js";
@@ -15,9 +15,9 @@ const App = () => {
   const [user,setUser] = useState(null);
 
   useEffect(() => {
-    const auth = getAuth(app); // Initialize the authentication service
+    const authInstance = getAuth(appAuth); // Initialize the authentication service
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(authInstance, (user) => {
       setUser(user);
     });
 
@@ -34,7 +34,7 @@ const App = () => {
           <div className="app">
             <Sidebar />
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Dashboard user = {user}/>} />
               <Route path="/machineDetails" element={<MachineDetails/>}/>
             </Routes>
           </div>
@@ -46,7 +46,5 @@ const App = () => {
     </ColorModeContext.Provider>
   );
 };
-
-
 
 export default App;
