@@ -4,6 +4,7 @@ import { Box, useTheme} from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
+import mockData from "../../data/mockData.json";
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
@@ -72,12 +73,8 @@ const Sidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         >
-                            <Item
-                                title="Machine 1"
-                                to="/machineDetails"
-                                selected={selected}
-                                setSelected={setSelected}
-                            />
+                            {mockData.map(data => 
+                                <Item title={"Machine #" + data.title} to={"/machineDetails"+data.path} selected={selected} setSelected={setSelected}/>)}
                         </SubMenu>
                     </Box>
                 </Menu>

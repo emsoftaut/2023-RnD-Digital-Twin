@@ -1,5 +1,5 @@
 // import { lightGreen, yellow } from '@mui/material/colors';
-import { Box, useTheme } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { Row, Col } from 'react-simple-flex-grid';
 import "react-simple-flex-grid/lib/main.css";
 import SummaryCard from '../../components/SummaryCard';
@@ -7,22 +7,24 @@ import Header from "../../components/Header";
 import mockData from "../../data/mockData.json";
 
 const Homepage = () => {
-    const theme = useTheme();
-    
     return (
         <Box sx={{
             mb: 10,
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
             overflowY: "scroll",
           }} >
-            <Box width="100%" p="20px" >
+            <Box width="100%" p="20px">
+            <Box display="flex" justifyContent="space-between">
             <Header title="All machines" subtitle="{timestamp}" />
+            <Button>TURN OFF ALL MACHINES</Button>
+            </Box>
             <Box>
                 <Row gutter={30}>
                 {mockData.map(data => 
-                <Col xs={{ span: 12 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <SummaryCard title={data.title} info={data.info} />                
                 </Col>)}
                 </Row>

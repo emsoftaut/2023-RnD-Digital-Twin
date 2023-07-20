@@ -1,19 +1,22 @@
 [
     {"title": "0001", 
+    "path": "/0001",
     "info": {
         "status": true,
         "conveyorSpeed": "100",
         "paperSuction": "70/40",
         "temperature": "60"
     }},
-    {"title": "0002", 
+    {"title": "0002",  
+    "path": "/0002",
     "info": {
         "status": true,
         "conveyorSpeed": "100",
         "paperSuction": "1/40",
         "temperature": "50"
     }},
-    {"title": "0003", 
+    {"title": "0003",  
+    "path": "/0003",
     "info": {
         "status": false,
         "conveyorSpeed": "200",
@@ -21,6 +24,7 @@
         "temperature": "70"
     }},
     {"title": "0004", 
+    "path": "/0004", 
     "info": {
         "status": false,
         "conveyorSpeed": "320",

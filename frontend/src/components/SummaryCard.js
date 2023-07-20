@@ -16,7 +16,6 @@ const SummaryCard = ({ title, info }) => {
   //json to bring values from firebase
   return (
     <Box 
-    width="450px" 
     m="5px 5px"
     p="10px 15px" 
     backgroundColor={colors.surface[500]}
