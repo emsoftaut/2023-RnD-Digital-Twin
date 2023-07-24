@@ -26,7 +26,7 @@ const Login = () => {
       e.preventDefault();
   
       const authInstance = getAuth(appAuth); // Initialize the authentication service
-      const dbInstance = getAuth(appDb);
+      //const dbInstance = getAuth(appDb);
   
       signInWithEmailAndPassword(authInstance, email, password)
         .then((userCredential) => {

@@ -22,7 +22,6 @@ const MachineDetails = ({title}) => {
                     <Header title="Machine Details" subtitle={"Machine #"+title} />
                     <Button sx={{ height: 50 }} variant="contained" color="error">stop</Button>
                 </Box>
-
                 <MachineTabs/>
             </Box>
         </Box>

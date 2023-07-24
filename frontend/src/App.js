@@ -1,11 +1,8 @@
 import {appAuth} from "./firebaseConfig";
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./scenes/global/Navbar";
 import Sidebar from "./scenes/global/Sidebar";
 import { ColorModeContext, useMode } from "./theme.js";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { ColorModeContext, useMode } from "./theme.js";
-import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
 import Navbar from "./scenes/global/Navbar";
 import MachineDetails from "./scenes/machineDetails";
@@ -40,7 +37,6 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               {mockData.map(data=> <Route path={"machineDetails"+data.path} element={<MachineDetails title={data.title}/>}/>)}
-              <Route path="/" element={<Dashboard user = {user}/>} />
               <Route path="/machineDetails" element={<MachineDetails/>}/>
             </Routes>
           </div>

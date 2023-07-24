@@ -24,7 +24,6 @@ const Homepage = () => {
                     <Header title="All Machines" subtitle="{timestamp}" />
                     <Button sx={{ height: 50 }} variant="contained" color="error">TURN OFF ALL MACHINES</Button>
                 </Box>
-
                 <AllMachineTable />
             </Box>
         </Box>
