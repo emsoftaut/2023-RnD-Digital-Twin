@@ -59,6 +59,7 @@ body {
     font-size: 15px;
     color: grey;
     box-shadow: 7px 7px 14px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
 .dropdownprofile ul {
@@ -95,3 +96,50 @@ body {
     border-left: solid 1px grey;
     border-top: solid 1px grey;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .input {
+    width: 300px;
+    margin-bottom: 15px;
+  }
+  
+  .button {
+    background-color: #205766;
+    color: white;
+    width: 200px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #45a8d8;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 10px;
+  }

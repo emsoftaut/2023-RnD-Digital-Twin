@@ -1,0 +1,33 @@
+[
+    {"title": "0001", 
+    "path": "/0001",
+    "info": {
+        "status": true,
+        "conveyorSpeed": "100",
+        "jobsDone": 30,
+        "jobsQueued": 30,
+        "temperature": "60"
+    }},
+    {"title": "0002",  
+    "path": "/0002",
+    "info": {
+        "status": true,
+        "conveyorSpeed": "100",
+        "jobsDone": 10,
+        "jobsQueued": 30,
+        "temperature": "50"
+    }},
+    {"title": "0003",  
+    "path": "/0003",
+    "info": {
+        "status": false,
+        "conveyorSpeed": "200",
+        "jobsDone": 30,
+        "jobsQueued": 100,
+        "temperature": "70"
+    }}
+]
+
+
+
+

@@ -15,16 +15,20 @@ let FirebaseMachineConnection
 
 function Setup() {
   FactoryIOMachineModel = getFactoryIOMachineModel(MachineName);
-  FirebaseMachineConnection = FirebaseService.getMachineRecord(MachineName, FactoryIOMachineModel);
-  
-  console.log("Machine Setup at " + GetCurrentDateTime());
-  console.log("Starting listeners");
-  ListenFirebaseChanges();
-  ListenModbusChanges();
 
-  setInterval(function() {
-    ModbusService.WriteToModbus(FactoryIOMachineModel);
-  }, pollFrequency);
+  FirebaseService.setupFirebase().then(() => {
+    console.log("Database connected");
+    FirebaseMachineConnection = FirebaseService.getMachineRecord(MachineName, FactoryIOMachineModel);
+
+    console.log("Machine Setup at " + GetCurrentDateTime());
+    console.log("Starting listeners");
+    ListenFirebaseChanges();
+    ListenModbusChanges();
+  
+    setInterval(function() {
+      ModbusService.WriteToModbus(FactoryIOMachineModel);
+    }, pollFrequency);  
+  });
 }
 
 function ListenFirebaseChanges()
