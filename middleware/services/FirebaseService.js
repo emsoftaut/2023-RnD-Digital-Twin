@@ -1,12 +1,18 @@
 const fb = require("firebase/compat/app");
 require("firebase/compat/database");
-const dbconfig = require("../config/config");
-const dbSchema = require("../config/schema");
+require('firebase/compat/auth');
+const dbconfig = require("../config/FirebaseAuthConfig");
+const dbSchema = require("../config/FirebaseSchema");
+const localConfig = require("../config/LocalEnvConfig");
+
 
 fb.initializeApp(dbconfig);
 const db = fb.database();
 
-console.log("Connected to Realtime Database: " + dbSchema.getPath());
+function setupFirebase()
+{
+    return fb.auth().signInWithEmailAndPassword(localConfig.email, localConfig.password);
+}
 
 function getMachineRecord(machineID = null, machineFactoryIOHandler = null) {
     if (!machineID)
@@ -28,6 +34,7 @@ function getMachineRecord(machineID = null, machineFactoryIOHandler = null) {
                 machineFBRecord = getMachineRecord(machineID);
                 console.log("Machine successfully posted.");
             }});
+
         return db.ref(dbSchema.getPath() + machineID);
     }
 }
@@ -47,5 +54,6 @@ function updateMachine(values, dbref) {
 module.exports = {
     getMachineRecord,
     setMachine,
-    updateMachine
+    updateMachine,
+    setupFirebase
 };
