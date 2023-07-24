@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import FactoryIoDisplay from '../../FactoryIoDisplay';
-import DatabaseStatus from '../../DataBaseStatus';
+import React from 'react';
 import { useTheme, Box, Button, Paper} from "@mui/material";
 import Header from "../../components/Header";
 import AllMachineTable from "../../components/AllMachineTable";

@@ -1,18 +1,45 @@
+import {useState, useEffect} from 'react';
 import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearProgress, Typography } from "@mui/material";
-import mockData from "../data/mockData.json";
+import {appDb} from "../firebaseConfig";
+import {ref, get, set, onValue, off } from "firebase/database";
 
-function toggleMachine(machID) {
-    console.log("machID");
-}
+async function toggleMachine(machID) {
+    // Get the reference to the database path where "running" variable is stored
+    const databasePath = `factory_io/data/${machID}/coils/running`;
+    const databaseRef = ref(appDb, databasePath);
+  
+    try {
+      // Read the current status from the database
+      const snapshot = await get(databaseRef);
+      const currentStatus = snapshot.val();
+  
+      // Calculate the new status (toggle the status) and update the database
+      const newStatus = !currentStatus;
+      set(databaseRef, newStatus)
+        .then(() => {
+          console.log("Machine status updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error updating machine status:", error);
+        });
+    } catch (error) {
+      console.error("Error reading machine status:", error);
+    }
+  }
 
-const MachineButton = ({machID, status}) => {
-    let innerText = status ? "stop" : "start";
-    let colorText = status ? "error" : "primary"
+const MachineButton = ({machID, running}) => {
+    let innerText = running ? "stop" : "start";
+    let colorText = running ? "error" : "primary"
+
+    const handleClick = () => {
+        toggleMachine(machID);
+    }
+
     return (
         <Button 
         variant= "contained" 
         color={colorText}
-        onClick={toggleMachine(machID)}
+        onClick={handleClick}
         >{innerText}</Button>
     )
 }
@@ -32,6 +59,31 @@ const ProgressBar = ({ done, queued }) => {
 };
 
 const AllMachineTable = () => {
+    const [machineData, setMachineData] = useState([]);
+
+    useEffect(() => {
+        const machineRef = ref(appDb, "factory_io/data");
+
+        const handleDataChange = (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                const dataArray = Object.values(data).map((machine) => ({
+                    machID: machine.machineID,
+                    ...machine,
+                }));
+                setMachineData(dataArray);
+            }
+        };
+
+        onValue(machineRef, handleDataChange);
+
+        return () => {
+            off(machineRef, "value", handleDataChange);
+        };
+    }, []);
+
+    console.log(machineData);
+
     return (
         <Box sx={{ overflowX: "scroll" }}>
             <Table size="small" stickyHeader width="max-content">
@@ -39,29 +91,28 @@ const AllMachineTable = () => {
                     <TableRow>
                         <TableCell>Machine #</TableCell>
                         <TableCell>Job Status</TableCell>
-                        <TableCell>Job Start Time</TableCell>
+                        <TableCell>Last Modified</TableCell>
                         <TableCell>Job Progress</TableCell>
-                        <TableCell align="right">Box Speed</TableCell>
+                        <TableCell align="right">Belt Speed</TableCell>
                         <TableCell align="right">Temperature</TableCell>
                         <TableCell>Start/Stop</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {mockData.map(data =>
+                    {machineData.map((machine) =>
                         <TableRow>
-                            <TableCell>{data.title}</TableCell>
-                            <TableCell>{data.info.status ? "Running" : "Not Running"}</TableCell>
-                            <TableCell>{"2am"}</TableCell>
-                            <TableCell><ProgressBar done={data.info.jobsDone} queued={data.info.jobsQueued} /></TableCell>
-                            <TableCell align="right">{data.info.conveyorSpeed}</TableCell>
-                            <TableCell align="right">{data.info.temperature}</TableCell>
-                            <TableCell><MachineButton machID={data.title} status={data.info.status}/></TableCell>
+                            <TableCell>{machine.machineID}</TableCell>
+                            <TableCell>{machine.sensors.machineStatus === "ON" ? "Running" : "Not Running"}</TableCell>
+                            <TableCell>{machine.lastModified}</TableCell>
+                            <TableCell><ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} /></TableCell>
+                            <TableCell align="right">{machine.coils.beltSpeed || "0"}</TableCell>
+                            <TableCell align="right">{machine.sensors.temperature || "0"}</TableCell>
+                            <TableCell><MachineButton machID={machine.machineID} running={machine.coils.running}/></TableCell>
                         </TableRow>)}
                 </TableBody>
             </Table>
         </Box>);
 
 };
-
 
 export default AllMachineTable;
