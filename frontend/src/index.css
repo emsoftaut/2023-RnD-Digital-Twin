@@ -7,20 +7,21 @@ body {
 html,
 body,
 #root,
-.app,
 .content {
   height: 100%;
   width: 100%;
-  font-family: "Source Sans Pro", sans-serif;
+  overflow: hidden;
 }
 
 .app {
+  height: 100%;
+  width: 100%;
   display: flex;
   position: relative;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 0px;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
@@ -74,16 +75,17 @@ code {
   display: flex;
   max-width: 700px;
   width: 100%;
+  background-color: black;
 }
 
 
 .card {
   flex: 600px;
   max-width: 600px;
-  width: 380px;
+  width: 600px;
   background: #cdcdcd;
   border-radius: 10px;
-  padding: 20px;
+  padding: 10px;
   margin-top: 5%;
   transition: .3s;
   display: flex;
@@ -95,15 +97,14 @@ code {
 
 .Heading{
   display: flex;
-  max-width: 350px;
-  width: 350px;
-  height: auto;
+  max-width: 300px;
+  justify-content: space-evenly;
 }
 
 .moreDetailButton{
-  width: 120px;
-  height: auto;
-  margin: 15px;
+  width: 100px;
+  height: 25px;
+  align-self: center;
   border-radius: 20px;
   cursor: pointer;
   background: lightblue;
@@ -114,39 +115,30 @@ code {
 }
 
 .leftside{
-  max-width: 850;
+  max-width: 600px;
   width: 60%;
   flex-direction: column;
 }
 
 .rightside{
-  max-width: 850px;
+  max-width: 600px;
   width: 40%;
   justify-content: center;
   text-align: center;
 }
 
-.graphDisplay{
-  width: auto;
-}
-
 .cardButton{
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
   text-align: center;
   align-items: center;
   max-width: 150px;
-  width: 80%;
   margin-top: 5%;
   padding: 50px 10px;
 
 }
 
 .machineStatus{
-  max-width: 500px;
-  width: 100%;
   justify-content: center;
   text-align: center;
   padding: 5px;
@@ -155,14 +147,12 @@ code {
 }
 
 .machinePowerButton{
-  width: 100%;
+  padding: 10px;
   justify-content: center;
-  text-align: center;
   border-radius: 10px;
-  height: auto;
   cursor: pointer;
 }
 
 .machinePowerButton:hover{
-  border-color: blue;
+  border-color: aqua;
 }

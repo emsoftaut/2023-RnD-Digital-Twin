@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import DropdownProfile from "../../components/DropdownProfile";
-import { ColorModeContext, tokens } from "../../theme";
+import { ColorModeContext } from "../../theme";
 import { Box, IconButton, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -10,7 +10,6 @@ import AuthContext from "../../components/AuthContext";
 
 const Navbar = () => {
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
     const [openProfile, setOpenProfile] = useState(false);
 
@@ -21,20 +20,12 @@ const Navbar = () => {
 
 
     return (
-        <Box display="flex" justifyContent="space-between" padding={2}>
+        <Box sx={{display: "flex", justifyContent: "space-between", padding: 2, backgroundColor: (theme.palette.mode === "dark") ? theme.palette.grey[900] : theme.palette.primary.main}}>
             <Box display="flex">
                 {theme.palette.mode === 'dark' ? (
-                    <img 
-                    src="./logo-dark.png" 
-                    alt="adas" width={50} 
-                    style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} 
-                    />
+                    <img src="./logo-dark.png" alt="logo" width={50} style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} />
                 ) : (
-                    <img 
-                    src="./logo-light.png" 
-                    alt="adas" width={50} 
-                    style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} 
-                    />
+                    <img src="./logo-light.png" alt="logo" width={50} style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} />
                 )}
             </Box>
             <Box display="flex">

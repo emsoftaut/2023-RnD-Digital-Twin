@@ -1,19 +1,16 @@
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { Box, useTheme } from "@mui/material";
+import { ProSidebar, Menu, MenuItem, SubMenu} from "react-pro-sidebar";
+import { Box, useTheme} from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
-import { tokens } from "../../theme";
+import mockData from "../../data/mockData.json";
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
     return (
         <MenuItem
             active={selected === title}
-            style={{ color: colors.grey[100] }}
             onClick={() => setSelected(title)}
             icon={icon}
         >
@@ -25,13 +22,15 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 
 const Sidebar = () => {
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
     const [selected, setSelected] = useState("Dashboard");
     return (
         <Box
             sx={{
+                "& .pro-sidebar": {
+                    background: `${theme.palette.background.default} !important`,
+                },
                 "& .pro-sidebar-inner": {
-                    background: `${colors.primary[400]} !important`,
+                    background: `${theme.palette.background.default} !important`,
                 },
                 "& .pro-icon-wrapper": {
                     backgroundColor: "transparent !important",
@@ -39,17 +38,21 @@ const Sidebar = () => {
                 "& .pro-inner-item": {
                     padding: "5px 35px 5px 20px !important",
                 },
-                "& .pro-inner-item:hover": {
-                    color: "#868dfb !important",
+                "& .pro-menu-item .pro-arrow": {
+                    borderColor: `inherit !important`,
                 },
-                "& .pro-menu-item.active": {
-                    color: "#6870fa !important",
+                "& .pro-sidebar .pro-menu .pro-menu-item": {
+                    color:  `${theme.palette.text.primary} !important`,
+                },
+                
+                "& .pro-sidebar .pro-menu .pro-menu-item.active": {
+                    color:  `${theme.palette.success.main} !important`,
                 },
             }}
         >
-            <ProSidebar width="250px" >
+            <ProSidebar width="250px">
                 <Menu iconShape="square">
-                    <Box paddingLeft="5px">
+                    <Box paddingLeft="5px" paddingRight="5px">
                         <Item
                             title="All Machines"
                             to="/"
@@ -64,12 +67,8 @@ const Sidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         >
-                            <Item
-                                title="Machine 1"
-                                to="/machineDetails"
-                                selected={selected}
-                                setSelected={setSelected}
-                            />
+                            {mockData.map(data => 
+                                <Item title={"Machine #" + data.title} to={"/machineDetails"+data.path} selected={selected} setSelected={setSelected}/>)}
                         </SubMenu>
                     </Box>
                 </Menu>

@@ -33,34 +33,21 @@ const FactoryIoDisplay = () => {
 
   return (
     <div>
-      <h1>Factory IO Display</h1>
-      <div>
-        <label>Status:</label>
-        <input type="text" value={status} disabled />
-      </div>
-      <div>
-        <label>Temperature:</label>
-        <input type="text" value={temperature} disabled />
-      </div>
-      <div>
-        <label>Belt Speed:</label>
-        <input type="text" value={beltSpeed} disabled />
-      </div>
-      <div>
-        <label>Jobs Queued:</label>
-        <input
-          type="text"
-          value={jobsQueued}
-          onChange={(e) => setJobsQueued(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Jobs Done:</label>
-        <input type="text" value={jobsDone} disabled />
-      </div>
-      <div>
-        <label>Running:</label>
-        <input type="text" value={running} disabled />
+      <h1>Machine Data</h1>
+      <div id="buttonDiv">
+        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('0')}>Conveyor 0: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('0')}>Conveyor 0: OFF</button>
+        <br />
+        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('1')}>Conveyor 1: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('1')}>Conveyor 1: OFF</button>
+        <br />
+        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('2')}>Conveyor 2: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('2')}>Conveyor 2: OFF</button>
+        <br />
+        <button className="testButtonOn" style={{backgroundColor: colors.redAccent[400]}} onClick={() => turnOnConveyor('3')}>Conveyor 3: ON</button>
+        <button className="testButtonOff" style={{backgroundColor: colors.greenAccent[400]}} onClick={() => turnOffConveyor('3')}>Conveyor 3: OFF</button>
+        <br />
+
       </div>
       <button onClick={handleDataUpdate}>Update Jobs Queued</button>
     </div>
