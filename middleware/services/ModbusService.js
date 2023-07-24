@@ -2,19 +2,10 @@ const Modbus = require('jsmodbus');
 const net = require('net');
 const socket = new net.Socket();
 const client = new Modbus.client.TCP(socket);
+const localConfig = require('../config/LocalEnvConfig');
 
-const localIP0 = '172.29.15.197';
-const localIP1 = '192.168.1.132';
-const localIP2 = 'localhost';
-const localIP3 = '120.0.0.1';
-const localIP4 = 'LOCAL';
-
-const port1 = 502;
-const port2 = 61561;
-//const ip = '172.29.15.197';
-//const ip = '192.168.1.132';
-const ip = localIP1;
-const IOport = port1;
+const ip = localConfig.IP;
+const IOport = localConfig.port;
 
 console.log("Connecting to modbus");
 
