@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import {useState, useEffect} from "react";
 import {getAuth, onAuthStateChanged } from "firebase/auth";
 import mockData from "./data/mockData.json";
+import FireBaseData from "./data/FireBaseData.js";
 
 const App = () => {
   const [theme, colorMode] = useMode();
