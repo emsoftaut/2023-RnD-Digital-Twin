@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import FactoryIoDisplay from '../../FactoryIoDisplay';
-import DatabaseStatus from '../../DataBaseStatus';
+//import FactoryIoDisplay from '../../FactoryIoDisplay';
+//import DatabaseStatus from '../../DataBaseStatus';
 import { useTheme, Box, Button, Paper} from "@mui/material";
 import Header from "../../components/Header";
 import AllMachineTable from "../../components/AllMachineTable";
+import JobPopup from "../../components/JobPopup";
+
+
 
 const Homepage = () => {
+
     const theme = useTheme().palette;
     return (
         <Box sx={{
@@ -25,9 +29,14 @@ const Homepage = () => {
                     <Button sx={{ height: 50 }} variant="contained" color="error">TURN OFF ALL MACHINES</Button>
                 </Box>
                 <AllMachineTable />
+                <JobPopup>
+
+                </JobPopup>
             </Box>
         </Box>
     );
 };
 
+
 export default Homepage;
+
