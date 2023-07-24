@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./controllers/middleware.js testPLCMachine",
-    "build": "node ./controllers/middleware.js testPLCMachine"
+    "build": "node ./controllers/middleware.js testPLCMachine",
+	"buildjson": "node ./controllers/fileParser.js"
   },
   "author": "",
   "license": "ISC",

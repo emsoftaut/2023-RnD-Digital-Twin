@@ -1,0 +1,32 @@
+{
+	"name": "Elevator(Advanced)",
+	"sensors": {
+		"I17": { "name": "Emergency stop", "value": "0", "register": "17" },
+		"I6": { "name": "At 0 (low)", "value": "0", "register": "6" },
+		"I7": { "name": "At 0 (high)", "value": "0", "register": "7" },
+		"I10": { "name": "At 2 (low)", "value": "0", "register": "10" },
+		"I11": { "name": "At 2 (high)", "value": "0", "register": "11" },
+		"I12": { "name": "At 3 (low)", "value": "0", "register": "12" },
+		"I13": { "name": "At 3 (high)", "value": "0", "register": "13" },
+		"I8": { "name": "At 1 (low)", "value": "0", "register": "8" },
+		"I9": { "name": "At 1 (high)", "value": "0", "register": "9" },
+		"I3": { "name": "At elevator", "value": "0", "register": "3" },
+		"I0": { "name": "At 1", "value": "0", "register": "0" },
+		"I1": { "name": "At 2", "value": "0", "register": "1" },
+		"I2": { "name": "At 3", "value": "0", "register": "2" }
+	},
+	"coils": {
+		"o4": { "name": "Exit conveyor", "value": "0", "register": "4" },
+		"o10": { "name": "Warning light", "value": "0", "register": "10" },
+		"o11": { "name": "Start light", "value": "0", "register": "11" },
+		"o13": { "name": "Stop light", "value": "0", "register": "13" },
+		"o12": { "name": "Reset light", "value": "0", "register": "12" },
+		"o14": { "name": "Floor 1", "value": "0", "register": "14" },
+		"o15": { "name": "Floor 2", "value": "0", "register": "15" },
+		"o16": { "name": "Floor 3", "value": "0", "register": "16" },
+		"o0": { "name": "Conveyor 0", "value": "0", "register": "0" },
+		"o1": { "name": "Conveyor 1", "value": "0", "register": "1" },
+		"o2": { "name": "Conveyor 2", "value": "0", "register": "2" },
+		"o3": { "name": "Conveyor 3", "value": "0", "register": "3" }
+	}
+}
