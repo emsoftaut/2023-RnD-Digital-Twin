@@ -14,11 +14,14 @@ function setupFirebase()
     return fb.auth().signInWithEmailAndPassword(localConfig.email, localConfig.password);
 }
 
-function getMachineRecord(machineID = null, machineFactoryIOHandler = null) {
-    if (!machineID)
+function getMachineRecord(machine = null, machineFactoryIOHandler = null) {
+    if (!machine)
     {
-            return db.ref(dbSchema.getPath());
+        console.log ("Machine passed is null. Returning database");
+        return db.ref(dbSchema.getPath());
     } else {
+        let machineID = machine.machineID;
+        console.log("Getting machine from firebase: " + dbSchema.getPath() + machineID);
         let machineRecord = db.ref(dbSchema.getPath() + machineID);
 
         // Check if the machineRecord exists. If so, move on. If not, send the current model to firebase, then re-establish the connection
@@ -26,12 +29,13 @@ function getMachineRecord(machineID = null, machineFactoryIOHandler = null) {
             if (snapshot.exists()) {
                 console.log('Machine ' + machineID + ' record exists')
             } else {
-                console.log("Machine doesn't exist, posting local model");
+                console.log("Machine " + machineID + " doesn't exist, posting local model");
                 database = getMachineRecord();
                 machineToCommit = {};
                 machineToCommit[machineID] = machineFactoryIOHandler.getAnemicModel();
+                machineToCommit[machineID]["DateCreated"] = GetCurrentDateTime();
+                machineToCommit[machineID]["machineID"] = machineID;
                 database.update(machineToCommit);
-                machineFBRecord = getMachineRecord(machineID);
                 console.log("Machine successfully posted.");
             }});
 
@@ -51,9 +55,22 @@ function updateMachine(values, dbref) {
       });
 }
 
+function ListenFirebaseChanges(firebaseMachineConnection, FactoryIOMachineModel1, handleFirebaseChanges) {
+    firebaseMachineConnection.on('value', updatedValues => {
+        handleFirebaseChanges(updatedValues, FactoryIOMachineModel1, firebaseMachineConnection);
+    });
+}
+
+function GetCurrentDateTime()
+{
+  var currentDateTime = new Date();
+  return currentDateTime.toLocaleString() + " (NZT)";
+}
+
 module.exports = {
     getMachineRecord,
     setMachine,
     updateMachine,
-    setupFirebase
+    setupFirebase,
+    ListenFirebaseChanges,
 };
