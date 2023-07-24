@@ -1,88 +1,29 @@
-// import { lightGreen, yellow } from '@mui/material/colors';
-import { Box, Button } from "@mui/material";
-import { Row, Col } from 'react-simple-flex-grid';
-import "react-simple-flex-grid/lib/main.css";
-import SummaryCard from '../../components/SummaryCard';
+import { useTheme, Box, Button, Paper} from "@mui/material";
 import Header from "../../components/Header";
-import mockData from "../../data/mockData.json";
+import AllMachineTable from "../../components/AllMachineTable";
 
 const Homepage = () => {
+    const theme = useTheme().palette;
     return (
         <Box sx={{
-            mb: 10,
+            mb: 1,
+            padding: 3,
             width: "100%",
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
             overflowY: "scroll",
-          }} >
-            <Box width="100%" p="20px">
-            <Box display="flex" justifyContent="space-between">
-            <Header title="All machines" subtitle="{timestamp}" />
-            <Button>TURN OFF ALL MACHINES</Button>
+            backgroundColor: (theme.mode === "dark" ? theme.divider : "auto")
+        }} >
+            <Box p="20px" height="90%" component={Paper}>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Header title="All Machines" subtitle="{timestamp}" />
+                    <Button sx={{ height: 50 }} variant="contained" color="error">TURN OFF ALL MACHINES</Button>
+                </Box>
+
+                <AllMachineTable />
             </Box>
-            <Box>
-                <Row gutter={30}>
-                {mockData.map(data => 
-                <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <SummaryCard title={data.title} info={data.info} />                
-                </Col>)}
-                </Row>
-            </Box>
-                
-            </Box>
-            {/*
-            <div className="powerButton">
-                <button className='allmachinePowerButton'>
-                    <p>Stop All Machine</p>
-                </button>
-            </div>
-            <div className="container">
-                {cards.map((card, i) => (
-                    <div className="cards">
-                        <div key={i} className="card">
-                            <div className="leftside">
-                                <div className='Heading'>
-                                    <h2>{card.title}</h2>
-                                    <button className="moreDetailButton">
-                                        More Detail
-                                    </button>
-                                </div>
-                                <div className='info'>
-                                    <p>{card.conveyorSpeed}</p>
-                                    <p>{card.paperSuction}</p>
-                                    <p>{card.temperature}</p>
-                                </div>
-                            </div>
-                            <div className="rightside">
-                                <h2 style={{ fontSize: 20 }}>Cups per min</h2>
-                                <div className='graphDisplay'>
-                                    <p style={{ fontSize: 20 }}>X amount</p>
-                                <h2> Cups per min</h2>
-                                <div>
-                                    <p style={{fontSize: 20}}>X amount</p>
-                                    <img src="./dummy-graph.png" alt="adas" width={200} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="cardButton">
-                            <div className="machineStatus">
-                                <h4>Machine Status</h4>
-                            <div className="cardButton">
-                                <div className="machineStatus">
-                                    <h4>Machine Status</h4>
-                                </div>
-                                <button className="machinePowerButton">
-                                    Turn machine on
-                                </button>
-                            </div>
-                            <button className="machinePowerButton">
-                                <h4>Turn machine on </h4>
-                            </button>
-                        </div>
-                    </div>
-                ))}
-                </div>*/}
         </Box>
     );
 };

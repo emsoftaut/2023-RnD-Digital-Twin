@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Box, useTheme, Tab, Tabs } from "@mui/material";
+import { Box, useTheme, Tab, Tabs } from "@mui/material";
 import { tokens } from "../theme";
 
 const MachineTabs = () => {
@@ -11,14 +11,14 @@ const MachineTabs = () => {
     };
 
     return (
-        <Box display={"flex"} sx={{ width: '100%' }} justifyContent={"space-between"}>
+        <Box sx={{ width: '100%',  overflowX: "scroll" }} justifyContent={"space-between"}>
             <Tabs
                 value={value}
                 onChange={handleChange}
                 aria-label="machine page tabs"
                 sx={{
                     "& Tab": {
-                        color: colors.secondaryVar,
+                        color: colors.secondary,
                     }
                 }}
             >
