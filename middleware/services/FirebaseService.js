@@ -49,7 +49,6 @@ function setMachine(machine, dbref) {
 
 function updateMachine(values, dbref) {
     dbref.update(values).then(() => {
-        console.log('Machine record updated successfully');
       }).catch((error) => {
         console.error('Error updating machine record:', error);
       });
