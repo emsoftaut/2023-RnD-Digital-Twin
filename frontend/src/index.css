@@ -1,28 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Raleway&display=swap");
 body {
-  font-family: 'Raleway', 'Roboto', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-family: "Raleway", "Roboto", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 html,
 body,
 #root,
 .content {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
 }
 
 .app {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  position: relative;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	position: relative;
 }
 
 ::-webkit-scrollbar {
-  width: 0px;
+	width: 0px;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
