@@ -16,12 +16,6 @@ function Setup() {
   FirebaseService.setupFirebase().then(() => {
     SetupModelsAndConnections(machines);
     SetupListeners();
-
-    //ListenModbusChanges();
-  
-    //setInterval(function() {
-    //  ModbusService.WriteToModbus(FactoryIOMachineModel);
-    //}, pollFrequency);  
   });
 }
 
@@ -44,14 +38,33 @@ function SetupListeners()
   for (let i = 0; i < firebaseMachineConnections.length; i++)
   {
     FirebaseService.ListenFirebaseChanges(firebaseMachineConnections[i], factoryIOMachineModels[i], handleFirebaseChanges);
+    ListenModbusChanges(firebaseMachineConnections[i], factoryIOMachineModels[i]);
   }
 }
 
+
+function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
+  setInterval(function() {
+    ModbusService.ReadFromModbus(factoryIOMachine).then((pollResponse) => {
+      if (pollResponse)
+      {
+        console.log("Poll response found:" + pollResponse);
+        pollResponse.lastModified = GetCurrentDateTime();
+        FirebaseService.updateMachine(pollResponse, firebaseMachineConnection);
+      }
+    });
+  }, pollFrequency);
+};
+
 function handleFirebaseChanges(updatedValues, FactoryIOModel, FirebaseConnection) {
+  console.log("Firebase value changed");
   map(updatedValues.val(), FactoryIOModel);
   FactoryIOModel.lastModified = GetCurrentDateTime();
 
-  testFunction(FactoryIOModel, FirebaseConnection);
+  setInterval(function () {
+    ModbusService.WriteToModbus(FactoryIOModel);
+  }, pollFrequency);
+  //testFunction(FactoryIOModel, FirebaseConnection);
 }
 
 function testFunction(FactoryIOModel, FirebaseConnection)
@@ -60,19 +73,6 @@ function testFunction(FactoryIOModel, FirebaseConnection)
   FirebaseService.updateMachine(FactoryIOModel.getAnemicModel(), FirebaseConnection);
   console.log("Updated machine " + FactoryIOModel.machineID + " Successfully");
 }
-
-function ListenModbusChanges() {
-  setInterval(function() {
-    ModbusService.ReadFromModbus(FactoryIOMachineModel).then((pollResponse) => {
-      if (pollResponse)
-      {
-        console.log("Poll response found:" + pollResponse);
-        pollResponse.lastModified = GetCurrentDateTime();
-        FirebaseService.updateMachine(pollResponse, FirebaseMachineConnection);
-      }
-    });
-  }, pollFrequency);
-};
 
 function GetCurrentDateTime()
 {
