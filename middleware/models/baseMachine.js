@@ -11,31 +11,55 @@ let base = {
         return Values;
     },
     setSensorValues: function(valueArray) {
-        let counter = 0;
+        for (const reg in valueArray)
+        {
+            for (const sensor in this.sensors)
+            {
+                if (this.sensors[sensor].register == reg)
+                {
+                    this.sensors[sensor].value = valueArray[reg];
+                }
+            }
+        }
+        /*
         Keys = Object.keys(this.sensors);
         Keys.forEach((Key) => {
+            [register] = valueArray)
             this.sensors[Key].value = valueArray[counter];
             counter++;
-        });
+        });*/
     },
     getSensorValues: function() {
         Keys = Object.keys(this.sensors);
-        Values = [Keys.length];
+        Values = {};
         Keys.forEach((Key) => {
             Values[this.sensors[Key].register] = this.sensors[Key].value;
         });
+        console.log("Sensors:");
+        console.log(Values);
         return Values;
     },
-    getAnemicModel: function() {
+    toFirebaseModel: function() {
         const anemicModel = {};
-
         for (const key in this) {
-            if (typeof this[key] !== 'function') {
+            if (key == "sensors" || key == "coils") 
+            {
+                anemicModel[key] = {};
+                for (const bitValue in this[key]) 
+                {
+                    anemicModel[key][bitValue] = this[key][bitValue].value;
+                }
+            } else if (typeof this[key] !== 'function') {
                 anemicModel[key] = this[key];
             }
-          }
-        
+        }
         return anemicModel;
+    },
+    toModbusModel: function(firebaseModel) {
+        for (const key in this.coils)
+        {
+            this.coils[key].value = firebaseModel.coils[key];
+        }
     }
 }
 

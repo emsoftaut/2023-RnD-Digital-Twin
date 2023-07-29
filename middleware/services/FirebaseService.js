@@ -3,18 +3,17 @@ require("firebase/compat/database");
 require('firebase/compat/auth');
 const dbconfig = require("../config/FirebaseAuthConfig");
 const dbSchema = require("../config/FirebaseSchema");
-const localConfig = require("../config/LocalEnvConfig");
 
 
 fb.initializeApp(dbconfig);
 const db = fb.database();
 
-function setupFirebase()
+function setupFirebase(email, password)
 {
-    return fb.auth().signInWithEmailAndPassword(localConfig.email, localConfig.password);
+    return fb.auth().signInWithEmailAndPassword(email, password);
 }
 
-function getMachineRecord(machine = null, machineFactoryIOHandler = null) {
+function getMachineRecord(machine = null, machineModbusConnection = null) {
     if (!machine)
     {
         console.log ("Machine passed is null. Returning database");
@@ -32,7 +31,7 @@ function getMachineRecord(machine = null, machineFactoryIOHandler = null) {
                 console.log("Machine " + machineID + " doesn't exist, posting local model");
                 database = getMachineRecord();
                 machineToCommit = {};
-                machineToCommit[machineID] = machineFactoryIOHandler.getAnemicModel();
+                machineToCommit[machineID] = machineModbusConnection.toFirebaseModel();
                 machineToCommit[machineID]["DateCreated"] = GetCurrentDateTime();
                 machineToCommit[machineID]["machineID"] = machineID;
                 database.update(machineToCommit);

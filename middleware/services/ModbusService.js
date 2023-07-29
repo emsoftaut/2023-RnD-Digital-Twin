@@ -9,19 +9,22 @@ const IOport = localConfig.port;
 
 console.log("Connecting to modbus");
 
-socket.connect({ host: ip, port: IOport });
+function SetupModbus(ip, IOport)
+{
+  socket.connect({ host: ip, port: IOport });
 
-socket.on('connect', async () => {
-    console.log('Connected to Modbus server on ' + ip + ": " + IOport);
-});
-
-socket.on('error', (error) => {
-    console.error('Error:', error);
+  socket.on('connect', async () => {
+      console.log('Connected to Modbus server on ' + ip + ": " + IOport);
   });
   
-socket.on('close', () => {
-    console.log('Connection closed.');
-  });
+  socket.on('error', (error) => {
+      console.error('Error:', error);
+    });
+    
+  socket.on('close', () => {
+      console.log('Connection closed.');
+    });  
+}
 
 function WriteToModbus(FactoryIOMachineModel)
 {
@@ -43,21 +46,19 @@ async function ReadFromModbus(FactoryIOMachineModel)
 
     sensorValues = FactoryIOMachineModel.getSensorValues();
   
-    const response = await client.readDiscreteInputs(0, sensorCount);
+    const response = await client.readDiscreteInputs(80, sensorCount);
     let sensorChangeFound = false;
       for (let i = 0; i < sensorCount; i++) {
         const currentValue = response.response.body.valuesAsArray[i];
         if (currentValue !== sensorValues[i]) {
           sensorChangeFound = true;
-          console.log(`Sensor ${i} changed: ${currentValue}`);
-          sensorValues[i] = currentValue;
+          sensorValues[i+80] = currentValue;
           FactoryIOMachineModel.setSensorValues(sensorValues);
         }
       }
     if (sensorChangeFound)
     {
-      console.log("Returning values");
-      return FactoryIOMachineModel.getAnemicModel();
+      return FactoryIOMachineModel.toFirebaseModel();
     }
   } catch (error) {
     console.log("Error occurred reading from sensors");
@@ -79,5 +80,6 @@ OfflineErrorMessage += "If you are using FactoryIO, you can find your IP and Por
 
 module.exports = {
   WriteToModbus,
-  ReadFromModbus
+  ReadFromModbus,
+  SetupModbus
 };

@@ -1,19 +1,19 @@
 const FirebaseService = require("../services/FirebaseService.js");
-const map = require("../services/mapper");
 const getFactoryIOMachineModel = require("../models/baseMachine.js");
 const ModbusService = require("../services/ModbusService.js");
-const LocalConfig = require("../config/LocalEnvConfig.js");
+const localConfig = require("../config/LocalEnvConfig.js");
 
-const machines = LocalConfig.machines;
+const machines = localConfig.machines;
 
 let factoryIOMachineModels = [];
 let firebaseMachineConnections = [];
 
 
-const pollFrequency = 10;
+const pollFrequency = 1000;
 
 function Setup() {
-  FirebaseService.setupFirebase().then(() => {
+  ModbusService.SetupModbus(localConfig.IP, localConfig.port)
+  FirebaseService.setupFirebase(localConfig.email, localConfig.password).then(() => {
     SetupModelsAndConnections(machines);
     SetupListeners();
   });
@@ -48,7 +48,6 @@ function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
     ModbusService.ReadFromModbus(factoryIOMachine).then((pollResponse) => {
       if (pollResponse)
       {
-        console.log("Poll response found:" + pollResponse);
         pollResponse.lastModified = GetCurrentDateTime();
         FirebaseService.updateMachine(pollResponse, firebaseMachineConnection);
       }
@@ -57,20 +56,16 @@ function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
 };
 
 function handleFirebaseChanges(updatedValues, FactoryIOModel, FirebaseConnection) {
-  console.log("Firebase value changed");
-  map(updatedValues.val(), FactoryIOModel);
+  console.log("Firebase values changed");
+  FactoryIOModel.toModbusModel(updatedValues.val());
   FactoryIOModel.lastModified = GetCurrentDateTime();
-
-  setInterval(function () {
-    ModbusService.WriteToModbus(FactoryIOModel);
-  }, pollFrequency);
-  //testFunction(FactoryIOModel, FirebaseConnection);
+  ModbusService.WriteToModbus(FactoryIOModel);
 }
 
 function testFunction(FactoryIOModel, FirebaseConnection)
 {
   FactoryIOModel.sensors.machineStatus = FactoryIOModel.coils.running ? "ON" : "OFF";
-  FirebaseService.updateMachine(FactoryIOModel.getAnemicModel(), FirebaseConnection);
+  FirebaseService.updateMachine(FactoryIOModel.toFirebaseModel(), FirebaseConnection);
   console.log("Updated machine " + FactoryIOModel.machineID + " Successfully");
 }
 
