@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearProgress, Typography } from "@mui/material";
 import {appDb} from "../firebaseConfig";
 import {ref, get, set, onValue, off } from "firebase/database";
+import { Link } from 'react-router-dom';
 
 async function toggleMachine(machID) {
     // Get the reference to the database path where "running" variable is stored
@@ -58,8 +59,17 @@ const ProgressBar = ({ done, queued }) => {
     );
 };
 
+
+function validateMachineData(machine) {
+    const requiredKeys = ['machineID', 'coils', 'lastModified', 'sensors'];
+    return requiredKeys.every(key => machine.hasOwnProperty(key) 
+      && machine[key] !== null 
+      && Object.keys(machine[key]).length !== 0);
+}
+
 const AllMachineTable = () => {
     const [machineData, setMachineData] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const machineRef = ref(appDb, "factory_io/data");
@@ -67,7 +77,9 @@ const AllMachineTable = () => {
         const handleDataChange = (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                const dataArray = Object.values(data).map((machine) => ({
+                const dataArray = Object.values(data)
+                .filter(validateMachineData)
+                .map((machine) => ({
                     machID: machine.machineID,
                     ...machine,
                 }));
@@ -82,7 +94,10 @@ const AllMachineTable = () => {
         };
     }, []);
 
-    console.log(machineData);
+    if(error) {
+        setError(error);
+        return <p>Error: {error}</p>
+    }
 
     return (
         <Box sx={{ overflowX: "scroll" }}>
@@ -101,7 +116,9 @@ const AllMachineTable = () => {
                 <TableBody>
                     {machineData.map((machine) =>
                         <TableRow>
-                            <TableCell>{machine.machineID}</TableCell>
+                            <TableCell>
+                                <Link to={"/"+machine.machID}>{machine.machID}</Link>
+                                </TableCell>
                             <TableCell>{machine.sensors.machineStatus === "ON" ? "Running" : "Not Running"}</TableCell>
                             <TableCell>{machine.lastModified}</TableCell>
                             <TableCell><ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} /></TableCell>

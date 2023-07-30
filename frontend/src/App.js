@@ -1,16 +1,16 @@
 import {appAuth} from "./firebaseConfig";
-import { Routes, Route } from "react-router-dom";
-import Sidebar from "./scenes/global/Sidebar";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme.js";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Dashboard from "./scenes/dashboard";
-import Navbar from "./scenes/global/Navbar";
 import MachineDetails from "./scenes/machineDetails";
 import Login from "./components/Login";
 import {useState, useEffect} from "react";
 import {getAuth, onAuthStateChanged } from "firebase/auth";
-import mockData from "./data/mockData.json";
-import FireBaseData from "./data/FireBaseData.js";
+import ForgotPassword from "./components/ForgotPassword";
+import PrivateRoute from "./components/PrivateRoute";
+import { getDatabase, ref, onValue } from 'firebase/database';
+
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -18,7 +18,6 @@ const App = () => {
 
   useEffect(() => {
     const authInstance = getAuth(appAuth); // Initialize the authentication service
-
     const unsubscribe = onAuthStateChanged(authInstance, (user) => {
       setUser(user);
     });
@@ -26,25 +25,37 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
+  const [machines, setMachines] = useState([]);
+  
+  useEffect(() => {
+    const db = getDatabase();
+    const machinesRef = ref(db, 'factory_io/data');
+    
+    onValue(machinesRef, (snapshot) => {
+      const data = snapshot.val();
+      const machinesArray = Object.keys(data).map((key) => ({
+        id: key,
+        ...data[key],
+      }));
+      setMachines(machinesArray);
+    });
+  }, []);
+
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {user ? (
-        <main className="content">
-          <Navbar />
-          <div className="app">
-            <Sidebar />
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              {mockData.map(data=> <Route path={"machineDetails"+data.path} element={<MachineDetails title={data.title}/>}/>)}
-              <Route path="/machineDetails" element={<MachineDetails/>}/>
-            </Routes>
-          </div>
-        </main>
-        ) : (
-          <Login />
-        )}
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/" element={<PrivateRoute user={user} machines={machines}/>}>
+            <Route index element={<Dashboard />} />
+            {machines.map((machine) => (
+              <Route path={machine.machineID} element={<MachineDetails title={machine.machineID} />} />
+            ))}
+          </Route>
+        </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
