@@ -2,3 +2,5 @@ middleware/node_modules/*
 middleware/package-lock.json
 middleware/node_modules
 middleware/config/LocalEnvConfig.js
+node_modules
+functions/node_modules
