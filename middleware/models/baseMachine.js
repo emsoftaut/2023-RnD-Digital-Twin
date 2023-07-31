@@ -21,13 +21,6 @@ let base = {
                 }
             }
         }
-        /*
-        Keys = Object.keys(this.sensors);
-        Keys.forEach((Key) => {
-            [register] = valueArray)
-            this.sensors[Key].value = valueArray[counter];
-            counter++;
-        });*/
     },
     getSensorValues: function() {
         Keys = Object.keys(this.sensors);

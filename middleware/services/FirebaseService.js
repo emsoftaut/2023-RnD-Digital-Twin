@@ -33,7 +33,7 @@ function getMachineRecord(machine = null, machineModbusConnection = null) {
                 machineToCommit = {};
                 machineToCommit[machineID] = machineModbusConnection.toFirebaseModel();
                 machineToCommit[machineID]["DateCreated"] = GetCurrentDateTime();
-                machineToCommit[machineID]["machineID"] = machineID;
+                machineToCommit[machineID]["machineID"] = machineToCommit[machineID].machineID;
                 database.update(machineToCommit);
                 console.log("Machine successfully posted.");
             }});

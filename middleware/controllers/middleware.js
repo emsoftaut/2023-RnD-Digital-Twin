@@ -22,12 +22,12 @@ function Setup() {
 function SetupModelsAndConnections(machines)
 {
   let counter = 0;
-  for (const key in machines) {
-    let machineModel = getFactoryIOMachineModel(machines[key].machineName);
+  for (const machine in machines) {
+    let machineModel = getFactoryIOMachineModel(machines[machine].machineName);
     factoryIOMachineModels.push(machineModel);
-    factoryIOMachineModels[counter].machineID = key;
+    factoryIOMachineModels[counter].machineID = machines[machine].machineID;
 
-    let machineRecord = FirebaseService.getMachineRecord(machines[key], factoryIOMachineModels[counter]);
+    let machineRecord = FirebaseService.getMachineRecord(machines[machine], factoryIOMachineModels[counter]);
     firebaseMachineConnections.push(machineRecord);
     counter++;
   }
