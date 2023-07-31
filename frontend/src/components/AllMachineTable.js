@@ -119,7 +119,7 @@ const AllMachineTable = () => {
                             <TableCell>
                                 <Link to={"/"+machine.machID}>{machine.machID}</Link>
                                 </TableCell>
-                            <TableCell>{machine.sensors.machineStatus === true ? "Running" : "Not Running"}</TableCell>
+                            <TableCell>{machine.sensors.machineStatus === 1 ? "Running" : "Not Running"}</TableCell>
                             <TableCell>{machine.lastModified}</TableCell>
                             <TableCell><ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} /></TableCell>
                             <TableCell align="right">{machine.coils.beltSpeed || "0"}</TableCell>
