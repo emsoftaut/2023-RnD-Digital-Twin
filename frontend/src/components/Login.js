@@ -2,10 +2,11 @@
 import {appAuth, appDb} from "../firebaseConfig";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import React, {useContext, useState}  from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import {TextField, Button} from "@mui/material";
 import styles from "./style.module.css";
 import AuthContext from "./AuthContext";
+import ForgotPassword from "./ForgotPassword";
 
 const Login = () => {
     const {setUserManually} = useContext(AuthContext);
@@ -21,6 +22,10 @@ const Login = () => {
     const handlePasswordChange = (e) => {
       setPassword(e.target.value);
     };
+
+    const handleForgotPasswordClick = () => {
+      navigate("/forgot-password");
+    };
   
     const handleLogin = (e) => {
       e.preventDefault();
@@ -35,13 +40,14 @@ const Login = () => {
           navigate("/"); // Redirect to the desired route upon successful login
         })
         .catch((error) => {
-          setError(error.message);
+          setError(`Invalid Username or Password.`);
         });
         
     };
   
     return (
-      <div className={styles.container}>
+      <div>
+        <div className={styles.container}>
         <h2 className={styles.title}>Digital Twin Login</h2>
         <form className={styles.form} onSubmit={handleLogin}>
           <TextField
@@ -65,7 +71,10 @@ const Login = () => {
           <Button className={styles.button} variant="contained" type="submit">
             Log In
           </Button>
+          <br />
+          <Link onClick={handleForgotPasswordClick} to="/forgot-password">Forgot Password?</Link>
         </form>
+        </div>
         {error && <p className={styles.error}>{error}</p>}
       </div>
     );

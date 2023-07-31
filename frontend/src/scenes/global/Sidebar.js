@@ -3,7 +3,6 @@ import { ProSidebar, Menu, MenuItem, SubMenu} from "react-pro-sidebar";
 import { Box, useTheme} from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
-import mockData from "../../data/mockData.json";
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
@@ -20,7 +19,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
     );
 };
 
-const Sidebar = () => {
+const Sidebar = ({machines}) => {
     const theme = useTheme();
     const [selected, setSelected] = useState("Dashboard");
     return (
@@ -67,8 +66,12 @@ const Sidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         >
-                            {mockData.map(data => 
-                                <Item title={"Machine #" + data.title} to={"/machineDetails"+data.path} selected={selected} setSelected={setSelected}/>)}
+                            {machines && machines.map(machine => 
+                                <Item 
+                                title={"Machine #" + machine.machineID} 
+                                to={"/"+machine.machineID} 
+                                selected={selected} 
+                                setSelected={setSelected}/>)}
                         </SubMenu>
                     </Box>
                 </Menu>
