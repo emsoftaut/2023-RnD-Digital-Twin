@@ -1,57 +1,73 @@
 const FirebaseService = require("../services/FirebaseService.js");
-const map = require("../services/mapper");
-const getFactoryIOMachineModel = require("../models/middleware/baseMachine");
+const getFactoryIOMachineModel = require("../models/baseMachine.js");
 const ModbusService = require("../services/ModbusService.js");
+const localConfig = require("../config/LocalEnvConfig.js");
 
-// Get the name of the machine from command line argument
-// command line arguments are currently handled in middleware/package.json
-let MachineName = process.argv[2];
+const machines = localConfig.machines;
 
-const pollFrequency = 10;
-let FactoryIOMachineModel;
-let FirebaseMachineConnection
+let factoryIOMachineModels = [];
+let firebaseMachineConnections = [];
 
 
+const pollFrequency = 1000;
 
 function Setup() {
-  FactoryIOMachineModel = getFactoryIOMachineModel(MachineName);
-
-  FirebaseService.setupFirebase().then(() => {
-    console.log("Database connected");
-    FirebaseMachineConnection = FirebaseService.getMachineRecord(MachineName, FactoryIOMachineModel);
-
-    console.log("Machine Setup at " + GetCurrentDateTime());
-    console.log("Starting listeners");
-    ListenFirebaseChanges();
-    ListenModbusChanges();
-  
-    setInterval(function() {
-      ModbusService.WriteToModbus(FactoryIOMachineModel);
-    }, pollFrequency);  
+  ModbusService.SetupModbus(localConfig.IP, localConfig.port)
+  FirebaseService.setupFirebase(localConfig.email, localConfig.password).then(() => {
+    SetupModelsAndConnections(machines);
+    SetupListeners();
   });
 }
 
-function ListenFirebaseChanges()
+function SetupModelsAndConnections(machines)
 {
-  FirebaseMachineConnection.on('value', (updatedValues) => {
-    console.log(updatedValues.val());
-    map(updatedValues.val(), FactoryIOMachineModel);
-    FactoryIOMachineModel.lastModified = GetCurrentDateTime();
-    });
+  let counter = 0;
+  for (const machine in machines) {
+    let machineModel = getFactoryIOMachineModel(machines[machine].machineName);
+    factoryIOMachineModels.push(machineModel);
+    factoryIOMachineModels[counter].machineID = machines[machine].machineID;
+
+    let machineRecord = FirebaseService.getMachineRecord(machines[machine], factoryIOMachineModels[counter]);
+    firebaseMachineConnections.push(machineRecord);
+    counter++;
+  }
 }
 
-function ListenModbusChanges() {
+function SetupListeners()
+{
+  for (let i = 0; i < firebaseMachineConnections.length; i++)
+  {
+    FirebaseService.ListenFirebaseChanges(firebaseMachineConnections[i], factoryIOMachineModels[i], handleFirebaseChanges);
+    ListenModbusChanges(firebaseMachineConnections[i], factoryIOMachineModels[i]);
+  }
+}
+
+
+function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
   setInterval(function() {
-    ModbusService.ReadFromModbus(FactoryIOMachineModel).then((pollResponse) => {
+    ModbusService.ReadFromModbus(factoryIOMachine).then((pollResponse) => {
       if (pollResponse)
       {
-        console.log("Poll response found:" + pollResponse);
         pollResponse.lastModified = GetCurrentDateTime();
-        FirebaseService.updateMachine(pollResponse, FirebaseMachineConnection);
+        FirebaseService.updateMachine(pollResponse, firebaseMachineConnection);
       }
     });
   }, pollFrequency);
 };
+
+function handleFirebaseChanges(updatedValues, FactoryIOModel, FirebaseConnection) {
+  console.log("Firebase values changed");
+  FactoryIOModel.toModbusModel(updatedValues.val());
+  FactoryIOModel.lastModified = GetCurrentDateTime();
+  ModbusService.WriteToModbus(FactoryIOModel);
+}
+
+function testFunction(FactoryIOModel, FirebaseConnection)
+{
+  FactoryIOModel.sensors.machineStatus = FactoryIOModel.coils.running ? "ON" : "OFF";
+  FirebaseService.updateMachine(FactoryIOModel.toFirebaseModel(), FirebaseConnection);
+  console.log("Updated machine " + FactoryIOModel.machineID + " Successfully");
+}
 
 function GetCurrentDateTime()
 {
