@@ -10,7 +10,6 @@ import MachineDetails from "./scenes/machineDetails";
 import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
 import PrivateRoute from "./components/PrivateRoute";
-import Register from "./components/Register";
 import AdminPanel from "./components/AdminPanel";
 
 
@@ -52,7 +51,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/" element={<PrivateRoute user={user} machines={machines}/>}>
+          <Route path="/*" element={<PrivateRoute user={user} machines={machines}/>}>
             <Route index element={<Dashboard />} />
             {machines.map((machine) => (
               <Route path={machine.machineID} element={<MachineDetails title={machine.machineID} />} />

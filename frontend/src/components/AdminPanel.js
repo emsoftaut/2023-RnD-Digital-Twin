@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 const AdminPanel = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const auth = getAuth();
-  
+  const functions = getFunctions();
+
+  useEffect(() => {
+    const checkAdmin = httpsCallable(functions, 'checkAdmin');
+    checkAdmin().then((result) => {
+      setIsAdmin(result.data.isAdmin);
+    });
+  }, []);
+
   const handleRegister = (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
@@ -20,8 +30,8 @@ const AdminPanel = () => {
         setError("Error registering user: " + error.message);
       });
   };
-  
-  if (auth.currentUser.uid !== "SWD43SNbitZY6vUJYMFCYAnewJS2") {
+
+  if (!isAdmin) {
     return <p>You are not authorized to view this page.</p>;
   }
 

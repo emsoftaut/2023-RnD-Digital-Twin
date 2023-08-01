@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import DropdownProfile from "../../components/DropdownProfile";
 import { ColorModeContext } from "../../theme";
 import { Box, IconButton, useTheme } from "@mui/material";
@@ -6,12 +6,26 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import AuthContext from "../../components/AuthContext";
+
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { Link } from 'react-router-dom';
+import { authInstance  } from "../../firebaseConfig";
 
 const Navbar = () => {
     const theme = useTheme();
     const colorMode = useContext(ColorModeContext);
     const [openProfile, setOpenProfile] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    //const navigate = useNavigate();
+    const auth = authInstance;
+    const functions = getFunctions();
+
+    useEffect(() => {
+        const checkAdmin = httpsCallable(functions, 'checkAdmin');
+        checkAdmin().then((result) => {
+            setIsAdmin(result.data.isAdmin);
+        });
+    }, []);
 
 
     const handleProfileClick = () => {
@@ -29,6 +43,10 @@ const Navbar = () => {
                 )}
             </Box>
             <Box display="flex">
+                {isAdmin && 
+                <Link to="/admin">
+                    <IconButton>Admin Panel</IconButton>
+                </Link>}
                 <IconButton 
                 onClick={colorMode.toggleColorMode} 
                 aria-label="Display Mode Toggle">

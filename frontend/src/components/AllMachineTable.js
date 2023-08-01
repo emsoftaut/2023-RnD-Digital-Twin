@@ -59,7 +59,6 @@ const ProgressBar = ({ done, queued }) => {
     );
 };
 
-
 function validateMachineData(machine) {
     const requiredKeys = ['machineID', 'coils', 'lastModified', 'sensors'];
     return requiredKeys.every(key => machine.hasOwnProperty(key) 
