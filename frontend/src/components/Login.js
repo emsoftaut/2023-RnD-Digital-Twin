@@ -71,8 +71,6 @@ const Login = () => {
             Log In
           </Button>
           <br />
-          <Link to="/register">Don't have an account? Register here</Link>
-          <br />
           <Link onClick={handleForgotPasswordClick} to="/forgot-password">Forgot Password?</Link>
         </form>
         </div>
