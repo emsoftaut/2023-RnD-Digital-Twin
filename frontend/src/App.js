@@ -35,7 +35,7 @@ const App = () => {
     onValue(machinesRef, (snapshot) => {
       const data = snapshot.val();
       const machinesArray = Object.keys(data).map((key) => ({
-        id: key,
+        machineID: key,
         ...data[key],
       }));
       setMachines(machinesArray);
@@ -54,7 +54,11 @@ const App = () => {
           <Route path="/*" element={<PrivateRoute user={user} machines={machines}/>}>
             <Route index element={<Dashboard />} />
             {machines.map((machine) => (
-              <Route path={machine.machineID} element={<MachineDetails title={machine.machineID} />} />
+              <Route 
+              key={machine.machineID}
+              path={machine.machineID} 
+              element={<MachineDetails 
+              title={machine.machineID} />} />
             ))}
           </Route>
         </Routes>

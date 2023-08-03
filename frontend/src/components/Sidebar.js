@@ -9,6 +9,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 const Item = ({ title, to, icon, selected, setSelected }) => {
     return (
         <MenuItem
+            key={title}
             active={selected === title}
             onClick={() => setSelected(title)}
             icon={icon}
@@ -67,11 +68,12 @@ const Sidebar = ({machines}) => {
                             setSelected={setSelected}
                         >
                             {machines && machines.map(machine => 
-                                <Item 
-                                title={"Machine #" + machine.machineID} 
-                                to={"/"+machine.machineID} 
-                                selected={selected} 
-                                setSelected={setSelected}/>)}
+                            <Item 
+                            key={machine.machineID}
+                            title={"Machine #" + machine.machineID} 
+                            to={"/"+machine.machineID} 
+                            selected={selected} 
+                            setSelected={setSelected}/>)}
                         </SubMenu>
                     </Box>
                 </Menu>
