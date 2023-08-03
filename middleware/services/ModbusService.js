@@ -2,15 +2,14 @@ const Modbus = require('jsmodbus');
 const net = require('net');
 const socket = new net.Socket();
 const client = new Modbus.client.TCP(socket);
-const localConfig = require('../config/LocalEnvConfig');
+let offset;
 
-const ip = localConfig.IP;
-const IOport = localConfig.port;
 
 console.log("Connecting to modbus");
 
-function SetupModbus(ip, IOport)
+function SetupModbus(ip, IOport, inputOffset)
 {
+  offset = inputOffset;
   socket.connect({ host: ip, port: IOport });
 
   socket.on('connect', async () => {
@@ -39,32 +38,15 @@ function WriteToModbus(FactoryIOMachineModel)
   }
 }
 
-async function ReadFromModbus(FactoryIOMachineModel)
+async function ReadFromModbus(sensorCount)
 {
   try {
-    sensorCount = Object.keys(FactoryIOMachineModel.sensors).length;
-
-    sensorValues = FactoryIOMachineModel.getSensorValues();
-  
-    const response = await client.readDiscreteInputs(80, sensorCount);
-    let sensorChangeFound = false;
-      for (let i = 0; i < sensorCount; i++) {
-        const currentValue = response.response.body.valuesAsArray[i];
-        if (currentValue !== sensorValues[i]) {
-          sensorChangeFound = true;
-          sensorValues[i+80] = currentValue;
-          FactoryIOMachineModel.setSensorValues(sensorValues);
-        }
-      }
-    if (sensorChangeFound)
-    {
-      return FactoryIOMachineModel.toFirebaseModel();
-    }
+    const modbusResponse = await client.readDiscreteInputs(offset, sensorCount);
+    return modbusResponse.response.body.valuesAsArray;
   } catch (error) {
     console.log("Error occurred reading from sensors");
     HandleModbusError(error);
   }
-
 }
 
 function HandleModbusError(error) {

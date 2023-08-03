@@ -4,11 +4,11 @@ let testMachine = {
     coils: {
         beltSpeed: {
             value: true,
-            register: 2
+            register: 82
         },
         jobsQueued: {
             value: true,
-            register: 1
+            register: 81
         },
         running: {
             value: true,
@@ -18,7 +18,7 @@ let testMachine = {
     sensors: {
         jobsDone: {
             value: true,
-            register: 2
+            register: 82
         },
         machineStatus: {
             value: false,
@@ -26,7 +26,7 @@ let testMachine = {
         },
         temperature: {
             value: true,
-            register: 1
+            register: 81
         }        
     }
 }
