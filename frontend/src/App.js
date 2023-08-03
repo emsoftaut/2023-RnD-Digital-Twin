@@ -54,10 +54,9 @@ const App = () => {
           <Route path="/*" element={<PrivateRoute user={user} machines={machines}/>}>
             <Route index element={<Dashboard />} />
             {machines.map((machine) => (
-              <Route path={"/*"+machine.machineID} element={<MachineDetails title={machine.machineID} />} />
               <Route 
               key={machine.machineID}
-              path={machine.machineID} 
+              path={"/*"+machine.machineID} 
               element={<MachineDetails 
               title={machine.machineID} />} />
             ))}
