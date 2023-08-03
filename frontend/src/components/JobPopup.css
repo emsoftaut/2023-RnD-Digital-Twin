@@ -12,13 +12,16 @@
 }
 
 .popup-inner {
-	position: absolute;
+	position: relative;
 	padding: 32px;
 	width: 100%;
 	height: auto;
 	max-width: 640px;
 	background-color: white;
 	color: black;
+
+	align-items: center;
+	justify-content: space-between;
 }
 
 .popup-inner .popup-cb {
