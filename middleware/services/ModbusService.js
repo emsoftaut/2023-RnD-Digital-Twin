@@ -28,21 +28,51 @@ function SetupModbus(ip, IOport, inputOffset)
 function WriteToModbus(FactoryIOMachineModel)
 {
   let coils = FactoryIOMachineModel.coils;
-  for (let coil of Object.values(coils))
-  {
-    client.writeSingleCoil(coil.register, coil.value)
-    .catch((error) => {
+
+    try {
+    for (let coil of Object.values(coils))
+    {
+      if (coil.valueType == "BYTE")
+      {
+        console.log("Writing to register");
+        console.log(coil.register);
+        console.log(coil.value);        
+        client.writeSingleRegister(coil.register, coil.value);
+      }
+      else {
+        client.writeSingleCoil(coil.register, coil.value);
+      }
+    }
+  }
+    catch (error) {
       console.log("Error occurred Writing Coils");
       HandleModbusError(error);
-    });
+    }
   }
-}
-
+  
 async function ReadFromModbus(sensorCount)
 {
   try {
-    const modbusResponse = await client.readDiscreteInputs(offset, sensorCount);
-    return modbusResponse.response.body.valuesAsArray;
+    const modbusDisResp = await client.readDiscreteInputs(offset, sensorCount);
+    const modbusDiscrete = modbusDisResp.response.body.valuesAsArray;
+    const modbusRegResp = await client.readInputRegisters(offset, sensorCount);
+    const modbusRegisters = modbusRegResp.response.body.valuesAsArray;
+
+    let modbusResponse = modbusDiscrete;
+    for (let i = 0; i < sensorCount; i++)
+    {
+      if (modbusRegisters[i] > modbusDiscrete[i])
+      {
+        modbusResponse[i] = modbusRegisters[i];
+      }
+    }
+
+    //console.log(modbusDiscrete);
+    //console.log(modbusRegisters);
+    //console.log(modbusResponse);
+
+    //client.readInputRegisters
+    return modbusResponse;
   } catch (error) {
     console.log("Error occurred reading from sensors");
     HandleModbusError(error);
