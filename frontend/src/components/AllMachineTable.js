@@ -3,7 +3,7 @@ import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearPr
 import { appDb } from "../firebaseConfig";
 import { ref, get, set, onValue, off } from "firebase/database";
 import { Link } from "react-router-dom";
-import Popup from "../components/JobPopup";
+import JobPopup from "../components/JobPopup";
 
 async function toggleMachine(machID) {
 	// Get the reference to the database path where "running" variable is stored
@@ -134,7 +134,7 @@ const AllMachineTable = () => {
 				</TableBody>
 			</Table>
 			<button onClick={() => setButtonPopup(true)}>Job Request</button>
-			<Popup trigger={buttonPopup} setTrigger={setButtonPopup}></Popup>
+			<JobPopup trigger={buttonPopup} setTrigger={setButtonPopup}></JobPopup>
 		</Box>
 	);
 };
