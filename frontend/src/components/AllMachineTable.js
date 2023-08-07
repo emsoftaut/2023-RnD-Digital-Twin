@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearProgress, Typography, colors } from "@mui/material";
+import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearProgress, Typography } from "@mui/material";
 import { appDb } from "../firebaseConfig";
 import { ref, get, set, onValue, off } from "firebase/database";
 import { Link } from "react-router-dom";
 import Popup from "../components/JobPopup";
-import styled from "@emotion/styled";
-import { red } from "@mui/material/colors";
 
 async function toggleMachine(machID) {
 	// Get the reference to the database path where "running" variable is stored
