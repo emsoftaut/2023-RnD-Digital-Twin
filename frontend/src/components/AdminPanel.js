@@ -8,6 +8,8 @@ import styles from "./style.module.css";
 const AdminPanel = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [registerMessage, setRegisterMessage] = useState("");
   const [error, setError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -23,19 +25,33 @@ const AdminPanel = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
+
+    if(password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // User registered successfully.
         console.log("User registered: ", userCredential.user);
+        setRegisterMessage("User registered successfully!");
+        setError("");
       })
       .catch((error) => {
         // Error registering user.
         setError("Error registering user: " + error.message);
+        setRegisterMessage("");
       });
   };
 
   if (!isAdmin) {
-    return <p>You are not authorized to view this page.</p>;
+    return (
+      <div className={styles.container}>
+        <p className={styles.error}>
+          You are not authorized to view this page.
+        </p>
+      </div>)
   }
 
   return (
@@ -61,12 +77,22 @@ const AdminPanel = () => {
           required
         />
         <br />
+        <TextField
+          className={styles.input}
+          label="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+        <br />
         <Button className={styles.button} variant="contained" type="submit">Add New User</Button>
         <br />
         <Link to="/">Return to Home</Link> 
       </form>
 
       {error && <p className={styles.error}>{error}</p>}
+      {registerMessage && <p className={styles.success}>{registerMessage}</p>}
       </div>
     </div>
   );
