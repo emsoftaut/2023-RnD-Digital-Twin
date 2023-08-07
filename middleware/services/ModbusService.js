@@ -2,68 +2,81 @@ const Modbus = require('jsmodbus');
 const net = require('net');
 const socket = new net.Socket();
 const client = new Modbus.client.TCP(socket);
-const localConfig = require('../config/LocalEnvConfig');
+let offset;
 
-const ip = localConfig.IP;
-const IOport = localConfig.port;
 
 console.log("Connecting to modbus");
 
-socket.connect({ host: ip, port: IOport });
+function SetupModbus(ip, IOport, inputOffset)
+{
+  offset = inputOffset;
+  socket.connect({ host: ip, port: IOport });
 
-socket.on('connect', async () => {
-    console.log('Connected to Modbus server on ' + ip + ": " + IOport);
-});
-
-socket.on('error', (error) => {
-    console.error('Error:', error);
+  socket.on('connect', async () => {
+      console.log('Connected to Modbus server on ' + ip + ": " + IOport);
   });
   
-socket.on('close', () => {
-    console.log('Connection closed.');
-  });
+  socket.on('error', (error) => {
+      console.error('Error:', error);
+    });
+    
+  socket.on('close', () => {
+      console.log('Connection closed.');
+    });  
+}
 
 function WriteToModbus(FactoryIOMachineModel)
 {
   let coils = FactoryIOMachineModel.coils;
-  for (let coil of Object.values(coils))
-  {
-    client.writeSingleCoil(coil.register, coil.value)
-    .catch((error) => {
+
+    try {
+    for (let coil of Object.values(coils))
+    {
+      if (coil.valueType == "BYTE")
+      {
+        console.log("Writing to register");
+        console.log(coil.register);
+        console.log(coil.value);        
+        client.writeSingleRegister(coil.register, coil.value);
+      }
+      else {
+        client.writeSingleCoil(coil.register, coil.value);
+      }
+    }
+  }
+    catch (error) {
       console.log("Error occurred Writing Coils");
       HandleModbusError(error);
-    });
+    }
   }
-}
-
-async function ReadFromModbus(FactoryIOMachineModel)
+  
+async function ReadFromModbus(sensorCount)
 {
   try {
-    sensorCount = Object.keys(FactoryIOMachineModel.sensors).length;
+    const modbusDisResp = await client.readDiscreteInputs(offset, sensorCount);
+    const modbusDiscrete = modbusDisResp.response.body.valuesAsArray;
+    const modbusRegResp = await client.readInputRegisters(offset, sensorCount);
+    const modbusRegisters = modbusRegResp.response.body.valuesAsArray;
 
-    sensorValues = FactoryIOMachineModel.getSensorValues();
-  
-    const response = await client.readDiscreteInputs(0, sensorCount);
-    let sensorChangeFound = false;
-      for (let i = 0; i < sensorCount; i++) {
-        const currentValue = response.response.body.valuesAsArray[i];
-        if (currentValue !== sensorValues[i]) {
-          sensorChangeFound = true;
-          console.log(`Sensor ${i} changed: ${currentValue}`);
-          sensorValues[i] = currentValue;
-          FactoryIOMachineModel.setSensorValues(sensorValues);
-        }
-      }
-    if (sensorChangeFound)
+    let modbusResponse = modbusDiscrete;
+    for (let i = 0; i < sensorCount; i++)
     {
-      console.log("Returning values");
-      return FactoryIOMachineModel.getAnemicModel();
+      if (modbusRegisters[i] > modbusDiscrete[i])
+      {
+        modbusResponse[i] = modbusRegisters[i];
+      }
     }
+
+    //console.log(modbusDiscrete);
+    //console.log(modbusRegisters);
+    //console.log(modbusResponse);
+
+    //client.readInputRegisters
+    return modbusResponse;
   } catch (error) {
     console.log("Error occurred reading from sensors");
     HandleModbusError(error);
   }
-
 }
 
 function HandleModbusError(error) {
@@ -79,5 +92,6 @@ OfflineErrorMessage += "If you are using FactoryIO, you can find your IP and Por
 
 module.exports = {
   WriteToModbus,
-  ReadFromModbus
+  ReadFromModbus,
+  SetupModbus
 };
