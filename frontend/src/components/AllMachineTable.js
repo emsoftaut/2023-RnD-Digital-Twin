@@ -53,12 +53,11 @@ const ProgressBar = ({ done, queued }) => {
                 <LinearProgress variant="determinate" value={convertValue} />
             </Box>
             <Box sx={{ minWidth: 60 }}>
-                <Typography variant="p">{done} / {queued}</Typography>
+                <Typography variant="body1">{done} / {queued}</Typography>
             </Box>
         </Box>
     );
 };
-
 
 function validateMachineData(machine) {
     const requiredKeys = ['machineID', 'coils', 'lastModified', 'sensors'];
@@ -115,7 +114,7 @@ const AllMachineTable = () => {
                 </TableHead>
                 <TableBody>
                     {machineData.map((machine) =>
-                        <TableRow>
+                        <TableRow key={machine.machID}>
                             <TableCell>
                                 <Link to={"/"+machine.machID}>{machine.machID}</Link>
                                 </TableCell>

@@ -124,7 +124,7 @@ body {
   }
   
   .button {
-    background-color: #205766;
+    background-color: #266404;
     color: white;
     width: 200px;
     height: 40px;
@@ -145,6 +145,18 @@ body {
     margin-top: 10px;
     text-align: center;
     background-color: #ff0026;
+    border: 1px solid #ffffff;
+    padding: 8px;
+    border-radius: 5px;
+    width: 300px;
+  }
+
+  .success {
+    color: #ffffff;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #1c6800;
     border: 1px solid #ffffff;
     padding: 8px;
     border-radius: 5px;

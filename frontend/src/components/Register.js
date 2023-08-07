@@ -1,14 +1,12 @@
-
-import {appAuth, appDb} from "../firebaseConfig";
-import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
-import React, {useContext, useState}  from "react";
-import {useNavigate, Link} from "react-router-dom";
-import {TextField, Button} from "@mui/material";
+import { appAuth } from "../firebaseConfig";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
+import { TextField, Button } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
+import React, { useState } from "react";
 import styles from "./style.module.css";
-import AuthContext from "./AuthContext";
 
-const Login = () => {
-    const {setUserManually} = useContext(AuthContext);
+const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -22,33 +20,39 @@ const Login = () => {
       setPassword(e.target.value);
     };
 
-    const handleForgotPasswordClick = () => {
-      navigate("/forgot-password");
-    };
-  
-    const handleLogin = (e) => {
+    const handleRegister = (e) => {
       e.preventDefault();
-  
+    
       const authInstance = getAuth(appAuth); // Initialize the authentication service
-      //const dbInstance = getAuth(appDb);
-  
-      signInWithEmailAndPassword(authInstance, email, password)
+    
+      createUserWithEmailAndPassword(authInstance, email, password)
         .then((userCredential) => {
           console.log(userCredential.user);
-          setUserManually(userCredential.user);
-          navigate("/"); // Redirect to the desired route upon successful login
+    
+          // Initialize the database service
+          const db = getDatabase();
+          
+          // Create a reference to the user's document in the database
+          const userRef = ref(db, 'users/' + userCredential.user.uid);
+          
+          // Set the user's initial data
+          set(userRef, {
+            email: userCredential.user.email,
+            approved: false
+          });
+    
+          navigate("/login"); // Redirect to the login page after successful registration
         })
         .catch((error) => {
-          setError(`Invalid Username or Password.`);
+          setError(`Error creating user: ${error.message}`);
         });
-        
     };
-  
+
+    
     return (
-      <div>
-        <div className={styles.container}>
-        <h2 className={styles.title}>Digital Twin Login</h2>
-        <form className={styles.form} onSubmit={handleLogin}>
+      <div className={styles.container}>
+        <h2 className={styles.title}>Digital Twin Registration</h2>
+        <form className={styles.form} onSubmit={handleRegister}>
           <TextField
             className={styles.input}
             label="Email"
@@ -68,15 +72,14 @@ const Login = () => {
           />
           <br />
           <Button className={styles.button} variant="contained" type="submit">
-            Log In
+            Register
           </Button>
           <br />
-          <Link onClick={handleForgotPasswordClick} to="/forgot-password">Forgot Password?</Link>
+          <Link to="/login">Already have an account? Log in here</Link>
         </form>
-        </div>
         {error && <p className={styles.error}>{error}</p>}
       </div>
     );
   };
   
-  export default Login;
+  export default Register;
