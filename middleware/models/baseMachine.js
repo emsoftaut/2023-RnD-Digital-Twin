@@ -10,14 +10,14 @@ let base = {
         });
         return Values;
     },
-    setSensorValues: function(valueArray) {
-        for (const reg in valueArray)
+    setSensorValues: function(values) {
+        for (const reg in values)
         {
             for (const sensor in this.sensors)
             {
                 if (this.sensors[sensor].register == reg)
                 {
-                    this.sensors[sensor].value = valueArray[reg];
+                    this.sensors[sensor].value = values[reg];
                 }
             }
         }
@@ -28,8 +28,6 @@ let base = {
         Keys.forEach((Key) => {
             Values[this.sensors[Key].register] = this.sensors[Key].value;
         });
-        console.log("Sensors:");
-        console.log(Values);
         return Values;
     },
     toFirebaseModel: function() {

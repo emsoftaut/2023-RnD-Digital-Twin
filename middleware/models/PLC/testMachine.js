@@ -4,29 +4,35 @@ let testMachine = {
     coils: {
         beltSpeed: {
             value: true,
-            register: 2
+            register: 82,
+            valueType: "BIT"
         },
         jobsQueued: {
             value: true,
-            register: 1
+            register: 81,
+            valueType: "BYTE"
         },
         running: {
             value: true,
-            register: 80
+            register: 80,
+            valueType: "BIT"
         }
     },
     sensors: {
         jobsDone: {
             value: true,
-            register: 2
+            register: 81,
+            valueType: "BYTE"
         },
         machineStatus: {
             value: false,
-            register: 80
+            register: 80,
+            valueType: "BIT"
         },
         temperature: {
             value: true,
-            register: 1
+            register: 82,
+            valueType: "BIT"
         }        
     }
 }
