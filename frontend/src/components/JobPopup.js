@@ -87,7 +87,7 @@
 import React, { useState } from "react";
 import "./JobPopup.css";
 
-function JobPopup(props) {
+const JobPopup = (props, { title }) => {
 	const [inputValue, setInputValue] = useState("");
 	const [outputValue, setOutputValue] = useState("");
 
@@ -98,7 +98,7 @@ function JobPopup(props) {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		// Here, you can process the input value as needed.
-		// For this example, we'll just set the outputValue to the input value.
+		// set the outputValue to the input value.
 		setOutputValue(inputValue);
 	};
 
@@ -111,7 +111,7 @@ function JobPopup(props) {
 				<h1>Job Request</h1>
 				<form onSubmit={handleSubmit}>
 					<label>
-						Machine Number:
+						<h3>{title}</h3>
 						<br />
 						Number of Box Request:
 						<input type="number" value={inputValue} onChange={handleInputChange} step="1" />
@@ -133,6 +133,6 @@ function JobPopup(props) {
 	) : (
 		""
 	);
-}
+};
 
 export default JobPopup;

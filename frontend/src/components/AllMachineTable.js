@@ -111,6 +111,7 @@ const AllMachineTable = () => {
 						<TableCell align="right">Belt Speed</TableCell>
 						<TableCell align="right">Temperature</TableCell>
 						<TableCell>Start/Stop</TableCell>
+						<TableCell>Job Form</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -129,12 +130,14 @@ const AllMachineTable = () => {
 							<TableCell>
 								<MachineButton machID={machine.machineID} running={machine.coils.running} />
 							</TableCell>
+							<TableCell>
+								<button onClick={() => setButtonPopup(true)}>Job Request</button>
+								<JobPopup trigger={buttonPopup} setTrigger={setButtonPopup} title="hi"></JobPopup>
+							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
 			</Table>
-			<button onClick={() => setButtonPopup(true)}>Job Request</button>
-			<JobPopup trigger={buttonPopup} setTrigger={setButtonPopup}></JobPopup>
 		</Box>
 	);
 };
