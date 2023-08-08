@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import {TextField, Button} from "@mui/material";
+import { TextField, Button, useTheme, Box } from "@mui/material";
 import {Link} from 'react-router-dom';
 import styles from "./style.module.css";
+import Navbar from './Navbar';
 
 const AdminPanel = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ const AdminPanel = () => {
   const [registerMessage, setRegisterMessage] = useState("");
   const [error, setError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const theme = useTheme().palette;
 
   const auth = getAuth();
   const functions = getFunctions();
@@ -55,12 +58,36 @@ const AdminPanel = () => {
   }
 
   return (
-    <div>
-      <div className={styles.container}>
-      <h1 className={styles.title}>Admin Panel</h1>
-      <form className={styles.form} onSubmit={handleRegister}>
+    <Box sx={{
+      padding: 0, 
+      overflow: "hidden", 
+      backgroundColor:(theme.mode === "dark" ? theme.divider : "auto")
+      }}
+      >
+      < Navbar/>
+      <Box sx={{ 
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        height: "100vh",
+        padding: "50px 0px",
+        width: "100%"
+         }}>
+      <h1>Admin Panel</h1>
+      <h2>Add a new user below</h2>
+      <Box
+        component="form"
+        onSubmit={handleRegister}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          maxWidth: "400px"
+        }}>
         <TextField
-          className={styles.input}
+          sx={{ marginBottom: 1, width: '80%'}}
           label="Email"
           type="email"
           value={email}
@@ -69,7 +96,7 @@ const AdminPanel = () => {
         />
         <br />
         <TextField
-          className={styles.input}
+          sx={{ marginBottom: 1, width: '80%'}}
           label="Password"
           type="password"
           value={password}
@@ -78,7 +105,7 @@ const AdminPanel = () => {
         />
         <br />
         <TextField
-          className={styles.input}
+          sx={{ marginBottom: 1, width: '80%'}}
           label="Confirm Password"
           type="password"
           value={confirmPassword}
@@ -86,15 +113,16 @@ const AdminPanel = () => {
           required
         />
         <br />
-        <Button className={styles.button} variant="contained" type="submit">Add New User</Button>
+        <Button sx={{ height: 50 }} variant="contained" type="submit">Add New User</Button>
+        <br />
         <br />
         <Link to="/">Return to Home</Link> 
-      </form>
+      </Box>
 
-      {error && <p className={styles.error}>{error}</p>}
-      {registerMessage && <p className={styles.success}>{registerMessage}</p>}
-      </div>
-    </div>
+      {error && <p sx={{ color: "error.main" }}>{error}</p>}
+      {registerMessage && <p sx={{ color: "success.main" }}>{registerMessage}</p>}
+      </Box>
+    </Box>
   );
 };
 
