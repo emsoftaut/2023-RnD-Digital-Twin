@@ -132,7 +132,7 @@ const AllMachineTable = () => {
 							</TableCell>
 							<TableCell>
 								<button onClick={() => setButtonPopup(true)}>Job Request</button>
-								<JobPopup trigger={buttonPopup} setTrigger={setButtonPopup} title="hi"></JobPopup>
+								<JobPopup trigger={buttonPopup} setTrigger={setButtonPopup} title={machine.machID}></JobPopup>
 							</TableCell>
 						</TableRow>
 					))}

@@ -111,7 +111,7 @@ const JobPopup = (props, { title }) => {
 				<h1>Job Request</h1>
 				<form onSubmit={handleSubmit}>
 					<label>
-						<h3>{title}</h3>
+						Machine ID: {props.title}
 						<br />
 						Number of Box Request:
 						<input type="number" value={inputValue} onChange={handleInputChange} step="1" />
