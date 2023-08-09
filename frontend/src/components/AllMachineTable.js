@@ -69,7 +69,15 @@ const AllMachineTable = () => {
 	const [machineData, setMachineData] = useState([]);
 	const [error, setError] = useState(null);
 
-	const [buttonPopup, setButtonPopup] = useState(false);
+	const [showPopup, setShowPopup] = useState(false);
+	const [popupName, setPopupName] = useState("");
+
+	const handlePopupClose = (jQ) => {
+		if (jQ) {
+			setPopupName(jQ);
+		}
+		setShowPopup(false);
+	};
 
 	useEffect(() => {
 		const machineRef = ref(appDb, "factory_io/data");
@@ -131,13 +139,14 @@ const AllMachineTable = () => {
 								<MachineButton machID={machine.machineID} running={machine.coils.running} />
 							</TableCell>
 							<TableCell>
-								<button onClick={() => setButtonPopup(true)}>Job Request</button>
-								<JobPopup trigger={buttonPopup} setTrigger={setButtonPopup} title={machine.machID}></JobPopup>
+								<button onClick={() => setShowPopup(true)}>Job Request</button>
+								{showPopup && <JobPopup onClose={handlePopupClose} machineName={machine.machID} />}
 							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
 			</Table>
+			{popupName && <p>We are now processing your request of : {popupName} boxes</p>}
 		</Box>
 	);
 };
