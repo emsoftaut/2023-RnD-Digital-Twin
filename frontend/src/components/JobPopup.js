@@ -25,7 +25,7 @@ const JobPopup = ({ onClose, machineName }) => {
 						Machine ID: {machineName}
 						<br />
 						Number of Boxes:
-						<input type="text" value={jobsQueueNum} onChange={handlevalueChange} />
+						<input type="number" value={jobsQueueNum} onChange={handlevalueChange} />
 					</label>
 					<button type="submit">Submit</button>
 				</form>
