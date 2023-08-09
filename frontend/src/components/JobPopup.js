@@ -97,7 +97,7 @@ const JobPopup = (props, { title }) => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		// Here, you can process the input value as needed.
+		// can process the input value.
 		// set the outputValue to the input value.
 		setOutputValue(inputValue);
 	};
