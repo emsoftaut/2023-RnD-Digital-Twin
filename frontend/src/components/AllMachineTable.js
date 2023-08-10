@@ -29,28 +29,46 @@ async function toggleMachine(machID) {
 	}
 }
 
+async function setJQMachine(machID, JQ) {
+	// Get the reference to the database path where "jobsQueued" variable is stored
+	const databasePath = `factory_io/data/${machID}/coils/jobsQueued`;
+	const databaseRef = ref(appDb, databasePath);
+
+	try {
+		// Read the current status from the database
+		const snapshot = await get(databaseRef);
+		const currentStatus = snapshot.val();
+
+		// Calculate the new status (toggle the status) and update the database
+		if (JQ !== currentStatus) {
+			set(databaseRef, JQ)
+				.then(() => {
+					console.log("Machine status updated successfully!");
+				})
+				.catch((error) => {
+					console.error("Error updating machine status:", error);
+				});
+		}
+	} catch (error) {
+		console.error("Error reading machine status:", error);
+	}
+}
+
 const PopUpButton = ({ machID, showpop }) => {
-	const [popupName, setPopupName] = useState("");
 	const [showPopup, setshowPopup] = useState(showpop);
 
 	const handlePopupClose = (jQ) => {
-		setshowPopup(true);
 		if (jQ > 0) {
-			setPopupName(jQ);
-		} else {
-			setPopupName(`Ma`);
+			setJQMachine(machID, jQ);
 		}
 		setshowPopup(false);
 	};
 
 	return (
-		<div>
-			<Button variant="contained" onClick={() => setshowPopup(true)}>
-				Job Request
-				{showPopup && <JobPopup onClose={handlePopupClose} machineName={machID} />}
-			</Button>
-			<p>We are now processing your request of : {popupName} boxes</p>
-		</div>
+		<Button variant="contained" onClick={() => setshowPopup(true)}>
+			Job Request
+			{showPopup && <JobPopup onClose={handlePopupClose} machineName={machID} />}
+		</Button>
 	);
 };
 
