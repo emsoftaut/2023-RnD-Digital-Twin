@@ -29,6 +29,31 @@ async function toggleMachine(machID) {
 	}
 }
 
+const PopUpButton = ({ machID, showpop }) => {
+	const [popupName, setPopupName] = useState("");
+	const [showPopup, setshowPopup] = useState(showpop);
+
+	const handlePopupClose = (jQ) => {
+		setshowPopup(true);
+		if (jQ > 0) {
+			setPopupName(jQ);
+		} else {
+			setPopupName(`Ma`);
+		}
+		setshowPopup(false);
+	};
+
+	return (
+		<div>
+			<Button variant="contained" onClick={() => setshowPopup(true)}>
+				Job Request
+				{showPopup && <JobPopup onClose={handlePopupClose} machineName={machID} />}
+			</Button>
+			<p>We are now processing your request of : {popupName} boxes</p>
+		</div>
+	);
+};
+
 const MachineButton = ({ machID, running }) => {
 	let innerText = running ? "stop" : "start";
 	let colorText = running ? "error" : "primary";
@@ -69,15 +94,7 @@ const AllMachineTable = () => {
 	const [machineData, setMachineData] = useState([]);
 	const [error, setError] = useState(null);
 
-	const [showPopup, setShowPopup] = useState(false);
-	const [popupName, setPopupName] = useState("");
-
-	const handlePopupClose = (jQ) => {
-		if (jQ) {
-			setPopupName(jQ);
-		}
-		setShowPopup(false);
-	};
+	const [showPopup] = useState(false);
 
 	useEffect(() => {
 		const machineRef = ref(appDb, "factory_io/data");
@@ -139,14 +156,12 @@ const AllMachineTable = () => {
 								<MachineButton machID={machine.machineID} running={machine.coils.running} />
 							</TableCell>
 							<TableCell>
-								<button onClick={() => setShowPopup(true)}>Job Request</button>
-								{showPopup && <JobPopup onClose={handlePopupClose} machineName={machine.machID} />}
+								<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)}></PopUpButton>
 							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
 			</Table>
-			{popupName && <p>We are now processing your request of : {popupName} boxes</p>}
 		</Box>
 	);
 };

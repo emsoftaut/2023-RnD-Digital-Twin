@@ -3,10 +3,11 @@ import "./JobPopup.css";
 
 const JobPopup = ({ onClose, machineName }) => {
 	const [jobsQueueNum, setjobsQueue] = useState("");
+	const machineID = machineName;
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		onClose(jobsQueueNum);
+		onClose(jobsQueueNum, machineID);
 	};
 
 	const handlevalueChange = (event) => {
@@ -16,7 +17,7 @@ const JobPopup = ({ onClose, machineName }) => {
 	return (
 		<div className="popup">
 			<div className="popup-inner">
-				<button className="popup-cb" onClick={() => onClose(null)}>
+				<button className="popup-cb" onClick={() => onClose(false)}>
 					Close
 				</button>
 				<h1>Job Request</h1>
