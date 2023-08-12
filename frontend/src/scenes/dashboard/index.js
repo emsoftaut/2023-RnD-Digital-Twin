@@ -32,7 +32,7 @@ const Homepage = () => {
             <Box p="20px" height="90%" component={Paper}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Header title="All Machines" subtitle={timestamp} />
-                    <Button sx={{ height: 50 }} variant="contained" color="error">TURN OFF ALL MACHINES</Button>
+                    <Button sx={{ height: 50 }} variant="contained" color="error" disableElevation>TURN OFF ALL MACHINES</Button>
                 </Box>
                 <AllMachineTable />
             </Box>
