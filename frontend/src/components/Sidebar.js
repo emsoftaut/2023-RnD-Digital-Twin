@@ -1,83 +1,59 @@
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem, SubMenu} from "react-pro-sidebar";
-import { Box, useTheme} from "@mui/material";
+import { Box, List, Collapse, ListItemIcon, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
-    return (
-        <MenuItem
-            key={title}
-            active={selected === title}
-            onClick={() => setSelected(title)}
-            icon={icon}
-        >
-            <p>{title}</p>
-            <Link to={to} />
-        </MenuItem>
-    );
-};
+const Sidebar = ({ machines }) => {
+    console.log(typeof (machines));
+    let machineList = Object.values(machines);
+    console.log(machineList);
 
-const Sidebar = ({machines}) => {
-    const theme = useTheme();
-    const [selected, setSelected] = useState("Dashboard");
+    const [selected, setSelected] = useState("index");
+    const [open, setOpen] = useState(true);
+
+    const openSubList = () => {
+        setOpen(!open);
+    };
+
+    const handleListItemClick = (event, key) => {
+        setSelected(key);
+    }
+
+    const ListItem = ({ name, text, to, icon }) => {
+        return (
+            <ListItemButton
+                key={name}
+                selected={selected === name}
+                onClick={(event) => handleListItemClick(event, name)}
+                component={Link} to={to}
+                sx={{paddingY: "15px"}}>
+                <ListItemIcon >{icon}</ListItemIcon>
+                <ListItemText primary={text} />
+            </ListItemButton>
+        );
+    };
+
     return (
-        <Box
-            sx={{
-                "& .pro-sidebar": {
-                    background: `${theme.palette.background.default} !important`,
-                },
-                "& .pro-sidebar-inner": {
-                    background: `${theme.palette.background.default} !important`,
-                },
-                "& .pro-icon-wrapper": {
-                    backgroundColor: "transparent !important",
-                },
-                "& .pro-inner-item": {
-                    padding: "5px 35px 5px 20px !important",
-                },
-                "& .pro-menu-item .pro-arrow": {
-                    borderColor: `inherit !important`,
-                },
-                "& .pro-sidebar .pro-menu .pro-menu-item": {
-                    color:  `${theme.palette.text.primary} !important`,
-                },
-                
-                "& .pro-sidebar .pro-menu .pro-menu-item.active": {
-                    color:  `${theme.palette.success.main} !important`,
-                },
-            }}
-        >
-            <ProSidebar width="250px">
-                <Menu iconShape="square">
-                    <Box paddingLeft="5px" paddingRight="5px">
-                        <Item
-                            title="All Machines"
-                            to="/"
-                            icon={<DashboardIcon />}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-                        <SubMenu
-                            title="Machine Details"
-                            to="/"
-                            icon={<PrecisionManufacturingIcon />}
-                            selected={selected}
-                            setSelected={setSelected}
-                        >
-                            {machines && machines.map(machine => 
-                            <Item 
-                            key={machine.machineID}
-                            title={"Machine #" + machine.machineID} 
-                            to={"/"+machine.machineID} 
-                            selected={selected} 
-                            setSelected={setSelected}/>)}
-                        </SubMenu>
-                    </Box>
-                </Menu>
-            </ProSidebar>
+        <Box width="300px">
+            <List component="nav" sx={{paddingX: "5px"}}>
+                <ListItem name="index" text="All Machines" to="/" icon={<DashboardIcon />} />
+                <ListItemButton sx={{paddingY: "15px"}} onClick={openSubList}>
+                    <ListItemIcon><PrecisionManufacturingIcon /></ListItemIcon>
+                    <ListItemText primary="Machine Details" />{open ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                    <List component="nav" >
+                        {machines.map((machine) => (
+                            <ListItem name={machine.machineID} text={"Machine #" + machine.machineID} to={"/" + machine.machineID} />
+                        ))}
+                    </List>
+                </Collapse>
+
+            </List>
         </Box>
     );
 };

@@ -46,9 +46,9 @@ const Navbar = () => {
         <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2, backgroundColor: (theme.palette.mode === "dark") ? theme.palette.grey[900] : theme.palette.primary.main }}>
             <Box display="flex" height={50}>
                 {theme.palette.mode === 'dark' ? (
-                    <img src="./logo-dark.png" alt="logo" style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
+                    <img src="./logo-dark.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 ) : (
-                    <img src="./logo-light.png" alt="logo" style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
+                    <img src="./logo-light.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 )}
             </Box>
             <Box display="flex">
@@ -58,8 +58,10 @@ const Navbar = () => {
                             height: 50,
                             marginRight: "10px",
                         }}
+                            color="info"
                             variant="contained"
-                            type="submit">
+                            type="submit"
+                            disableElevation>
                             Admin Panel
                         </Button>
                     </Link>}
@@ -93,10 +95,7 @@ const Navbar = () => {
                             </Popover>
                         </>
                     )}
-                    
-
                     </PopupState>
-                   
                 )}
             </Box>
         </Box>

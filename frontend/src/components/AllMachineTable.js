@@ -37,10 +37,11 @@ const MachineButton = ({machID, running}) => {
     }
 
     return (
-        <Button 
+        <Button sx={{width: 15}}
         variant= "contained" 
         color={colorText}
         onClick={handleClick}
+        disableElevation
         >{innerText}</Button>
     )
 }
