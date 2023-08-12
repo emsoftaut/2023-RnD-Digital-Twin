@@ -2,9 +2,7 @@ import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearPr
 import { Link } from 'react-router-dom';
 import { useMachineData, toggleMachine } from '../../data/FireBaseData';
 
-
-
-const MachineButton = ({machID, running}) => {
+const MachineButton = ({ machID, running }) => {
     let innerText = running ? "stop" : "start";
     let colorText = running ? "error" : "primary"
 
@@ -13,11 +11,11 @@ const MachineButton = ({machID, running}) => {
     }
 
     return (
-        <Button sx={{width: 15}}
-        variant= "contained" 
-        color={colorText}
-        onClick={handleClick}
-        disableElevation
+        <Button sx={{ width: 15 }}
+            variant="contained"
+            color={colorText}
+            onClick={handleClick}
+            disableElevation
         >{innerText}</Button>
     )
 }
@@ -39,11 +37,9 @@ const ProgressBar = ({ done, queued }) => {
 const AllMachineTable = () => {
 
     const { machineData, error } = useMachineData();
-
-  if (error) {
-    return <p>Error: {error.message}</p>; // Adjust error display as needed
-  }
-
+    if (error) {
+        return <p>Error: {error.message}</p>; // Adjust error display as needed
+    }
     return (
         <Box sx={{ overflowX: "scroll" }}>
             <Table size="small" stickyHeader width="max-content">
@@ -62,14 +58,14 @@ const AllMachineTable = () => {
                     {machineData.map((machine) =>
                         <TableRow key={machine.machID}>
                             <TableCell>
-                                <Link to={"/"+machine.machID}>{machine.machID}</Link>
-                                </TableCell>
-                            <TableCell>{machine.sensors.machineStatus === 1 ? "Running" : "Not Running"}</TableCell>
+                                <Link to={"/" + machine.machID}>{machine.machID}</Link>
+                            </TableCell>
+                            <TableCell>{machine.coils.running === true ? "Running" : "Not Running"}</TableCell>
                             <TableCell>{machine.lastModified}</TableCell>
                             <TableCell><ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} /></TableCell>
                             <TableCell align="right">{machine.coils.beltSpeed || "0"}</TableCell>
                             <TableCell align="right">{machine.sensors.temperature || "0"}</TableCell>
-                            <TableCell><MachineButton machID={machine.machineID} running={machine.coils.running}/></TableCell>
+                            <TableCell><MachineButton machID={machine.machineID} running={machine.coils.running} /></TableCell>
                         </TableRow>)}
                 </TableBody>
             </Table>
