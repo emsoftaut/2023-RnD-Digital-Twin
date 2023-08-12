@@ -6,6 +6,7 @@ import { getFunctions, httpsCallable } from "firebase/functions";
 import { Button } from "@mui/material";
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
+import { useLocation } from "react-router-dom";
 import DropdownProfile from "./DropdownProfile";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -20,6 +21,7 @@ const Navbar = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const auth = authInstance;
     const functions = getFunctions();
+    const location = useLocation();
 
     useEffect(() => {
         // Listen for auth state changes
@@ -58,7 +60,7 @@ const Navbar = () => {
                 )}
             </Box>
             <Box display="flex">
-                {isAdmin &&
+                {isAdmin && location.pathname !== '/login' ? (
                     <Link to="/admin">
                         <Button sx={{
                             height: 50,
@@ -67,7 +69,7 @@ const Navbar = () => {
                             type="submit">
                             Admin Panel
                         </Button>
-                    </Link>}
+                    </Link>):null}
                 <IconButton
                     onClick={colorMode.toggleColorMode}
                     aria-label="Display Mode Toggle">
@@ -77,7 +79,7 @@ const Navbar = () => {
                         <DarkModeOutlinedIcon />
                     )}
                 </IconButton>
-                {isAuthenticated && (
+                {isAuthenticated && location.pathname !== '/login' ? (
                     <>
                         <IconButton aria-label="Settings">
                             <SettingsOutlinedIcon />
@@ -89,7 +91,7 @@ const Navbar = () => {
                             openProfile && (<DropdownProfile />)
                         }
                     </>
-                )}
+                ):null}
             </Box>
         </Box>
     );

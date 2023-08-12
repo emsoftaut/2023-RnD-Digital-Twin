@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme, Box, Button, Paper} from "@mui/material";
 import Header from "../../components/Header";
-import AllMachineTable from "../../components/AllMachineTable";
+import AllMachineTable from "../../components/machineComponents/AllMachineTable";
 
 const Homepage = () => {
     const theme = useTheme().palette;

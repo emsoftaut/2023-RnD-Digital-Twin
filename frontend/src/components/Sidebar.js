@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import { useMachineData } from '../data/FireBaseData';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
     return (
@@ -20,7 +21,8 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
     );
 };
 
-const Sidebar = ({machines}) => {
+const Sidebar = () => {
+    const {machineData, error } = useMachineData();
     const theme = useTheme();
     const [selected, setSelected] = useState("Dashboard");
     return (
@@ -67,7 +69,7 @@ const Sidebar = ({machines}) => {
                             selected={selected}
                             setSelected={setSelected}
                         >
-                            {machines && machines.map(machine => 
+                            {machineData.map(machine => 
                             <Item 
                             key={machine.machineID}
                             title={"Machine #" + machine.machineID} 
