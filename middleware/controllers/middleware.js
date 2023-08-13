@@ -15,7 +15,6 @@ function Setup() {
   ModbusService.SetupModbus(localConfig.IP, localConfig.port, offset);
   FirebaseService.setupFirebase(localConfig.email, localConfig.password).then(() => {
     SetupModelsAndConnections(machines);
-    return;
     SetupListeners();
   });
 }
