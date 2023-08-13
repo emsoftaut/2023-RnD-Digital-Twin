@@ -15,20 +15,26 @@ function Setup() {
   ModbusService.SetupModbus(localConfig.IP, localConfig.port, offset);
   FirebaseService.setupFirebase(localConfig.email, localConfig.password).then(() => {
     SetupModelsAndConnections(machines);
+    return;
     SetupListeners();
   });
 }
 
 function SetupModelsAndConnections(machines)
 {
+  let sensorOffset = offset;
+  let coilOffset = offset;
   let counter = 0;
   for (const machine in machines) {
-    let machineModel = getFactoryIOMachineModel(machines[machine].machineName);
+    let machineModel = getFactoryIOMachineModel(machines[machine].machineName, sensorOffset, coilOffset);
     factoryIOMachineModels.push(machineModel);
     factoryIOMachineModels[counter].machineID = machines[machine].machineID;
 
     let machineRecord = FirebaseService.getMachineRecord(machines[machine], factoryIOMachineModels[counter]);
     firebaseMachineConnections.push(machineRecord);
+
+    sensorOffset += Object.keys(machineModel.sensors).length;
+    coilOffset += Object.keys(machineModel.coils).length;
     counter++;
   }
 }

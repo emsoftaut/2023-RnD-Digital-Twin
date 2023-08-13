@@ -2,6 +2,8 @@ let base = {
     sensors: {},
     coils: {},
     lastModified: "",
+    sensorOffset: 0,
+    coilOffset: 0,
     getCoilValues: function() {
         Keys = Object.keys(this.coils);
         Values = [Keys.length];
@@ -40,6 +42,8 @@ let base = {
                 {
                     anemicModel[key][bitValue] = this[key][bitValue].value;
                 }
+            } else if (key == "sensorOffset" || key == "coilOffset") {
+                continue;
             } else if (typeof this[key] !== 'function') {
                 anemicModel[key] = this[key];
             }
@@ -54,10 +58,27 @@ let base = {
     }
 }
 
-function getMachine(machineName) {
+function getMachine(machineName, sensorOffset, coilOffset) {
     console.log("Getting " + machineName);
-    const machineModelImport = require("./PLC/" + machineName);
-    return {...base, ...machineModelImport};
+    let machineModelImport = require("./PLC/" + machineName);
+    let toReturnImport = machineModelImport();
+    console.log("offset: " + sensorOffset + ", " + coilOffset);
+    base.sensorOffset = sensorOffset;
+    base.coilOffset = coilOffset;
+    combinedMachine = {...base, ...toReturnImport};
+
+    for (const key in toReturnImport.sensors)
+    {
+        console.log(key + ": " + toReturnImport.sensors[key].register);
+        toReturnImport.sensors[key].register += sensorOffset;
+    }
+    for (const key in toReturnImport.coils)
+    {
+        toReturnImport.coils[key].register += coilOffset;
+    }
+
+    //return {combinedMachine};
+    return {...base, ...toReturnImport};
 }
 
 module.exports = getMachine;
