@@ -72,7 +72,7 @@ const PopUpButton = ({ machID, showpop }) => {
 
 	return (
 		<Button variant="contained" onClick={() => setshowPopup(true)}>
-			Job Request
+			Order
 			{showPopup && <JobPopup onClick={handlePopupClick} machineName={machID} onClose={handlePopupClose} />}
 		</Button>
 	);

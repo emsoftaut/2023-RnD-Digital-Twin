@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { TextField, Button, useTheme, Box } from "@mui/material";
 import "./JobPopup.css";
 
 const JobPopup = ({ onClick, machineName, onClose }) => {
 	const [jobsQueueNum, setjobsQueue] = useState();
+
 	const machineID = machineName;
+	const theme = useTheme().palette;
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -20,20 +23,22 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 
 	return (
 		<div className="popup">
-			<div className="popup-inner">
-				<form onSubmit={handleSubmit}>
-					<h1>Job Request</h1>
-					<label>
-						Machine ID: {machineName}
-						<br />
-						<br />
+			<div className="popup-content">
+				<form className="form" onSubmit={handleSubmit}>
+					<h1 className="popup-title">Order Form</h1>
+					<h4>Machine ID: {machineName}</h4>
+					<label className="form-label">
 						Number of Boxes:
-						<input type="number" value={jobsQueueNum} onChange={handlevalueChange} />
+						<input className="form-input" type="number" value={jobsQueueNum} onChange={handlevalueChange} />
 					</label>
-					<button type="submit">Submit</button>
-					<button className="popup-cb" onClick={handleClose}>
-						Close
-					</button>
+					<div className="form-button-group">
+						<button className="form-submit-button" type="submit">
+							Submit
+						</button>
+						<button className="close-button" onClick={handleClose}>
+							Close
+						</button>
+					</div>
 				</form>
 			</div>
 		</div>
