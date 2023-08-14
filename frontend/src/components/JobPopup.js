@@ -17,6 +17,9 @@ const JobPopup = ({ onClose, machineName }) => {
 	return (
 		<div className="popup">
 			<div className="popup-inner">
+				<button className="popup-cb" onClick={() => onClose(false)}>
+					Close
+				</button>
 				<h1>Job Request</h1>
 				<form onSubmit={handleSubmit}>
 					<label>
@@ -27,7 +30,6 @@ const JobPopup = ({ onClose, machineName }) => {
 					</label>
 					<button type="submit">Submit</button>
 				</form>
-				<button className="popup-cb">Close</button>
 			</div>
 		</div>
 	);
