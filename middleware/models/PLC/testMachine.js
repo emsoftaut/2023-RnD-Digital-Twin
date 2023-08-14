@@ -1,11 +1,10 @@
 let testMachine = {
     name: "testMachine",
-    machineID: "",
     coils: {
         beltSpeed: {
-            value: true,
+            value: 0,
             register: 2,
-            valueType: "BIT"
+            valueType: "BYTE"
         },
         jobsQueued: {
             value: 0,
@@ -24,18 +23,18 @@ let testMachine = {
             register: 1,
             valueType: "BYTE"
         },
-        jobsStarted: {
-            value: 0,
-            register: 0,
-            valueType: "BYTE"
-        },
+        //jobsStarted: {
+        //    value: 0,
+        //    register: 0,
+        //    valueType: "BIT"
+        //},
         machineStatus: {
             value: false,
-            register: 3,
+            register: 0,
             valueType: "BIT"
         },
         temperature: {
-            value: true,
+            value: false,
             register: 2,
             valueType: "BIT"
         }        

@@ -40,6 +40,7 @@ function SetupModelsAndConnections(machines)
 
 function SetupListeners()
 {
+  console.log("Setting up listeners");
   for (let i = 0; i < firebaseMachineConnections.length; i++)
   {
     FirebaseService.ListenFirebaseChanges(firebaseMachineConnections[i], factoryIOMachineModels[i], handleFirebaseChanges);
@@ -49,13 +50,13 @@ function SetupListeners()
 
 function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
   setInterval(function() {
-    let sensorCount = Object.keys(factoryIOMachine.sensors).length;
-
-    ModbusService.ReadFromModbus(sensorCount).then((pollResponse) => {
-      let newValues = checkForChanges(factoryIOMachine.getSensorValues(), toFirebaseModel(pollResponse));
+    ModbusService.ReadFromModbus(factoryIOMachine).then((pollResponse) => {
+      let newValues = checkForChanges(factoryIOMachine.getSensorValues(), toFirebaseModel(factoryIOMachine.sensorOffset, pollResponse), factoryIOMachine.sensorOffset);
       
       if (newValues)
       {
+        console.log("New values detected in Modbus");
+        console.log(newValues);
         factoryIOMachine.setSensorValues(newValues);
         firebaseModel = factoryIOMachine.toFirebaseModel();
         firebaseModel.lastModified = GetCurrentDateTime();
@@ -65,14 +66,14 @@ function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
   }, pollFrequency);
 };
 
-function checkForChanges(currentSensorValues, newSensorValues)
+function checkForChanges(currentSensorValues, newSensorValues, sensorOffset)
 {
   let sensorCount = Object.keys(currentSensorValues).length;
 
   let sensorChangeFound = false;
   for (let i = 0; i < sensorCount; i++) {
-    const currentValue = newSensorValues[i+offset];
-    if (currentValue !== currentSensorValues[i+offset]) {
+    const currentValue = newSensorValues[i+sensorOffset];
+    if (currentValue !== currentSensorValues[i+sensorOffset]) {
       sensorChangeFound = true;
       break;
     }
@@ -87,12 +88,12 @@ function checkForChanges(currentSensorValues, newSensorValues)
     
 }
 
-function toFirebaseModel(pollResponse)
+function toFirebaseModel(sensorOffset, pollResponse)
 {
   let newSensorValues = {}
   for (let i = 0; i < pollResponse.length; i++)
   {
-    newSensorValues[offset + i] = pollResponse[i];
+    newSensorValues[sensorOffset + i] = pollResponse[i];
   }
   return newSensorValues;
 }
