@@ -6,6 +6,7 @@ import { authInstance } from "../firebaseConfig";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
+import { useLocation } from "react-router-dom";
 import DropdownProfile from "./DropdownProfile";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -18,6 +19,7 @@ const Navbar = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const auth = authInstance;
     const functions = getFunctions();
+    const location = useLocation();
 
     useEffect(() => {
         // Listen for auth state changes
@@ -46,23 +48,25 @@ const Navbar = () => {
         <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2, backgroundColor: (theme.palette.mode === "dark") ? theme.palette.grey[900] : theme.palette.primary.main }}>
             <Box display="flex" height={50}>
                 {theme.palette.mode === 'dark' ? (
-                    <img src="./logo-dark.png" alt="logo" style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
+                    <img src="./logo-dark.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 ) : (
-                    <img src="./logo-light.png" alt="logo" style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
+                    <img src="./logo-light.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 )}
             </Box>
             <Box display="flex">
-                {isAdmin &&
+                {isAdmin && location.pathname !== '/login' ? (
                     <Link to="/admin">
                         <Button sx={{
                             height: 50,
                             marginRight: "10px",
                         }}
+                            color="info"
                             variant="contained"
-                            type="submit">
+                            type="submit"
+                            disableElevation>
                             Admin Panel
                         </Button>
-                    </Link>}
+                    </Link>):null}
                 <IconButton
                     onClick={colorMode.toggleColorMode}
                     aria-label="Display Mode Toggle">
@@ -72,7 +76,7 @@ const Navbar = () => {
                         <DarkModeOutlinedIcon />
                     )}
                 </IconButton>
-                {isAuthenticated && (
+                {isAuthenticated && location.pathname !== '/login' ? (
                     <PopupState variant="popover" popupId="profilePopup">
                     {(popupState) => (
                         <>
@@ -93,11 +97,8 @@ const Navbar = () => {
                             </Popover>
                         </>
                     )}
-                    
-
                     </PopupState>
-                   
-                )}
+                ):null}
             </Box>
         </Box>
     );

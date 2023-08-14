@@ -23,11 +23,15 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 
 	return (
 		<div className="popup">
-			<div className="popup-content">
-				<form className="form" onSubmit={handleSubmit}>
-					<h1 className="popup-title">Order Form</h1>
-					<h4>Machine ID: {machineName}</h4>
-					<label className="form-label">
+			<div className="popup-inner">
+			<button className="popup-cb" onClick={() => onClose(false)}>
+					Close
+				</button>
+				<h1>Job Request</h1>
+				<form onSubmit={handleSubmit}>
+					<label>
+						Machine ID: {machineName}
+						<br />
 						Number of Boxes:
 						<input className="form-input" type="number" value={jobsQueueNum} onChange={handlevalueChange} />
 					</label>
