@@ -60,14 +60,20 @@ const PopUpButton = ({ machID, showpop }) => {
 	const handlePopupClick = (jQ) => {
 		if (jQ > 0) {
 			setJQMachine(machID, parseInt(jQ));
+			console.log(jQ);
 		}
 		setshowPopup(false);
+	};
+
+	const handlePopupClose = (popup) => {
+		console.log(popup);
+		setshowPopup(popup);
 	};
 
 	return (
 		<Button variant="contained" onClick={() => setshowPopup(true)}>
 			Job Request
-			{showPopup && <JobPopup onClick={handlePopupClick} machineName={machID} />}
+			{showPopup && <JobPopup onClick={handlePopupClick} machineName={machID} onClose={handlePopupClose} />}
 		</Button>
 	);
 };
