@@ -28,5 +28,5 @@ let jadcupSimulationPLC = {
 
 
 module.exports = function createModelInstance() {
-    return JSON.parse(JSON.stringify(jadcupSimPLC));
+    return JSON.parse(JSON.stringify(jadcupSimulationPLC));
 };
