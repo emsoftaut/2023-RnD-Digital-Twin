@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
-//import {FaInfoCircle, FaSignOutAlt} from "react-icons/fa";
-import { styled } from '@mui/material/styles';
-import { Box, Grid, Paper, Avatar, Button, Typography, useTheme } from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Box, Grid, Paper, Avatar, Button, Typography, useTheme, styled } from "@mui/material";
+import { FaCog, FaInfoCircle, FaSignOutAlt } from "react-icons/fa";
 import AuthContext from "./AuthContext";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -16,49 +14,48 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const DropdownProfile = () => {
   const theme = useTheme();
-    const { handleLogout } = useContext(AuthContext);
- 
-    const handleLogoutClick = () =>  {
-        handleLogout();
-    }
-      
-        return (
-            <Box sx={{ flexGrow: 1, background: theme.palette.background.default}}>
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          paddingX={5}
-          paddingY={2}
-        >
+  const { handleLogout } = useContext(AuthContext);
 
-                <Grid item xs>
-                <Item><Avatar sx={{ width: 56, height: 56 }} alt="Jane Jung"/></Item>
-                </Grid>
-                <Grid item xs>
-                <Item><Typography variant="h6">Jane Jung</Typography></Item>
-              
-                </Grid>
-                <Grid item xs>
-                <Item><Typography variant="p">janejung@email.com</Typography></Item>
-              
-                </Grid>
-                <Grid item xs>
-                <Item><Button>Settings</Button></Item>
-              
-                </Grid>
-                <Grid item xs>
-                <Item><Button>Help</Button></Item>
-              
-                </Grid>
-                <Grid item xs>
-                <Item><Button onClick={handleLogoutClick}>Logout</Button></Item>
-            
-                </Grid>
-              </Grid>
-              </Box>
-          );
+  const handleLogoutClick = () => {
+    handleLogout();
+  }
+
+  return (
+    <Box sx={{ flexGrow: 1, background: theme.palette.background.default }}>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        paddingX={5}
+        paddingY={2}
+      >
+
+        <Grid item xs>
+          <Item><Avatar sx={{ width: 56, height: 56 }} alt="Jane Jung" /></Item>
+        </Grid>
+        <Grid item xs>
+          <Item><Typography variant="h6">Jane Jung</Typography> {/*something to represent user/admin level*/}</Item>
+
+        </Grid>
+        <Grid item xs>
+          <Item><Typography variant="p">janejung@email.com</Typography></Item>
+
+        </Grid>
+        <Grid item xs>
+          <Item><Button startIcon={<FaCog />}>Settings</Button></Item>
+        </Grid>
+        <Grid item xs>
+          <Item><Button startIcon={<FaInfoCircle />}>Help</Button></Item>
+
+        </Grid>
+        <Grid item xs>
+          <Item><Button variant="contained" onClick={handleLogoutClick} startIcon={<FaSignOutAlt />}>Logout</Button></Item>
+
+        </Grid>
+      </Grid>
+    </Box>
+  );
 }
 
 export default DropdownProfile;
