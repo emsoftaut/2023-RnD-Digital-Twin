@@ -1,5 +1,5 @@
 import { Box, Button, Paper, useTheme } from "@mui/material";
-import MachineTabs from "../../components/machineComponents/MachineTabs";
+import MachineTabs from "../../components/MachineTabs";
 import Header from "../../components/Header";
 import * as React from 'react';
 
