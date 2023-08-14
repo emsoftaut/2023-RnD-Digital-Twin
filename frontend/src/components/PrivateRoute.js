@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import Navbar from '../scenes/global/Navbar';
-import Sidebar from '../scenes/global/Sidebar';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
 
 function PrivateRoute({ user, machines }) {
   if (!user) {

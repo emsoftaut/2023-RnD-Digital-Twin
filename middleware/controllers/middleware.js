@@ -7,12 +7,12 @@ const machines = localConfig.machines;
 
 let factoryIOMachineModels = [];
 let firebaseMachineConnections = [];
-
+let offset = localConfig.offset;
 
 const pollFrequency = 1000;
 
 function Setup() {
-  ModbusService.SetupModbus(localConfig.IP, localConfig.port)
+  ModbusService.SetupModbus(localConfig.IP, localConfig.port, offset);
   FirebaseService.setupFirebase(localConfig.email, localConfig.password).then(() => {
     SetupModelsAndConnections(machines);
     SetupListeners();
@@ -42,31 +42,61 @@ function SetupListeners()
   }
 }
 
-
 function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
   setInterval(function() {
-    ModbusService.ReadFromModbus(factoryIOMachine).then((pollResponse) => {
-      if (pollResponse)
+    let sensorCount = Object.keys(factoryIOMachine.sensors).length;
+
+    ModbusService.ReadFromModbus(sensorCount).then((pollResponse) => {
+      let newValues = checkForChanges(factoryIOMachine.getSensorValues(), toFirebaseModel(pollResponse));
+      
+      if (newValues)
       {
-        pollResponse.lastModified = GetCurrentDateTime();
-        FirebaseService.updateMachine(pollResponse, firebaseMachineConnection);
+        factoryIOMachine.setSensorValues(newValues);
+        firebaseModel = factoryIOMachine.toFirebaseModel();
+        firebaseModel.lastModified = GetCurrentDateTime();
+        FirebaseService.updateMachine(firebaseModel, firebaseMachineConnection);
       }
     });
   }, pollFrequency);
 };
 
-function handleFirebaseChanges(updatedValues, FactoryIOModel, FirebaseConnection) {
+function checkForChanges(currentSensorValues, newSensorValues)
+{
+  let sensorCount = Object.keys(currentSensorValues).length;
+
+  let sensorChangeFound = false;
+  for (let i = 0; i < sensorCount; i++) {
+    const currentValue = newSensorValues[i+offset];
+    if (currentValue !== currentSensorValues[i+offset]) {
+      sensorChangeFound = true;
+      break;
+    }
+  }
+
+  if (sensorChangeFound)
+  {
+    return newSensorValues
+  } else {
+    return null;
+  }
+    
+}
+
+function toFirebaseModel(pollResponse)
+{
+  let newSensorValues = {}
+  for (let i = 0; i < pollResponse.length; i++)
+  {
+    newSensorValues[offset + i] = pollResponse[i];
+  }
+  return newSensorValues;
+}
+
+function handleFirebaseChanges(updatedValues, FactoryIOModel) {
   console.log("Firebase values changed");
   FactoryIOModel.toModbusModel(updatedValues.val());
   FactoryIOModel.lastModified = GetCurrentDateTime();
   ModbusService.WriteToModbus(FactoryIOModel);
-}
-
-function testFunction(FactoryIOModel, FirebaseConnection)
-{
-  FactoryIOModel.sensors.machineStatus = FactoryIOModel.coils.running ? "ON" : "OFF";
-  FirebaseService.updateMachine(FactoryIOModel.toFirebaseModel(), FirebaseConnection);
-  console.log("Updated machine " + FactoryIOModel.machineID + " Successfully");
 }
 
 function GetCurrentDateTime()
