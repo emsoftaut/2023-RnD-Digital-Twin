@@ -7,7 +7,8 @@ const machines = localConfig.machines;
 
 let factoryIOMachineModels = [];
 let firebaseMachineConnections = [];
-let offset = localConfig.offset;
+let offset = localConfig.initOffset;
+let machineOffset = localConfig.machineOffset;
 
 const pollFrequency = 1000;
 
@@ -32,8 +33,8 @@ function SetupModelsAndConnections(machines)
     let machineRecord = FirebaseService.getMachineRecord(machines[machine], factoryIOMachineModels[counter]);
     firebaseMachineConnections.push(machineRecord);
 
-    sensorOffset += Object.keys(machineModel.sensors).length;
-    coilOffset += Object.keys(machineModel.coils).length;
+    sensorOffset += machineOffset;
+    coilOffset += machineOffset;
     counter++;
   }
 }
