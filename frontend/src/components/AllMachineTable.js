@@ -57,9 +57,9 @@ async function setJQMachine(machID, JQ) {
 const PopUpButton = ({ machID, showpop }) => {
 	const [showPopup, setshowPopup] = useState(showpop);
 
-	const handlePopupClose = (jQ) => {
+	const handlePopupClick = (jQ) => {
 		if (jQ > 0) {
-			setJQMachine(machID, jQ);
+			setJQMachine(machID, parseInt(jQ));
 		}
 		setshowPopup(false);
 	};
@@ -67,7 +67,7 @@ const PopUpButton = ({ machID, showpop }) => {
 	return (
 		<Button variant="contained" onClick={() => setshowPopup(true)}>
 			Job Request
-			{showPopup && <JobPopup onClose={handlePopupClose} machineName={machID} />}
+			{showPopup && <JobPopup onClick={handlePopupClick} machineName={machID} />}
 		</Button>
 	);
 };
