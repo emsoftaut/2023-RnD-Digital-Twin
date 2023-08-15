@@ -1,4 +1,4 @@
-/* .popup {
+.popup {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -36,13 +36,6 @@
 	border-radius: 4px;
 }
 
-.form-button-group {
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	margin-top: 16px;
-}
-
 .form-submit-button {
 	background-color: #4caf50;
 	color: white;
@@ -59,4 +52,4 @@
 	padding: 8px 16px;
 	border-radius: 4px;
 	cursor: pointer;
-} */
+}
