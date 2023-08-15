@@ -3,17 +3,29 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import HighchartsMore from 'highcharts/highcharts-more';
 import solidGauge from 'highcharts/modules/solid-gauge';
+import { useTheme } from "@mui/material";
 
 HighchartsMore(Highcharts);
 solidGauge(Highcharts);
 
-const getChartColors = (modeObj) => {
+const getChartColors = (modeObj, theme) => {
     const modeValue = modeObj.mode;
-    console.log(modeValue);
     return modeValue === "dark" ? {
-        backgroundColor: '#121212',
+        backgroundColor: theme.divider,
+        titleColor: '#ffffff',
+        textColor: '#cccccc',
+        gridLineColor: '#333333',
+        seriesColors: ['#FF5733', '#33FF57', '#3357FF'],
+        tooltipBackgroundColor: '#222222',
+        tooltipTextColor: '#ffffff'
     } : {
         backgroundColor: '#ffffff',
+        titleColor: '#000000',
+        textColor: '#333333',
+        gridLineColor: '#e6e6e6',
+        seriesColors: ['#FF3333', '#33FF33', '#3333FF'],
+        tooltipBackgroundColor: '#ffffff',
+        tooltipTextColor: '#000000'
     };
 };
 
@@ -83,37 +95,55 @@ const gaugeOptions = {
 
 const TemperatureGauge = ({ temperature, mode }) => {
     const [chartOptions, setChartOptions] = useState({});
-  
+    const theme = useTheme().palette;
     useEffect(() => {
-        const colors = getChartColors(mode);
-        console.log('Setting colors to:', colors.backgroundColor);
-        setChartOptions((prevOptions) => ({
-          ...prevOptions,
-          chart: {
-            ...prevOptions.chart,
-            backgroundColor: colors.backgroundColor,
-          },
-          yAxis: {
-            ...prevOptions.yAxis,
-            min: 0,
-            max: 100,
-          },
-          series: [{
-            name: 'Temperature',
-            data: [temperature],
-            dataLabels: {
-              format:
-                '<div style="text-align:center">' +
-                '<span style="font-size:25px">{y}</span><br/>' +
-                '<span style="font-size:12px;opacity:0.4">°C</span>' +
-                '</div>'
+        const colors = getChartColors(mode, theme);
+        console.log('Setting colors to:', colors);
+        setChartOptions({
+            ...gaugeOptions, // Spread the existing gaugeOptions
+            chart: {
+                ...gaugeOptions.chart,
+                backgroundColor: colors.backgroundColor,
+            },
+            title: {
+                ...gaugeOptions.title,
+                style: { color: colors.titleColor }
+            },
+            yAxis: {
+                ...gaugeOptions.yAxis,
+                labels: {
+                    ...gaugeOptions.yAxis.labels,
+                    style: { color: colors.textColor }
+                },
+                title: {
+                    ...gaugeOptions.yAxis.title,
+                    style: { color: colors.textColor }
+                },
+                gridLineColor: colors.gridLineColor
             },
             tooltip: {
-              valueSuffix: ' °C'
-            }
-          }]
-        }));
-      }, [mode, temperature]);
+                ...gaugeOptions.tooltip,
+                backgroundColor: colors.tooltipBackgroundColor,
+                style: { color: colors.tooltipTextColor }
+            },
+            series: [{
+                ...gaugeOptions.series,
+                name: 'Temperature',
+                data: [temperature],
+                dataLabels: {
+                    format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">°C</span>' +
+                    '</div>',
+                    style: { color: colors.textColor }
+                },
+                tooltip: {
+                    valueSuffix: ' °C'
+                }
+            }]
+        });
+    }, [mode, temperature]);
   
     return (
       <HighchartsReact highcharts={Highcharts} options={chartOptions} />

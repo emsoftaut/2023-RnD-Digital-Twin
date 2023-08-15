@@ -2,18 +2,37 @@ import React from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import HighChartsMore from 'highcharts/highcharts-more';
-import { useTheme } from '@emotion/react';
-import { getChartColors } from '../../theme';
+import { useTheme } from "@mui/material";
 
 HighChartsMore(Highcharts);
 
-const BeltSpeedGauge = ({ beltSpeed }) => {
+const getChartColors = (modeObj, theme) => {
+  const modeValue = modeObj.mode;
+  return modeValue === "dark" ? {
+      backgroundColor: theme.divider,
+      titleColor: '#ffffff',
+      textColor: '#cccccc',
+      gridLineColor: '#333333',
+      seriesColors: ['#FF5733', '#33FF57', '#3357FF'],
+      tooltipBackgroundColor: '#222222',
+      tooltipTextColor: '#ffffff'
+  } : {
+      backgroundColor: '#ffffff',
+      titleColor: '#000000',
+      textColor: '#333333',
+      gridLineColor: '#e6e6e6',
+      seriesColors: ['#FF3333', '#33FF33', '#3333FF'],
+      tooltipBackgroundColor: '#ffffff',
+      tooltipTextColor: '#000000'
+  };
+};
 
 
-  const theme = useTheme();
-  const mode = theme.palette.mode;
+
+const BeltSpeedGauge = ({ beltSpeed, mode }) => {
 
 
+  
   const chartOptions = {
     chart: {
       type: 'gauge',
@@ -94,7 +113,7 @@ const BeltSpeedGauge = ({ beltSpeed }) => {
     }]
   };
     return (
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} key={mode} />
+      <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
     );
   };
   
