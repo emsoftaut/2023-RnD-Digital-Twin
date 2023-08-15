@@ -43,7 +43,7 @@ const gaugeOptions = {
 
     pane: {
         center: ['50%', '65%'],
-        size: '110%',
+        size: '100%',
         startAngle: -90,
         endAngle: 90,
         background: {
@@ -136,7 +136,7 @@ const TemperatureGauge = ({ temperature, mode }) => {
                     '<span style="font-size:25px">{y}</span><br/>' +
                     '<span style="font-size:12px;opacity:0.4">°C</span>' +
                     '</div>',
-                    style: { color: colors.textColor }
+                    style: { color: colors.gridLineColor }
                 },
                 tooltip: {
                     valueSuffix: ' °C'
