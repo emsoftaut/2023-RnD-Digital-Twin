@@ -39,6 +39,7 @@ PROGRAM JadcupPLC
     M1JobDoneCheck : BOOL := false;
   END_VAR
   VAR
+    M1MachineOverride AT %QX1.2 : BOOL := false;
     M2BConeyor1 AT %QX101.4 : BOOL := FALSE;
     M2BConeyor2 AT %QX101.5 : BOOL := FALSE;
     M2BConeyor3 AT %QX101.6 : BOOL := FALSE;
@@ -71,24 +72,26 @@ PROGRAM JadcupPLC
     M2JobStartedCheck : BOOL := FALSE;
     M2JobDoneCheck : BOOL := FALSE;
   END_VAR
+  VAR
+    M2MachineOverride AT %QX2.2 : BOOL := FALSE;
+  END_VAR
 
   (* Code can only exicute if factoryIO is running*)
   IF FACTORYRUNNING THEN
-    (*TEST CODE REMOVE WHEN NEW MIDDLEWARE FUNCTIONALITY IS ADDED*)
-    M2RUNNING :=TRUE;
-    M1RUNNING := TRUE;
-    IF TRUE THEN
-      M2JOBSQUEUED := M1JOBSQUEUED;
-    END_IF;
-    (*END OF TEST CODE*)
-    
-    (*Machine One*)
-    IF M1RUNNING THEN
-      (*RESET JOB STARTED AND DONE VALUES WHEN THE FACTORY I/O RESET BUTTON IS PRESSED*)
+    (*RESET JOB STARTED AND DONE VALUES WHEN THE FACTORY I/O RESET BUTTON IS PRESSED*)
       IF FACTORYRESETTING = TRUE THEN
         M1JOBSSTARTED := 0;
         M1JOBSDONE := 0;
-      END_IF;
+        M2JOBSSTARTED := 0;
+        M2JOBSDONE := 0;
+        END_IF;
+      
+    (*START OF MACHINE 1 CODE*)
+    
+    (*if the machine isnt overridden and there are jobs to do the machine is running*)
+    M1Running := AND((NOT M1MACHINEOVERRIDE), (M1JOBSQUEUED >M1JOBSDONE));
+
+    IF M1RUNNING THEN
       (*if there are jobs to do start the factory*)
       IF M1JobsQueued > M1JOBSDONE then
         M1BCONEYOR1 := TRUE;
@@ -98,66 +101,58 @@ PROGRAM JadcupPLC
         M1BCONEYORCURVE2 := true;
         M1BCONEYORINCLINE := true;
         M1BCONEYORSCALE1 :=true;
-        M1Running := true;
         M1EMITTER := TRUE;
         M1Remover := true;
-      END_IF;
-      (*when all jobs are done turn off all conveyors and the remover. then reset job trackers*)
-      IF M1JobsQueued = M1JOBSDONE then
-        M1BCONEYOR1 := false;
-        M1BCONEYOR2 := false;
-        M1BCONEYOR3 := false;
-        M1BCONEYORCURVE1 := FALSE;
-        M1BCONEYORCURVE2 := FALSE;
-        M1BCONEYORINCLINE := FALSE;
-        M1BCONEYORSCALE1 :=FALSE;
-        M1REMOVER := false;
-      END_IF;
+        END_IF;
       (*if there are still pending jobs M1Emitter is on*)
       IF M1JobsStarted < M1JobsQueued then
         M1EMITTER := true;
-      END_IF;
+        END_IF;
       (*turn off emitter when enough jobs have been started*)
       IF M1JOBSSTARTED = M1JobsQueued THEN
         M1EMITTER := FALSE;
-      END_IF;
+        END_IF;
         
       (*M1Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
-      IF M1RETROFLECTIVESENSOR1 = false then
-        IF M1JOBSTARTEDCHECK = FALSE THEN
-          M1JOBSSTARTED := M1JOBSSTARTED + 1;
-          M1JOBSTARTEDCHECK := TRUE;
+      IF (M1RETROFLECTIVESENSOR1 = false) AND (M1JOBSTARTEDCHECK = FALSE) then
+        M1JOBSSTARTED := M1JOBSSTARTED + 1;
+        M1JOBSTARTEDCHECK := TRUE;
         END_IF;
-      END_IF;
+        
       (*RETROFLECTIVESENSOR2 tracts boxes leaving the machine into the remover*)
-      IF M1RETROFLECTIVESENSOR2 = false THEN
-        IF M1JOBDONECHECK = FALSE THEN
-          M1JOBSDONE := M1JOBSDONE +1;
-          M1JOBDONECHECK := TRUE;
+      IF (M1RETROFLECTIVESENSOR2 = false) AND (M1JOBDONECHECK = FALSE) THEN
+        M1JOBSDONE := M1JOBSDONE +1;
+        M1JOBDONECHECK := TRUE;
         END_IF;
-      END_IF;
+        
       (*RESET JOBS STARTED CHECK IF SENSOR ISNT TRIGGERED*)
       IF M1RETROFLECTIVESENSOR1 = TRUE then
         M1JOBSTARTEDCHECK :=FALSE;
-      END_IF;
+        END_IF;
       (*RESET JOBS DONE CHECK IF SENSOR ISNT TRIGGERED*)
       IF M1RETROFLECTIVESENSOR2 = TRUE then
         M1JOBDONECHECK := FALSE;
+        END_IF;
+    ELSE
+      M1BCONEYOR1 := false;
+      M1BCONEYOR2 := false;
+      M1BCONEYOR3 := false;
+      M1BCONEYORCURVE1 := FALSE;
+      M1BCONEYORCURVE2 := FALSE;
+      M1BCONEYORINCLINE := FALSE;
+      M1BCONEYORSCALE1 :=FALSE;
+      M1REMOVER := false;
+      M1EMITTER :=FALSE;
       END_IF;
-      (*END OF MACHINE 1 CODE*)
-    END_IF;
-
-    (*Machine 2*)
-    (* Code can only exicute if factoryIO is running*)
+    
+    (*END OF MACHINE 1 CODE  *)
+    (*-----------------------*)
+    (*START OF MACHINE 2 CODE*)
+    
+    (*if the machine isnt overriddin and there are jobs to do the machine is running*)
+    M2Running := AND((NOT M2MACHINEOVERRIDE), (M2JOBSQUEUED >M2JOBSDONE)); 
+    
     IF M2RUNNING THEN
-      (*RESET JOB STARTED AND DONE VALUES WHEN THE FACTORY I/O RESET BUTTON IS PRESSED*)
-      IF FACTORYRESETTING = TRUE THEN
-        M2JOBSSTARTED := 0;
-        M2JOBSDONE := 0;
-        M2JOBSSTARTED := 0;
-        M2JOBSDONE := 0;
-      END_IF;
-
       (*if there are jobs to do start the factory*)
       IF M2JobsQueued > M2JOBSDONE then
         M2BCONEYOR1 := TRUE;
@@ -167,60 +162,37 @@ PROGRAM JadcupPLC
         M2BCONEYORCURVE2 := true;
         M2BCONEYORINCLINE := true;
         M2BCONEYORSCALE1 :=true;
-        M2Running := true;
         M2EMITTER := TRUE;
         M2REMOVER  :=TRUE;
-      END_IF;
-
-      (*when all jobs are done turn off all conveyors and the remover. then reset job trackers*)
-      IF M2JobsQueued = M2JOBSDONE then
-        M2BCONEYOR1 := false;
-        M2BCONEYOR2 := false;
-        M2BCONEYOR3 := false;
-        M2BCONEYORCURVE1 := FALSE;
-        M2BCONEYORCURVE2 := FALSE;
-        M2BCONEYORINCLINE := FALSE;
-        M2BCONEYORSCALE1 :=FALSE;
-        M2REMOVER := false;
-      END_IF;
-
-      (*if there are still pending jobs M2Emitter is on*)
+        END_IF;
+      (*if there are still pending jobs M2Emitter is on otherwise turn off*)
       IF M2JobsStarted < M2JobsQueued then
         M2EMITTER := true;
-      END_IF;
-
-      (*turn off emitter when enough jobs have been started*)
-      IF M2JOBSSTARTED = M2JobsQueued THEN
+        ELSE
         M2EMITTER := FALSE;
-      END_IF;
+        END_IF;
 
       (*M2Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
-      IF M2RETROFLECTIVESENSOR1 = FALSE THEN
-        IF M2JOBSTARTEDCHECK = FALSE THEN
-          M2JOBSSTARTED := M2JOBSSTARTED + 1;
-          M2JOBSTARTEDCHECK := TRUE;
+      IF (M2RETROFLECTIVESENSOR1 = FALSE) AND (M2JOBSTARTEDCHECK = FALSE) THEN
+        M2JOBSSTARTED := M2JOBSSTARTED + 1;
         END_IF;
-      END_IF;
-    
       (*RETROFLECTIVESENSOR2 tracts boxes leaving the machine into the remover*)
-      IF M2RETROFLECTIVESENSOR2 = FALSE THEN
-        IF M2JOBDONECHECK = FALSE THEN
-          M2JOBSDONE := M2JOBSDONE +1;
-          M2JOBDONECHECK := TRUE;
-        END_IF;
+      IF (M2RETROFLECTIVESENSOR2 = FALSE) AND (M2JOBDONECHECK = FALSE) THEN
+        M2JOBSDONE := M2JOBSDONE +1;
+        END_IF; 
+    ELSE
+      M2BCONEYOR1 := false;
+      M2BCONEYOR2 := false;
+      M2BCONEYOR3 := false;
+      M2BCONEYORCURVE1 := FALSE;
+      M2BCONEYORCURVE2 := FALSE;
+      M2BCONEYORINCLINE := FALSE;
+      M2BCONEYORSCALE1 :=FALSE;
+      M2REMOVER := false;
+      M2EMITTER := FALSE;
       END_IF;
-      (*RESET JOBSSTARTEDCHECK WHEN THE SENSOR IS NOT TRIGGERED*)
-      IF M2RETROFLECTIVESENSOR1 = TRUE then
-        M2JOBSTARTEDCHECK := FALSE;
-      END_IF;
-      (*RESET JOBSDONECHECK WHEN THE SENSOR IS NOT TRIGGERED*)
-      IF M2RETROFLECTIVESENSOR2 = TRUE then
-        M2JOBDONECHECK := FALSE;
-      END_IF;
-      
-    END_IF;
     (*END OF MACHINE 2 CODE*)
-  END_IF;
+    END_IF;
 END_PROGRAM
 
 
