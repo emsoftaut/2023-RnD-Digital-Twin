@@ -65,10 +65,10 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 							marginTop: "16px",
 						}}
 					>
-						<Button className={styles.button} variant="contained" type="submit">
+						<Button className={styles.popbutton} variant="contained" type="submit">
 							SUBMIT
 						</Button>
-						<button className={styles.popclosebutton} variant="contained" onClick={handleClose}>
+						<button className={styles.popbutton} variant="contained" onClick={handleClose}>
 							CLOSE
 						</button>
 					</Box>

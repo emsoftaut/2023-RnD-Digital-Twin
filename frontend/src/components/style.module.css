@@ -163,7 +163,7 @@ body {
 	width: 300px;
 }
 
-.popclosebutton {
+.popbutton {
 	background-color: #266404;
 	color: white;
 	width: 200px;
@@ -173,4 +173,7 @@ body {
 	font-size: 16px;
 	cursor: pointer;
 	transition: background-color 0.3s;
+}
+.popbutton:hover {
+	background-color: #45a8d8;
 }
