@@ -44,12 +44,12 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 					borderRadius: "8px",
 					boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.3)",
 					width: "500px",
-					color: theme.palette.text.secondary,
+					color: theme.palette.text.primary,
 					background: theme.palette.background.default,
 				}}
 			>
 				<form onSubmit={handleSubmit}>
-					<h1 sx={{ marginBottom: 16 }}>Order Form</h1>
+					<h1 sx={{ marginBottom: 16 }}>Jobs Request Form</h1>
 					<h3>Machine ID: {machineID}</h3>
 					<label sx={{ display: "block", marginButtom: "8px" }}>
 						Number of Boxes:
