@@ -24,7 +24,7 @@ const AdminPanel = () => {
     checkAdmin().then((result) => {
       setIsAdmin(result.data.isAdmin);
     });
-  },);
+  },[]);
 
   const handleRegister = (e) => {
     e.preventDefault();

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Box, useTheme } from "@mui/material";
 import styles from "./style.module.css";
-//import "./JobPopup.css";
 
 const JobPopup = ({ onClick, machineName, onClose }) => {
 	const [jobsQueueNum, setjobsQueue] = useState();
@@ -75,27 +74,6 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 				</form>
 			</Box>
 		</Box>
-
-		// <div className="popup">
-		// 	<div className="popup-content">
-		// 		<form className="form" onSubmit={handleSubmit}>
-		// 			<h1 className="popup-title">Order Form</h1>
-		// 			<h4>Machine ID: {machineID}</h4>
-		// 			<label className="form-label">
-		// 				Number of Boxes:
-		// 				<input className="form-input" type="number" value={jobsQueueNum} onChange={handlevalueChange} />
-		// 			</label>
-		// 			<div className="form-button-group">
-		// 				<button className="form-submit-button" type="submit">
-		// 					Submit
-		// 				</button>
-		// 				<button className="close-button" onClick={handleClose}>
-		// 					Close
-		// 				</button>
-		// 			</div>
-		// 		</form>
-		// 	</div>
-		// </div>
 	);
 };
 
