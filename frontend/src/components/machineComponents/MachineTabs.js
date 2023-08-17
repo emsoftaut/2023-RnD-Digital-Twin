@@ -6,7 +6,7 @@ import MachineCharts from "./MachineCharts";
 const MachineTabs = ({ machineID, mode }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [value, setValue] = React.useState('summary');
+    const [value, setValue] = React.useState('visualize');
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -23,13 +23,13 @@ const MachineTabs = ({ machineID, mode }) => {
                     }
                 }}
             >
+                <Tab value="visualize" label="Real Time Analytics" />
                 <Tab value="summary" label="Summary" />
                 <Tab value="temp" label="Temperature Settings" />
                 <Tab value="detect" label="Detection Settings" />
                 <Tab value="server" label="Server Settings" />
                 <Tab value="angle" label="Angle Settings" />
                 <Tab value="inout" label="Input/Output" />
-                <Tab value="visualize" label="Real Time Analytics" />
             </Tabs>
             {value === "visualize" && (
                 <Box>
