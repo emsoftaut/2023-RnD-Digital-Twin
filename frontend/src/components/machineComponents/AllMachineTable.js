@@ -3,10 +3,10 @@ import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearPr
 import { appDb } from "../../firebaseConfig";
 import { ref, get, set, onValue, off } from "firebase/database";
 import { Link } from "react-router-dom";
-import JobPopup from "../JobPopup"
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
+import JobPopup from "../JobPopup";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
 import { grey } from "@mui/material/colors";
 
 async function toggleMachine(machID) {
@@ -82,19 +82,14 @@ const PopUpButton = ({ machID, showpop }) => {
 
 const MachineButton = (props) => {
 	let { machID, running, method, jQ } = props;
-	let innerIcon = method === "toggle" ? (running ? <PauseIcon /> : <PlayArrowIcon/>) : <StopIcon/>;
+	let innerIcon = method === "toggle" ? running ? <PauseIcon /> : <PlayArrowIcon /> : <StopIcon />;
 	let innerText = method === "toggle" ? (running ? "Pause" : "Resume") : "Stop";
 	const handleClick = () => {
-		method === "toggle" ? toggleMachine(machID) : console.log('cancelFunction');
+		method === "toggle" ? toggleMachine(machID) : console.log("cancelFunction");
 	};
 
 	return (
-		<Button startIcon={innerIcon} 
-		disableElevation 
-		variant="contained" 
-		color="grey" 
-		onClick={handleClick}
-		disabled={(jQ > 0) ? false: true}>
+		<Button startIcon={innerIcon} disableElevation variant="contained" color="grey" onClick={handleClick} disabled={jQ > 0 ? false : true}>
 			<Typography variant="p">{innerText}</Typography>
 		</Button>
 	);
@@ -183,15 +178,13 @@ const AllMachineTable = () => {
 							<TableCell align="right">{machine.coils.beltSpeed || "0"}</TableCell>
 							<TableCell align="right">{machine.sensors.temperature || "0"}</TableCell>
 							<TableCell>
-							<Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-								<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)}></PopUpButton>
-								<MachineButton machID={machine.machineID} running={machine.coils.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"}/>
-								<MachineButton machID={machine.machineID} running={machine.coils.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"}/>
+								<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)}></PopUpButton>
+									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
+									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
 								</Box>
 							</TableCell>
-							<TableCell>
-								<Button>Cancel</Button>
-							</TableCell>
+							<TableCell></TableCell>
 						</TableRow>
 					))}
 				</TableBody>
