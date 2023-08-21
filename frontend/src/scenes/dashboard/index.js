@@ -4,7 +4,11 @@ import Header from "../../components/Header";
 import AllMachineTable from "../../components/machineComponents/AllMachineTable";
 import { useMachineData, toggleMachine } from "../../data/FireBaseData"
 
-const ToggleAllButton = () => {
+async function cancelAll() {
+	console.log('cancellAll'); //replace with function that asks all machine's jQ to 0 in firebaseData
+}
+
+const CancelAllButton = () => {
     const { machineData, error } = useMachineData();
     if (error) {
         return <p>Error: {error.message}</p>; // Adjust error display as needed
@@ -13,6 +17,8 @@ const ToggleAllButton = () => {
     
     const handleClick = () => {
         machineData.filter((m) => m.coils.running === true).map(filteredM => toggleMachine(filteredM.machineID));
+        machineData.map(m => m.coils.jobsQueued = 0); //replace w cancelJobs function
+        cancelAll();
     }
 
     return(
@@ -56,7 +62,7 @@ const Homepage = () => {
             <Box p="20px" height="90%" component={Paper}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Header title="All Machines" subtitle={timestamp} />
-                    <ToggleAllButton/>
+                    <CancelAllButton/>
                 </Box>
                 <AllMachineTable />
             </Box>
