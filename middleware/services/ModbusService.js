@@ -30,32 +30,33 @@ function WriteToModbus(FactoryIOMachineModel)
   let coils = FactoryIOMachineModel.coils;
 
     try {
-    for (let coil of Object.values(coils))
-    {
-      if (coil.valueType == "BYTE")
+      console.log("Writing to Modbus with machineID: " + FactoryIOMachineModel.machineID);
+      for (let coil of Object.values(coils))
       {
-        console.log("Writing to register");
-        console.log(coil.register);
-        console.log(coil.value);        
-        client.writeSingleRegister(coil.register, coil.value);
+        if (coil.valueType == "BYTE")
+        {
+          client.writeSingleRegister(coil.register, coil.value);
+        }
+        else {
+          client.writeSingleCoil(coil.register, coil.value);
+        }
       }
-      else {
-        client.writeSingleCoil(coil.register, coil.value);
-      }
-    }
-  }
-    catch (error) {
+      console.log("done writing");
+    } catch (error) {
       console.log("Error occurred Writing Coils");
       HandleModbusError(error);
     }
   }
   
-async function ReadFromModbus(sensorCount)
+async function ReadFromModbus(machineModel)
 {
   try {
-    const modbusDisResp = await client.readDiscreteInputs(offset, sensorCount);
+    const sensorCount = Object.keys(machineModel.sensors).length;
+    const sensorOffset = machineModel.sensorOffset;
+
+    const modbusDisResp = await client.readDiscreteInputs(sensorOffset, sensorCount);
     const modbusDiscrete = modbusDisResp.response.body.valuesAsArray;
-    const modbusRegResp = await client.readInputRegisters(offset, sensorCount);
+    const modbusRegResp = await client.readInputRegisters(sensorOffset, sensorCount);
     const modbusRegisters = modbusRegResp.response.body.valuesAsArray;
 
     let modbusResponse = modbusDiscrete;
@@ -67,11 +68,6 @@ async function ReadFromModbus(sensorCount)
       }
     }
 
-    //console.log(modbusDiscrete);
-    //console.log(modbusRegisters);
-    //console.log(modbusResponse);
-
-    //client.readInputRegisters
     return modbusResponse;
   } catch (error) {
     console.log("Error occurred reading from sensors");
