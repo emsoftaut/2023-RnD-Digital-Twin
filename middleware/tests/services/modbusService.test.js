@@ -8,8 +8,6 @@ const {
 const net = require('net');
 const Modbus = require('jsmodbus');
 
-console.log(Modbus);
-
 describe('Modbus Service', () => {
 
   beforeEach(() => {
