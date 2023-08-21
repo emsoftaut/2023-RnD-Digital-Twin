@@ -87,7 +87,7 @@ const MachineButton = (props) => {
 	let innerIcon = method === "toggle" ? (running ? <PauseIcon /> : <PlayArrowIcon/>) : <StopIcon/>;
 	let innerText = method === "toggle" ? (running ? "Pause" : "Resume") : "Stop";
 	const handleClick = () => {
-		method = "toggle" ? toggleMachine(machID) : console.log('cancelFunction');
+		method === "toggle" ? toggleMachine(machID) : console.log('cancelFunction');
 	};
 
 	return (
