@@ -3,19 +3,16 @@ import { Box, useTheme, Tab, Tabs } from "@mui/material";
 import { tokens } from "../../theme";
 import MachineCharts from "./MachineCharts";
 
-const MachineTabs = () => {
+const MachineTabs = ({ machineID, mode }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [value, setValue] = React.useState('summary');
+    const [value, setValue] = React.useState('visualize');
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const jobsDone = 50;
-    const jobsQueued = 100;
-
     return (
-        <Box sx={{ width: '100%',  overflowX: "scroll" }} justifyContent={"space-between"}>
+        <Box sx={{ width: '100%', overflowX: "scroll" }} justifyContent={"space-between"}>
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -26,21 +23,21 @@ const MachineTabs = () => {
                     }
                 }}
             >
-                <Tab value="summary" label="Summary"/>
+                <Tab value="visualize" label="Real Time Analytics" />
+                <Tab value="summary" label="Summary" />
                 <Tab value="temp" label="Temperature Settings" />
                 <Tab value="detect" label="Detection Settings" />
                 <Tab value="server" label="Server Settings" />
                 <Tab value="angle" label="Angle Settings" />
                 <Tab value="inout" label="Input/Output" />
-                <Tab value="visualize" label="Real Time Analytics" />
             </Tabs>
             {value === "visualize" && (
-        <Box>
-                {value === "visualize" && (
-                <MachineCharts jobsDone={jobsDone} jobsQueued={jobsQueued} />
-      )}
-        </Box>
-      )}
+                <Box>
+                    {value === "visualize" && (
+                        <MachineCharts machineID={machineID} mode={mode}/>
+                    )}
+                </Box>
+            )}
         </Box>
     );
 }
