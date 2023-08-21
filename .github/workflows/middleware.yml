@@ -29,4 +29,5 @@ jobs:
 
 # middleware tests
     - name: Run middleware tests
+      run: npm ci
       run: npm run test
