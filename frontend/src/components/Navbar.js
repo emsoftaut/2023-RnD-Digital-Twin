@@ -23,7 +23,8 @@ const Navbar = () => {
 
     useEffect(() => {
         // Listen for auth state changes
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        console.log(onAuthStateChanged);
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 setIsAuthenticated(true);
                 // User is signed in, check if admin
@@ -37,12 +38,7 @@ const Navbar = () => {
                 setIsAuthenticated(false);
             }
         });
-
-        // Cleanup
-        return () => unsubscribe();
     }, [auth, functions]);
-
-
 
     return (
         <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2, backgroundColor: (theme.palette.mode === "dark") ? theme.palette.grey[900] : theme.palette.primary.main }}>
@@ -55,15 +51,18 @@ const Navbar = () => {
             </Box>
             <Box display="flex">
                 {isAdmin && location.pathname !== '/login' ? (
-                    <Link to="/admin">
+                    <Link to="/admin" data-testid="admin-panel-button">
                         <Button sx={{
                             height: 50,
                             marginRight: "10px",
                         }}
+                            label="Admin Panel"
                             color="info"
                             variant="contained"
                             type="submit"
-                            disableElevation>
+                            aria-label="Admin Panel"
+                            disableElevation
+                            >
                             Admin Panel
                         </Button>
                     </Link>):null}

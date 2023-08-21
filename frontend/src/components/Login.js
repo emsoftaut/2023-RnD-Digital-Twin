@@ -75,6 +75,7 @@ const Login = () => {
             }}>
             <TextField
               sx={{ marginBottom: 1, width: '80%' }}
+              id="email"
               label="Email"
               type="email"
               value={email}
@@ -84,6 +85,7 @@ const Login = () => {
             <br/>
             <TextField
               sx={{ marginBottom: 1, width: '80%' }}
+              id="password"
               label="Password"
               type="password"
               value={password}
@@ -91,7 +93,7 @@ const Login = () => {
               required
             />
             <br />
-            <Button sx={{ height: 50 }} variant="contained" type="submit">Log In</Button>
+            <Button sx={{ height: 50 }} variant="contained" type="submit" aria-label="Log In">Log In</Button>
             <br />
             <Link onClick={() => navigate("/forgot-password")} to="/forgot-password">Forgot Password?</Link>
           </Box>
