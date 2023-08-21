@@ -60,13 +60,11 @@ const PopUpButton = ({ machID, showpop }) => {
 	const handlePopupClick = (jQ) => {
 		if (jQ > 0) {
 			setJQMachine(machID, parseInt(jQ));
-			console.log(jQ);
 		}
 		setshowPopup(false);
 	};
 
 	const handlePopupClose = (popup) => {
-		console.log(popup);
 		setshowPopup(popup);
 	};
 
@@ -181,6 +179,9 @@ const AllMachineTable = () => {
 							</TableCell>
 							<TableCell>
 								<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)}></PopUpButton>
+							</TableCell>
+							<TableCell>
+								<Button>Cancel</Button>
 							</TableCell>
 						</TableRow>
 					))}
