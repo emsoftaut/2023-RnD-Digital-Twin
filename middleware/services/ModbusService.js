@@ -4,7 +4,6 @@ const socket = new net.Socket();
 const client = new Modbus.client.TCP(socket);
 let offset;
 
-
 console.log("Connecting to modbus");
 
 function SetupModbus(ip, IOport, inputOffset)
@@ -34,9 +33,6 @@ function WriteToModbus(FactoryIOMachineModel)
     {
       if (coil.valueType == "BYTE")
       {
-        console.log("Writing to register");
-        console.log(coil.register);
-        console.log(coil.value);        
         client.writeSingleRegister(coil.register, coil.value);
       }
       else {
@@ -67,11 +63,6 @@ async function ReadFromModbus(sensorCount)
       }
     }
 
-    //console.log(modbusDiscrete);
-    //console.log(modbusRegisters);
-    //console.log(modbusResponse);
-
-    //client.readInputRegisters
     return modbusResponse;
   } catch (error) {
     console.log("Error occurred reading from sensors");
