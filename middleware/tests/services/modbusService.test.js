@@ -1,12 +1,17 @@
 jest.mock('net');
 jest.mock('jsmodbus');
+jest.mock('baseMachine');
 
 const { 
     SetupModbus,
-    ReadFromModbus} 
+    ReadFromModbus,
+    WriteToModbus}
         = require('../../services/ModbusService');
 const net = require('net');
 const Modbus = require('jsmodbus');
+const getMachine = require('baseMachine');
+const machineMock = getMachine("");
+const clientMock = Modbus.client.TCP();
 
 describe('Modbus Service', () => {
 
@@ -67,9 +72,23 @@ describe('Modbus Service', () => {
     expect(console.log.mock.calls[1][0]).toBe("Connection closed.");
   });
 
-  it('should handle "readFromModbus" correctly', async () => {
-    const result = await ReadFromModbus(4);
+  it('should receive the correct "readFromModbus" result', async () => {
+    const expectedResult = [3, 1, 3, 1];
+    const actualResult = await ReadFromModbus(4);
 
-    expect(result).toEqual([3, 1, 3, 1]);
+    expect(actualResult).toEqual(expectedResult);
   });
+
+  it('should handle "writeToModbus" with correct calls to coils and registers', async () => {
+    // Input = machineMock
+    WriteToModbus(machineMock);
+
+    // Coils and Registers are defined in models/machineMock
+    expect(clientMock.writeSingleCoil).toHaveBeenCalledWith(0, true);
+    expect(clientMock.writeSingleRegister.mock.calls[0][0]).toBe(1, 10);
+    expect(clientMock.writeSingleRegister.mock.calls[1][0]).toBe(2, 5);
+  });
+
+
+
 });

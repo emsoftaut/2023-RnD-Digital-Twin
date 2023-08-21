@@ -12,8 +12,11 @@ const clientMock = {
                 valuesAsArray: [3, 0, 3, 0]
             }
         }
-    })
+    }),
+    writeSingleRegister: jest.fn(),
+    writeSingleCoil: jest.fn()
 }
+
 
 module.exports = {
     client: {

@@ -31,5 +31,5 @@ jobs:
     - name: install middleware dependencies
       run: npm ci
     
-    - name: Run middleware tests
+    - name: Run middleware jest tests
       run: npm run test
