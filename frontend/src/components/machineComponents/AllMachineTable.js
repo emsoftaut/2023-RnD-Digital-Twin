@@ -41,7 +41,6 @@ export const MachineButton = (props) => {
 
 	return (
 		<Button 
-		id= "machineButton"
 		startIcon={innerIcon} 
 		disableElevation 
 		variant="contained" 
