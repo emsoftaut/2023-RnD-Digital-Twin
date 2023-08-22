@@ -106,7 +106,7 @@ PROGRAM JadcupPLC
         M1Remover := true;
         END_IF;
       (*if there are still pending jobs M1Emitter is on*)
-      IF M1JobsStarted < M1JobsQueued then
+      IF M1JOBSQUEUED > M1JOBSSTARTED then
         M1EMITTER := true;
         END_IF;
       (*turn off emitter when enough jobs have been started*)
@@ -170,7 +170,7 @@ PROGRAM JadcupPLC
         M2REMOVER  :=TRUE;
         END_IF;
       (*if there are still pending jobs M2Emitter is on otherwise turn off*)
-      IF M2JobsStarted > M2JobsQueued then
+      IF M2JOBSQUEUED > M2JOBSSTARTED then
         M2EMITTER := true;
         ELSE
         M2EMITTER := FALSE;
@@ -184,6 +184,14 @@ PROGRAM JadcupPLC
       IF (M2RETROFLECTIVESENSOR2 = FALSE) AND (M2JOBDONECHECK = FALSE) THEN
         M2JOBSDONE := M2JOBSDONE +1;
         END_IF; 
+      (*RESET JOBS STARTED CHECK IF SENSOR ISNT TRIGGERED*)
+      IF M2RETROFLECTIVESENSOR1 = TRUE then
+        M2JOBSTARTEDCHECK :=FALSE;
+        END_IF;
+      (*RESET JOBS DONE CHECK IF SENSOR ISNT TRIGGERED*)
+      IF M2RETROFLECTIVESENSOR2 = TRUE then
+        M2JOBDONECHECK := FALSE;
+        END_IF;
     ELSE
       M2BCONEYOR1 := false;
       M2BCONEYOR2 := false;
