@@ -32,14 +32,14 @@ PROGRAM JadcupPLC
     M1JobsQueued AT %QW081 : INT := 0;
     M1JobsStarted AT %IW080 : INT := 0;
     M1JobsDone AT %IW081 : INT := 0;
-    M1Running AT %QX01.1 : BOOL := false;
+    M1Running AT %IX010.2 : BOOL := false;
   END_VAR
   VAR
     M1JobStartedCheck : BOOL := false;
     M1JobDoneCheck : BOOL := false;
   END_VAR
   VAR
-    M1MachineOverride AT %QX1.2 : BOOL := false;
+    M1MachineOverride AT %QX10.2 : BOOL := false;
     M2BConeyor1 AT %QX101.4 : BOOL := FALSE;
     M2BConeyor2 AT %QX101.5 : BOOL := FALSE;
     M2BConeyor3 AT %QX101.6 : BOOL := FALSE;
@@ -66,14 +66,15 @@ PROGRAM JadcupPLC
     M2JobsQueued AT %QW091 : INT := 0;
     M2JobsStarted AT %IW090 : INT := 0;
     M2JobsDone AT %IW091 : INT := 0;
-    M2Running AT %QX02.1 : BOOL := FALSE;
+    M2Running AT %IX11.4 : BOOL := FALSE;
   END_VAR
   VAR
     M2JobStartedCheck : BOOL := FALSE;
     M2JobDoneCheck : BOOL := FALSE;
+    M2Cos1 : REAL := 0.0;
   END_VAR
   VAR
-    M2MachineOverride AT %QX2.2 : BOOL := FALSE;
+    M2MachineOverride AT %QX11.4 : BOOL := FALSE;
   END_VAR
 
   (* Code can only exicute if factoryIO is running*)
@@ -144,7 +145,10 @@ PROGRAM JadcupPLC
       M1REMOVER := false;
       M1EMITTER :=FALSE;
       END_IF;
-    
+      M1TANKFILLVALVE1 := REAL_TO_INT((-(COS(INT_TO_REAL(M1LIGHTARRAY1)))/2.0)*1000.0);
+      M1TANKDRAINVALVE1 := REAL_TO_INT(((SIN(INT_TO_REAL(M1LIGHTARRAY1)))/2.0)*1000.0);
+      M1TANKFILLVALVE2 := REAL_TO_INT((-(COS(INT_TO_REAL(M1LIGHTARRAY2)))/2.0)*1000.0);
+      M1TANKDRAINVALVE2 := REAL_TO_INT(((SIN(INT_TO_REAL(M1LIGHTARRAY2)))/2.0)*1000.0);
     (*END OF MACHINE 1 CODE  *)
     (*-----------------------*)
     (*START OF MACHINE 2 CODE*)
@@ -166,7 +170,7 @@ PROGRAM JadcupPLC
         M2REMOVER  :=TRUE;
         END_IF;
       (*if there are still pending jobs M2Emitter is on otherwise turn off*)
-      IF M2JobsStarted < M2JobsQueued then
+      IF M2JobsStarted > M2JobsQueued then
         M2EMITTER := true;
         ELSE
         M2EMITTER := FALSE;
@@ -190,7 +194,13 @@ PROGRAM JadcupPLC
       M2BCONEYORSCALE1 :=FALSE;
       M2REMOVER := false;
       M2EMITTER := FALSE;
+      
       END_IF;
+      
+      M2TANKFILLVALVE1 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
+      M2TANKDRAINVALVE1 := REAL_TO_INT(((SIN(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
+      M2TANKFILLVALVE2 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)*1000.0);
+      M2TANKDRAINVALVE2 := REAL_TO_INT(((SIN(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)*1000.0);
     (*END OF MACHINE 2 CODE*)
     END_IF;
 END_PROGRAM
