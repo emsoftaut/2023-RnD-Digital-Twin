@@ -57,7 +57,7 @@ const Homepage = () => {
             overflow: "hidden",
             overflowY: "scroll",
         }} >
-            <Box p="20px" height="90%" component={Paper}>
+            <Box p="20px" height="90%" component={Paper} sx={{backgroundImage: "none"}}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Header title="All Machines" subtitle={timestamp} />
                     <CancelAllButton/>
