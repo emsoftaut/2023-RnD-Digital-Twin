@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { Button, useTheme, Box } from "@mui/material";
+import { useTheme, Box } from "@mui/material";
 import { Link } from 'react-router-dom';
 import { createUser, getUsers } from '../../data/FireBaseData';
 import styles from "../style.module.css";
@@ -25,6 +25,13 @@ const AdminPanel = () => {
   const auth = getAuth();
   const functions = getFunctions();
   const toggleUserStatus = httpsCallable(functions, 'toggleUserStatus');
+  const createUserClient = httpsCallable(functions, 'createUser');
+
+  const checkAdminStatus = async () => {
+    const checkAdmin = httpsCallable(functions, 'checkAdmin');
+    const result = await checkAdmin();
+    setIsAdmin(result.data.isAdmin);
+  };
 
   const toggleUserStatusClient = async (user) => {
     try {
@@ -78,29 +85,33 @@ const AdminPanel = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-
+  
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // User registered successfully.
-        console.log("User registered: ", userCredential.user);
+  
+    createUserClient({ email, password })
+    .then((result) => {
+      if (result.data.success) {
+        createUser(email,name); //RTDB Call to create user as a Node
+        console.log("User registered successfully");
         setRegisterMessage("User registered successfully!");
         setError("");
-        createUser(email, name);
         setName("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
-      })
-      .catch((error) => {
-        // Error registering user.
-        setError("Error registering user: " + error.message);
+      } else {
+        setError("Error registering user: " + result.data.error);
         setRegisterMessage("");
-      });
+      }
+    })
+    .catch((error) => {
+      // Error registering user.
+      setError("Error registering user: " + error.message); // use 'error' instead of 'result'
+      setRegisterMessage("");
+    });
   };
 
   if (!isAdmin) {
