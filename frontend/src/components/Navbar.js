@@ -13,7 +13,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 
 const Navbar = () => {
-    const theme = useTheme();
+    const theme = useTheme().palette;
     const colorMode = useContext(ColorModeContext);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,9 +45,14 @@ const Navbar = () => {
 
 
     return (
-        <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2, backgroundColor: (theme.palette.mode === "dark") ? theme.palette.grey[900] : theme.palette.primary.main }}>
+        <Box sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 2,
+            backgroundColor: (theme.mode === "dark") ? theme.background.paper : theme.primary.main,
+        }}>
             <Box display="flex" height={50}>
-                {theme.palette.mode === 'dark' ? (
+                {theme.mode === 'dark' ? (
                     <img src="./logo-dark.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 ) : (
                     <img src="./logo-light.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
@@ -62,43 +67,42 @@ const Navbar = () => {
                         }}
                             color="info"
                             variant="contained"
-                            type="submit"
-                            disableElevation>
+                            type="submit">
                             Admin Panel
                         </Button>
-                    </Link>):null}
+                    </Link>) : null}
                 <IconButton
                     onClick={colorMode.toggleColorMode}
                     aria-label="Display Mode Toggle">
-                    {theme.palette.mode === 'dark' ? (
-                        <LightModeOutlinedIcon />
+                    {theme.mode === 'dark' ? (
+                        <LightModeOutlinedIcon/>
                     ) : (
-                        <DarkModeOutlinedIcon />
+                        <DarkModeOutlinedIcon/>
                     )}
                 </IconButton>
                 {isAuthenticated && location.pathname !== '/login' ? (
                     <PopupState variant="popover" popupId="profilePopup">
-                    {(popupState) => (
-                        <>
-                            <IconButton aria-label="Profile" {...bindTrigger(popupState)}>
-                                <PersonOutlinedIcon />
-                            </IconButton>
-                            <Popover 
-                            {...bindPopover(popupState)} 
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                                }}
-                                transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}>
-                                <DropdownProfile/>
-                            </Popover>
-                        </>
-                    )}
+                        {(popupState) => (
+                            <>
+                                <IconButton aria-label="Profile" {...bindTrigger(popupState)}>
+                                    <PersonOutlinedIcon />
+                                </IconButton>
+                                <Popover
+                                    {...bindPopover(popupState)}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}>
+                                    <DropdownProfile />
+                                </Popover>
+                            </>
+                        )}
                     </PopupState>
-                ):null}
+                ) : null}
             </Box>
         </Box>
     );

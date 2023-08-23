@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { TextField, Button, useTheme, Box } from "@mui/material";
-import {Link} from 'react-router-dom';
+import { TextField, Button, Link, useTheme, Box } from "@mui/material";
+import {Link as RouterLink} from 'react-router-dom';
 import styles from "./style.module.css";
 import Navbar from './Navbar';
 
@@ -116,7 +116,7 @@ const AdminPanel = () => {
         <Button sx={{ height: 50 }} variant="contained" type="submit">Add New User</Button>
         <br />
         <br />
-        <Link to="/">Return to Home</Link> 
+        <Link component={RouterLink} to="/">Return to Home</Link> 
       </Box>
 
       {error && <p sx={{ color: "error.main" }}>{error}</p>}

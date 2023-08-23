@@ -15,7 +15,6 @@ const MachineDetails = ({title}) => {
             flexDirection: "column",
             overflow: "hidden",
             overflowY: "scroll",
-            backgroundColor: (theme.mode === "dark" ? theme.divider : "auto")
         }} >
             <Box p="20px" height="110%" component={Paper}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
