@@ -20,6 +20,7 @@ describe("Machine Button (Toggle)", () => {
         const { getByRole } = render(<MachineButton machID={"13"} running={false} method={"toggle"} jQ={123123} />);
         const button = getByRole(`button`);
         const buttonSpy = jest.spyOn(button, 'click');
+        button.click();
         expect(buttonSpy).toHaveBeenCalled();
     });
 
