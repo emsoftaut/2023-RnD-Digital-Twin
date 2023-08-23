@@ -12,8 +12,9 @@ const MachineTabs = ({ machineID, mode }) => {
     };
 
     return (
-        <Box sx={{ width: '100%', overflowX: "scroll" }} justifyContent={"space-between"}>
+        <Box sx={{ width: '100%', height: '100%', overflowX: "scroll", overflowY: "scroll", }} justifyContent={"space-between"}>
             <Tabs
+                height={'110%'}
                 value={value}
                 onChange={handleChange}
                 aria-label="machine page tabs"
@@ -32,7 +33,7 @@ const MachineTabs = ({ machineID, mode }) => {
                 <Tab value="visualize" label="Real Time Analytics" />
             </Tabs>
             {value === "visualize" && (
-                <Box>
+                <Box sx={{ width: '100%', height: 'auto', overflowX: "scroll", overflowY: "scroll", }}>
                     {value === "visualize" && (
                         <MachineCharts machineID={machineID} mode={mode}/>
                     )}
