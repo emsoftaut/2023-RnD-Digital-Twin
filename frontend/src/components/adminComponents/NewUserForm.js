@@ -22,9 +22,12 @@ const NewUserForm = ({
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            maxWidth: "400px"
+            maxWidth: "400px",
+            textAlign: "center"
+
         }}>
         <h2>Add a new user below</h2>
+        <br/>
         <TextField
             sx={{ marginBottom: 1, width: '80%' }}
             label="Name"
@@ -64,7 +67,7 @@ const NewUserForm = ({
         <Button sx={{ height: 50 }} variant="contained" type="submit">Add New User</Button>
         <br />
         {error && <p sx={{ color: "error.main" }}>{error}</p>}
-        {registerMessage && <p sx={{ color: "success.main" }}>{registerMessage}</p>}
+        {registerMessage && <p sx={{ color: "success.main", alignItems: "center" }}>{registerMessage}</p>}
     </Box>
 );
 

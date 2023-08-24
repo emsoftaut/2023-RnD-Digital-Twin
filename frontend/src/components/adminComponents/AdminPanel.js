@@ -134,8 +134,8 @@ const AdminPanel = () => {
       < Navbar />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', height: '100%' }}>
         <h1 style={{ textAlign: 'center' }}>Admin Panel</h1>
-        <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-          <Box sx={{ flex: '1', marginRight: '20px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>
+          <Box sx={{ flex: '1', marginRight: '20px',alignItems: 'center' }}>
             <NewUserForm
               name={name}
               password={password}
@@ -149,7 +149,7 @@ const AdminPanel = () => {
               setPassword={setPassword}
             />
             {error && <p sx={{ color: 'error.main' }}>{error}</p>}
-            {registerMessage && <p sx={{ color: 'success.main' }}>{registerMessage}</p>}
+            {registerMessage && <p sx={{ textAlign: 'center', color: 'success.main' }}>{registerMessage}</p>}
           </Box>
           <Box sx={{ flex: '1', marginLeft: '20px' }}> {/* Users List Box */}
             <AuthUserList users={users} toggleUserStatus={toggleUserStatusClient} />

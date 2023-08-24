@@ -1,36 +1,44 @@
 import React from 'react';
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableHead, TableRow, Button, TableContainer } from '@mui/material';
 
 const AuthUserList = ({ users, toggleUserStatus }) => (
-  <Box sx={{ width: "100%", padding: "20px", overflowY: "auto" }}>
-    <h2 style={{ textAlign: "center"}}>Users List</h2>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Email</TableCell>
-          <TableCell>Name</TableCell>
-          <TableCell>Status</TableCell>
-          <TableCell>Action</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {users && users.map((user, index) => (
-          <TableRow key={index}>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.name}</TableCell>
-            <TableCell>{user.disabled ? "Disabled" : "Enabled"}</TableCell>
-            <TableCell>
-              <Button
-                variant="contained"
-                onClick={() => toggleUserStatus(user)} // You'll need to create this function
-              >
-                {user.disabled ? "Enable" : "Disable"}
-              </Button>
-            </TableCell>
+  <Box sx={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    maxWidth: "auto"
+  }}>
+    <h2 style={{ textAlign: "center" }}>Users List</h2>
+    <Box sx={{ maxHeight: 450, width: '110%', overflowY: 'scroll', border: 1}}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Email</TableCell>
+            <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Name</TableCell>
+            <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Status</TableCell>
+            <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Action</TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {users && users.map((user, index) => (
+            <TableRow key={index}>
+              <TableCell align='center'>{user.email}</TableCell>
+              <TableCell align='center'>{user.name}</TableCell>
+              <TableCell align='center'>{user.disabled ? "Disabled" : "Enabled"}</TableCell>
+              <TableCell align='center'>
+                <Button
+                  variant="contained"
+                  onClick={() => toggleUserStatus(user)}
+                >
+                  {user.disabled ? "Enable" : "Disable"}
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Box>
   </Box>
 );
 
