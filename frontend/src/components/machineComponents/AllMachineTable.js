@@ -3,11 +3,12 @@ import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearPr
 import { appDb } from "../../firebaseConfig";
 import { ref, get, set, onValue, off } from "firebase/database";
 import { Link } from "react-router-dom";
-import JobPopup from "../JobPopup";
+import JobPopup from "../PopUps/JobPopup";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import { grey } from "@mui/material/colors";
+import WarningPopUp from "../PopUps/WarningPopUp";
 
 async function toggleMachine(machID) {
 	// Get the reference to the database path where "running" variable is stored
@@ -84,13 +85,27 @@ const MachineButton = (props) => {
 	let { machID, running, method, jQ } = props;
 	let innerIcon = method === "toggle" ? running ? <PauseIcon /> : <PlayArrowIcon /> : <StopIcon />;
 	let innerText = method === "toggle" ? (running ? "Pause" : "Resume") : "Stop";
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+
 	const handleClick = () => {
 		method === "toggle" ? toggleMachine(machID) : console.log("cancelFunction");
+		setIsPopupOpen(true);
+	};
+
+	const handleCancel = () => {
+		// Handle cancel action here
+		setJQMachine(machID, parseInt(0));
+		console.log("Work cancelled");
+	};
+
+	const handleClose = () => {
+		console.log("Popup closed");
 	};
 
 	return (
 		<Button startIcon={innerIcon} disableElevation variant="contained" color="grey" onClick={handleClick} disabled={jQ > 0 ? false : true}>
 			<Typography variant="p">{innerText}</Typography>
+			{isPopupOpen && method && <WarningPopUp onCancel={handleCancel} onClose={handleClose} />}
 		</Button>
 	);
 };
@@ -179,7 +194,7 @@ const AllMachineTable = () => {
 							<TableCell align="right">{machine.sensors.temperature || "0"}</TableCell>
 							<TableCell>
 								<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)}></PopUpButton>
+									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} />
 									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
 									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
 								</Box>

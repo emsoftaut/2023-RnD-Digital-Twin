@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Box, useTheme } from "@mui/material";
-import styles from "./style.module.css";
+import styles from "../style.module.css";
 
 const JobPopup = ({ onClick, machineName, onClose }) => {
 	const [jobsQueueNum, setjobsQueue] = useState();
