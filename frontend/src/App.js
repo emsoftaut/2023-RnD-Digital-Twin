@@ -51,7 +51,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/*" element={<PrivateRoute user={user} machines={machines}/>}>
+          <Route path="/" element={<PrivateRoute user={user} machines={machines}/>}>
             <Route index element={<Dashboard />} />
             {machines.map((machine) => (
               <Route 
