@@ -1,33 +1,29 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import Navbar from '../components/Navbar';
 import { ColorModeContext } from '../theme';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { useLocation } from 'react-router-dom';
+import { onAuthStateChanged } from "firebase/auth";
 
 // Mock authInstance
-jest.mock('../firebaseConfig', () => ({
-    authInstance: {
-        onAuthStateChanged: jest.fn((callback) => {
-            callback(null); // Simulates a user being signed out
-            return () => { }; // Return an unsubscribe function
-        }),
-    },
+jest.mock("firebase/auth");
+    onAuthStateChanged.mockImplementation((auth, callback) => {
+    callback({}); // Simulates a user being authenticated
+});
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'), // Use actual for all non-hook parts
+    useLocation: jest.fn().mockReturnValue({
+        pathname: '/some-path', // Any path other than '/login'
+    }),
 }));
 
-jest.mock('firebase/auth', () => ({
-    onAuthStateChanged: jest.fn((auth, callback) => {
-      callback({ uid: 'some-uid' }); // Simulate a signed-in user
-    }),
-  }));
-
-  jest.mock('firebase/functions', () => ({
-    getFunctions: jest.fn(),
-    httpsCallable: jest.fn(() => () => ({
-      then: (callback) => callback({ data: { isAdmin: true } }),
-    })),
-  }));
-
+jest.mock("firebase/functions");
+httpsCallable.mockImplementation(() => {
+    return jest.fn(() => Promise.resolve({ data: { isAdmin: true } }));
+});
 describe('Navbar Component', () => {
 
     it('Renders without crashing', () => {
@@ -37,6 +33,11 @@ describe('Navbar Component', () => {
             </BrowserRouter>
         );
         expect(container).toBeInTheDocument();
+    });
+
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     it('Toggles color mode correctly', () => {
@@ -52,6 +53,27 @@ describe('Navbar Component', () => {
         const toggleButton = getByLabelText(/Display Mode Toggle/i);
         fireEvent.click(toggleButton);
         expect(toggleColorMode).toHaveBeenCalled();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('Renders profile button correctly when authenticated', async () => {
+        const { findByLabelText, debug } = render(
+            <MemoryRouter initialEntries={['/some-other-route']}>
+                <Navbar />
+            </MemoryRouter>
+        );
+    
+        debug(); // Print out the HTML to understand what's being rendered
+    
+        const profileButton = await findByLabelText('Profile');
+        expect(profileButton).toBeInTheDocument();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     // Additional test cases can go here...
