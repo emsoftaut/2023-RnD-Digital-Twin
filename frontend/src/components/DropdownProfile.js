@@ -12,7 +12,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const DropdownProfile = () => {
+const DropdownProfile = ({user, isAdmin}) => {
   const theme = useTheme();
   const { handleLogout } = useContext(AuthContext);
 
@@ -35,11 +35,11 @@ const DropdownProfile = () => {
           <Item><Avatar sx={{ width: 56, height: 56 }} alt="Jane Jung" /></Item>
         </Grid>
         <Grid item xs>
-          <Item><Typography variant="h6">Jane Jung</Typography> {/*something to represent user/admin level*/}</Item>
+          <Item><Typography variant="h6">Jane Jung</Typography> {isAdmin ? "Admin" : "User" }</Item>
 
         </Grid>
         <Grid item xs>
-          <Item><Typography variant="p">janejung@email.com</Typography></Item>
+          <Item><Typography variant="p">{user.email}</Typography></Item>
 
         </Grid>
         <Grid item xs>

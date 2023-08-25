@@ -66,7 +66,7 @@ const Navbar = ({user, showProps = false}) => {
                                 vertical: 'top',
                                 horizontal: 'right',
                             }}>
-                                <DropdownProfile/>
+                                <DropdownProfile user={user} isAdmin={isAdmin}/>
                             </Popover>
                         </>
                     )}
