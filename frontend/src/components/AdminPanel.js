@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import styles from "./style.module.css";
 import Navbar from './Navbar';
 
-const AdminPanel = () => {
+const AdminPanel = ({user}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,7 +24,7 @@ const AdminPanel = () => {
     checkAdmin().then((result) => {
       setIsAdmin(result.data.isAdmin);
     });
-  },[]);
+  });
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -64,7 +64,7 @@ const AdminPanel = () => {
       backgroundColor:(theme.mode === "dark" ? theme.divider : "auto")
       }}
       >
-      < Navbar/>
+      < Navbar showProps={true} user={user}/>
       <Box sx={{ 
         display: "flex",
         flexDirection: "column",
