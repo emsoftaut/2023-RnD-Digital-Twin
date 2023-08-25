@@ -10,8 +10,8 @@ import MachineDetails from "./scenes/machineDetails";
 import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
 import PrivateRoute from "./components/PrivateRoute";
-import AdminPanel from "./components/AdminPanel";
 import { AuthProvider } from "./components/AuthContext";
+import AdminPanel from "./components/adminComponents/AdminPanel";
 
 
 const App = () => {

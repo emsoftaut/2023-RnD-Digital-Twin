@@ -8,9 +8,11 @@ export const tokens = (mode) => ({
             primary: '#43a047',
             secondary: '#42a5f5',
             paper: '#121212',
+            grey: '#5E5E5E',
         } : {
             primary: '#43a047',
             secondary: '#42a5f5',
+            grey: '#EBEBEB',
             }),
 });
 
@@ -23,6 +25,7 @@ export const themeSettings = (mode) => {
                 primary: { main: colors.primary },
                 secondary: { main: colors.secondary },
                 background: {paper: colors.paper},
+                grey: {main: colors.grey}
             }),
         },
         typography: {

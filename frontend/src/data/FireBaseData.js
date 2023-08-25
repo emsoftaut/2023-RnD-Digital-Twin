@@ -32,6 +32,50 @@ export const useMachineData = () => {
   return { machineData, error };
 };
 
+export const createUser = async (email, name) => {
+  // Define the database path where the user's data will be stored
+  const sanitizedEmail = email.replace('.', ','); // Replace dot with comma to use as key
+  const databasePath = `users/${sanitizedEmail}`;
+  const databaseRef = ref(appDb, databasePath);
+
+  try {
+    // Write the user's name to the database
+    await set(databaseRef, { name: name });
+    console.log("User created successfully!");
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error; // Re-throw the error to be handled in the calling function
+  }
+};
+
+export const getUsers = (callback) => {
+  const usersRef = ref(appDb, "users");
+  console.log("Users Reference:", usersRef);
+  const handleDataChange = (snapshot) => {
+    const data = snapshot.val();
+    console.log("Raw data:", data);
+    if (data) {
+      const usersArray = Object.keys(data).map((key) => ({
+        email: key.replace(',', '.'), // Replacing commas with dots
+        name: data[key].name,
+      }));
+      console.log(usersArray);
+      callback(usersArray);
+    }
+  };
+
+  onValue(usersRef, handleDataChange);
+
+  return () => {
+    off(usersRef, handleDataChange);
+  };
+};
+
+/*
+*
+* Function to flip the value of 'running' within the current machine
+*
+*/
 export const toggleMachine = async (machID) => {
   // Get the reference to the database path where "running" variable is stored
   const databasePath = `factory_io/data/${machID}/coils/running`;

@@ -1,40 +1,47 @@
 let testMachine = {
     name: "testMachine",
-    machineID: "",
     coils: {
         beltSpeed: {
-            value: true,
-            register: 82,
-            valueType: "BIT"
+            value: 0,
+            register: 2,
+            valueType: "BYTE"
         },
         jobsQueued: {
-            value: true,
-            register: 81,
+            value: 0,
+            register: 1,
             valueType: "BYTE"
         },
         running: {
             value: true,
-            register: 80,
+            register: 0,
             valueType: "BIT"
         }
     },
     sensors: {
         jobsDone: {
-            value: true,
-            register: 81,
+            value: 0,
+            register: 1,
             valueType: "BYTE"
         },
+        //jobsStarted: {
+        //    value: 0,
+        //    register: 0,
+        //    valueType: "BIT"
+        //},
         machineStatus: {
             value: false,
-            register: 80,
+            register: 0,
             valueType: "BIT"
         },
         temperature: {
-            value: true,
-            register: 82,
+            value: false,
+            register: 2,
             valueType: "BIT"
         }        
     }
 }
 
-module.exports = testMachine;
+
+module.exports = function createModelInstance() {
+    return JSON.parse(JSON.stringify(testMachine));
+};
