@@ -1,80 +1,67 @@
-import React from 'react';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-import Navbar from '../components/Navbar';
-import { ColorModeContext } from '../theme';
-import { BrowserRouter, MemoryRouter } from 'react-router-dom';
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { useLocation } from 'react-router-dom';
-import { onAuthStateChanged } from "firebase/auth";
+import React from "react";
+import { render, fireEvent, screen } from "@testing-library/react";
+import { ColorModeContext } from "../theme";
+import Navbar from "../components/Navbar";
+import { BrowserRouter as Router } from 'react-router-dom';
+import AuthContext from '../components/AuthContext'
 
-// Mock authInstance
-jest.mock("firebase/auth");
-    onAuthStateChanged.mockImplementation((auth, callback) => {
-    callback({}); // Simulates a user being authenticated
+describe("<Navbar />", () => {
+
+    const renderWithContexts = (isAdmin = false, colorMode = "light", user = null, showProps = false) => {
+        const mockColorMode = {
+            toggleColorMode: jest.fn()
+        };
+
+        const mockAuthContext = {
+            isAdmin: isAdmin
+        };
+
+        return render(
+            <Router>
+                <AuthContext.Provider value={mockAuthContext}>
+                    <ColorModeContext.Provider value={mockColorMode}>
+                        <Navbar user={user} showProps={showProps} />
+                    </ColorModeContext.Provider>
+                </AuthContext.Provider>
+            </Router>
+        );
+    }
+
+    it("shows the Admin Panel button when isAdmin is true and user is provided", () => {
+        renderWithContexts(true, "light", { name: "John" });
+        expect(screen.getByLabelText("Admin Panel")).toBeInTheDocument();
+    });
+
+    it("does not show the Admin Panel button when isAdmin is false or user is not provided", () => {
+        renderWithContexts(false);
+        expect(screen.queryByLabelText("Admin Panel")).not.toBeInTheDocument();
+
+        renderWithContexts(true);
+        expect(screen.queryByLabelText("Admin Panel")).not.toBeInTheDocument();
+    });
+
+    it("shows the light mode icon when theme is dark", () => {
+      renderWithContexts(false, "dark");
+      expect(screen.getByLabelText("Display Mode Toggle")).toContainElement(screen.getByRole('img', {name: 'Light Mode Icon'}));
+  });
+  
+  it("shows the dark mode icon when theme is light", () => {
+      renderWithContexts();
+      expect(screen.getByLabelText("Display Mode Toggle")).toContainElement(screen.getByRole('img', {name: 'Dark Mode Icon'}));
+  });
+
+    it("shows profile button and popover when user is provided and showProps is true", () => {
+        renderWithContexts(false, "light", { name: "John" }, true);
+        expect(screen.getByLabelText("Profile")).toBeInTheDocument();
+    });
+
+    it("does not show profile button and popover when user is not provided or showProps is false", () => {
+        renderWithContexts();
+        expect(screen.queryByLabelText("Profile")).not.toBeInTheDocument();
+
+        renderWithContexts(false, "light", { name: "John" });
+        expect(screen.queryByLabelText("Profile")).not.toBeInTheDocument();
+    });
+
 });
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'), // Use actual for all non-hook parts
-    useLocation: jest.fn().mockReturnValue({
-        pathname: '/some-path', // Any path other than '/login'
-    }),
-}));
-
-jest.mock("firebase/functions");
-httpsCallable.mockImplementation(() => {
-    return jest.fn(() => Promise.resolve({ data: { isAdmin: true } }));
-});
-describe('Navbar Component', () => {
-
-    it('Renders without crashing', () => {
-        const { container } = render(
-            <BrowserRouter>
-                <Navbar />
-            </BrowserRouter>
-        );
-        expect(container).toBeInTheDocument();
-    });
-
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it('Toggles color mode correctly', () => {
-        const toggleColorMode = jest.fn();
-        const { getByLabelText } = render(
-            <ColorModeContext.Provider value={{ toggleColorMode }}>
-                <BrowserRouter>
-                    <Navbar />
-                </BrowserRouter>
-            </ColorModeContext.Provider>
-        );
-
-        const toggleButton = getByLabelText(/Display Mode Toggle/i);
-        fireEvent.click(toggleButton);
-        expect(toggleColorMode).toHaveBeenCalled();
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it('Renders profile button correctly when authenticated', async () => {
-        const { findByLabelText, debug } = render(
-            <MemoryRouter initialEntries={['/some-other-route']}>
-                <Navbar />
-            </MemoryRouter>
-        );
-    
-        debug(); // Print out the HTML to understand what's being rendered
-    
-        const profileButton = await findByLabelText('Profile');
-        expect(profileButton).toBeInTheDocument();
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    // Additional test cases can go here...
-});

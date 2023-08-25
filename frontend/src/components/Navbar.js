@@ -10,7 +10,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AuthContext from "./AuthContext";
 
 const Navbar = ({user, showProps = false}) => {
-    const { isAdmin } = useContext(AuthContext);
+    const { isAdmin = false } = useContext(AuthContext) || {};
     const theme = useTheme();
     const colorMode = useContext(ColorModeContext);
 
