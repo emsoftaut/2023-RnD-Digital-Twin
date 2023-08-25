@@ -9,7 +9,7 @@ import Navbar from '../Navbar';
 import NewUserForm from './NewUserForm';
 import AuthUserList from './AuthUserList';
 
-const AdminPanel = () => {
+const AdminPanel = ({user}) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -131,7 +131,7 @@ const AdminPanel = () => {
       height: '100%'
     }}
     >
-      < Navbar />
+      < Navbar user={user} showProps={true} />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', height: '100%' }}>
         <h1 style={{ textAlign: 'center' }}>Admin Panel</h1>
         <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>

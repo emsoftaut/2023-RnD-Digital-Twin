@@ -48,6 +48,19 @@ export const createUser = async (email, name) => {
   }
 };
 
+export const getSingleUser = async (email) => {
+  const sanitizedEmail = email.replace('.', ',');
+  const userRef = ref(appDb, `users/${sanitizedEmail}`);
+  
+  const snapshot = await get(userRef);
+  if (snapshot.exists()) {
+    return snapshot.val().name;
+  } else {
+    console.error('User does not exist');
+    return null;
+  }
+};
+
 export const getUsers = (callback) => {
   const usersRef = ref(appDb, "users");
   console.log("Users Reference:", usersRef);

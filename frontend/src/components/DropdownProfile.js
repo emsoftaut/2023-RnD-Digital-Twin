@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Box, Grid, Paper, Avatar, Button, Typography, useTheme, styled } from "@mui/material";
 import { FaCog, FaInfoCircle, FaSignOutAlt } from "react-icons/fa";
 import AuthContext from "./AuthContext";
+import { getSingleUser } from "../data/FireBaseData";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundImage: "none",
@@ -15,6 +16,19 @@ const Item = styled(Paper)(({ theme }) => ({
 const DropdownProfile = ({user, isAdmin}) => {
   const theme = useTheme();
   const { handleLogout } = useContext(AuthContext);
+  const [userName, setUserName] = useState('Fetching...');
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const name = await getSingleUser(user.email);
+      if (name) {
+        setUserName(name);
+      } else {
+        isAdmin? setUserName("Admin") : setUserName('Not Found');
+      }
+    };
+    fetchUserName();
+  }, [user.email]);
 
   const handleLogoutClick = () => {
     handleLogout();
@@ -35,7 +49,7 @@ const DropdownProfile = ({user, isAdmin}) => {
           <Item><Avatar sx={{ width: 56, height: 56 }} alt="Jane Jung" /></Item>
         </Grid>
         <Grid item xs>
-          <Item><Typography variant="h6">Jane Jung</Typography> {isAdmin ? "Admin" : "User" }</Item>
+          <Item><Typography variant="h6">{userName}</Typography> {isAdmin ? "Admin" : "User" }</Item>
 
         </Grid>
         <Grid item xs>
