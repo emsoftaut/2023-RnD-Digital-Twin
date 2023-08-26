@@ -53,10 +53,10 @@ const WarningPopUp = ({ machID, onCancel, onClose }) => {
 					}}
 				>
 					<Button sx={styles.Button} variant="contained" onClick={handleCancel}>
-						Cancel
+						Yes
 					</Button>{" "}
 					<Button sx={styles.Button} variant="contained" onClick={handleClose}>
-						Close
+						No
 					</Button>
 				</Box>
 			</Box>
