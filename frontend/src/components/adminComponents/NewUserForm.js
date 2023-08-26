@@ -16,6 +16,7 @@ const NewUserForm = ({
 }) => (
     <Box
         component="form"
+        role="form"
         onSubmit={handleRegister}
         sx={{
             display: "flex",
@@ -33,6 +34,7 @@ const NewUserForm = ({
             label="Name"
             type="name"
             value={name}
+            inputProps={{'data-testid': 'name-input'}}
             onChange={(e) => setName(e.target.value)}
             required
         />
@@ -42,6 +44,7 @@ const NewUserForm = ({
             label="Email"
             type="email"
             value={email}
+            inputProps={{'data-testid': 'email-input'}}
             onChange={(e) => setEmail(e.target.value)}
             required
         />
@@ -51,6 +54,7 @@ const NewUserForm = ({
             label="Password"
             type="password"
             value={password}
+            inputProps={{'data-testid': 'password-input'}}
             onChange={(e) => setPassword(e.target.value)}
             required
         />
@@ -60,6 +64,7 @@ const NewUserForm = ({
             label="Confirm Password"
             type="password"
             value={confirmPassword}
+            inputProps={{'data-testid': 'confirm-password-input'}}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
         />
