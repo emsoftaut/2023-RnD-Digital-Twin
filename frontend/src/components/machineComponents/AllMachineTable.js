@@ -100,7 +100,7 @@ const MachineButton = (props) => {
 	return (
 		<Button startIcon={innerIcon} disableElevation variant="contained" color="grey" onClick={handleClick} disabled={jQ > 0 ? false : true}>
 			<Typography variant="p">{innerText}</Typography>
-			{isPopupOpen && method !== "toggle" && <WarningPopUp machineName={machID} onCancel={() => setIsPopupOpen(false)} onClose={() => setIsPopupOpen(false)} />}
+			{isPopupOpen && method !== "toggle" && <WarningPopUp machID={machID} onCancel={() => setIsPopupOpen(false)} onClose={() => setIsPopupOpen(false)} />}
 		</Button>
 	);
 };
