@@ -34,6 +34,7 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 				justifyContent: "center",
 				alignItems: "center",
 				zIndex: 10000,
+				cursor: "default",
 				backgroundColor: "rgba(0, 0, 0, 0.5)",
 			}}
 		>

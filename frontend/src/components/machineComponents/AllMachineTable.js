@@ -34,7 +34,7 @@ async function toggleMachine(machID) {
 	}
 }
 
-async function setJQMachine(machID, JQ) {
+export async function setJQMachine(machID, JQ) {
 	// Get the reference to the database path where "jobsQueued" variable is stored
 	const databasePath = `factory_io/data/${machID}/coils/jobsQueued`;
 	const databaseRef = ref(appDb, databasePath);
@@ -88,24 +88,19 @@ const MachineButton = (props) => {
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
 	const handleClick = () => {
-		method === "toggle" ? toggleMachine(machID) : console.log("cancelFunction");
-		setIsPopupOpen(true);
+		method === "toggle" ? toggleMachine(machID) : cancelFunction();
 	};
 
-	const handleCancel = () => {
-		// Handle cancel action here
-		setJQMachine(machID, parseInt(0));
-		console.log("Work cancelled");
-	};
-
-	const handleClose = () => {
-		console.log("Popup closed");
+	const cancelFunction = () => {
+		if (method !== "toggle" && !isPopupOpen) {
+			setIsPopupOpen(true);
+		}
 	};
 
 	return (
 		<Button startIcon={innerIcon} disableElevation variant="contained" color="grey" onClick={handleClick} disabled={jQ > 0 ? false : true}>
 			<Typography variant="p">{innerText}</Typography>
-			{isPopupOpen && method && <WarningPopUp onCancel={handleCancel} onClose={handleClose} />}
+			{isPopupOpen && method !== "toggle" && <WarningPopUp machineName={machID} onCancel={() => setIsPopupOpen(false)} onClose={() => setIsPopupOpen(false)} />}
 		</Button>
 	);
 };

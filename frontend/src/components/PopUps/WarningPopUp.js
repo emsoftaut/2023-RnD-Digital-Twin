@@ -1,31 +1,72 @@
-import React, { useState } from "react";
-import "./WarningPopUp.css";
+import React from "react";
+import { setJQMachine } from "../machineComponents/AllMachineTable";
+import { Button, Box, useTheme } from "@mui/material";
 
-function WarningPopUp({ onCancel, onClose }) {
-	const [isOpen, setIsOpen] = useState(true);
+const WarningPopUp = ({ machID, onCancel, onClose }) => {
+	const theme = useTheme();
+
+	const machineName = machID;
 
 	const handleCancel = () => {
-		setIsOpen(false);
+		setJQMachine(machineName, parseInt(0));
+		console.log("Cancelling jobs");
 		onCancel();
 	};
 
 	const handleClose = () => {
-		setIsOpen(false);
+		console.log("Closing popup");
 		onClose();
 	};
 
 	return (
-		<div className={`popup ${isOpen ? "open" : ""}`}>
-			<div className="popup-content">
-				<h2>Cancel the work?</h2>
-				<p>Do you want to cancel the work in progress?</p>
-				<div className="popup-buttons">
-					<button onClick={handleCancel}>Cancel</button>
-					<button onClick={handleClose}>Close</button>
-				</div>
-			</div>
-		</div>
+		<Box
+			sx={{
+				position: "fixed",
+				top: "0",
+				left: "0",
+				width: "100%",
+				height: "100%",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				zIndex: "1000000",
+				cursor: "default",
+				backgroundColor: "rgba(0, 0, 0, 0.5)",
+			}}
+		>
+			<Box
+				sx={{
+					//background: "white",
+					padding: "20px",
+					borderradius: "5px",
+					boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
+					textAlign: "center",
+					color: "red",
+					background: theme.palette.background.default,
+				}}
+			>
+				<h1 sx={{ margin: 0 }}>Machine: {machineName} Warning!</h1>
+				<p>This action cannot be undone. Are you sure you want to proceed?</p>
+				<h3>{machID}</h3>
+				<Box
+					sx={{
+						margin: "0 10px",
+						padding: "10px 20px",
+						border: "none",
+						borderRadius: "5px",
+						alignItems: "space-evenly",
+					}}
+				>
+					<Button sx={{ cursor: "pointer" }} onClick={handleCancel}>
+						Cancel
+					</Button>
+					<Button sx={{ cursor: "pointer" }} onClick={handleClose}>
+						Close
+					</Button>
+				</Box>
+			</Box>
+		</Box>
 	);
-}
+};
 
 export default WarningPopUp;
