@@ -1,7 +1,8 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import JobPopup from "./JobPopup";
+import JobPopup from "./PopUps/JobPopup";
+import WarningPopUp from "./PopUps/WarningPopUp";
 
 describe("JobPopup Component", () => {
 	it("renders the machine ID correctly", () => {
@@ -10,7 +11,7 @@ describe("JobPopup Component", () => {
 		const machineIdElement = screen.getByText("Machine ID: Machine123");
 		expect(machineIdElement).toBeInTheDocument();
 	});
-
+	
 	it("submits the form with the given number of boxes", () => {
 		const mockOnClick = jest.fn();
 		render(<JobPopup onClose={() => {}} onClick={mockOnClick} machineName="Machine123" />);
@@ -31,7 +32,6 @@ describe("JobPopup Component", () => {
 		const closeButton = screen.getByText("CLOSE");
 		userEvent.click(closeButton);
 
-		// Wait for the component to re-render after state update
 		await waitFor(() => {
 			expect(mockOnClose).toHaveBeenCalledWith(false);
 		});
