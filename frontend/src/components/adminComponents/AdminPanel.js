@@ -148,7 +148,7 @@ const AdminPanel = ({ user }) => {
               setName={setName}
               setPassword={setPassword}
             />
-            {error && <p sx={{ color: 'error.main' }}>{error}</p>}
+            {error && <p className={styles.error} data-testid="password-error" sx={{ color: 'error.main' }}>{error}</p>}
             {registerMessage && <p sx={{ textAlign: 'center', color: 'success.main' }}>{registerMessage}</p>}
           </Box>
           <Box sx={{ flex: '1', marginLeft: '20px' }}> {/* Users List Box */}

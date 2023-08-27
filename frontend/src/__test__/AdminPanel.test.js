@@ -17,16 +17,18 @@ jest.mock('firebase/functions', () => ({
     })))
 }));
 
-const renderWithAuthContext = (component) => {
-    const mockContextValue = {
-        user: null,  // Modify this based on your AdminPanel requirements
-        isAdmin: false,  // Modify this based on your AdminPanel requirements
+const renderWithAuthContext = (component, contextValue) => {
+    const defaultContextValue = {
+        user: null,
+        isAdmin: false,
         setUserManually: jest.fn(),
         setIsAdmin: jest.fn(),
     };
+    
+    const combinedContextValue = { ...defaultContextValue, ...contextValue };
 
     const result = render(
-        <AuthContext.Provider value={mockContextValue}> 
+        <AuthContext.Provider value={combinedContextValue}>
             <BrowserRouter>
                 {component}
             </BrowserRouter>
@@ -35,10 +37,11 @@ const renderWithAuthContext = (component) => {
 
     return {
         ...result,
-        setUserManually: mockContextValue.setUserManually,
-        setIsAdmin: mockContextValue.setIsAdmin
+        setUserManually: combinedContextValue.setUserManually,
+        setIsAdmin: combinedContextValue.setIsAdmin
     };
 };
+
 
 describe('AdminPanel Component', () => {
     it('Renders without crashing', () => {
@@ -62,5 +65,65 @@ describe('AdminPanel Component', () => {
         );
 
         expect(getByText('Admin Panel')).toBeInTheDocument();  
+    });
+
+    it('renders an error message for non-admin users', () => {
+        const { getByText } = renderWithAuthContext(<AdminPanel />, { isAdmin: false });
+        expect(getByText('You are not authorized to view this page.')).toBeInTheDocument();
+    });
+
+    it('displays an error when passwords do not match', async () => {
+        const mockContextValue = {
+            user: { uid: '12345', email: 'admin@example.com' },
+            isAdmin: true,
+            setUserManually: jest.fn(),
+            setIsAdmin: jest.fn(),
+        };
+        
+        const { getByTestId, getByText  } = render(
+            <AuthContext.Provider value={mockContextValue}>
+                <BrowserRouter>
+                    <AdminPanel />
+                </BrowserRouter>
+            </AuthContext.Provider>
+        );
+        
+        const passwordInput = getByTestId('password-input');
+        const confirmPasswordInput = getByTestId('confirm-password-input');
+        const submitButton = getByText('Add New User');
+
+        // Simulate entering mismatching passwords
+        fireEvent.change(passwordInput, { target: { value: 'password123' } });
+        fireEvent.change(confirmPasswordInput, { target: { value: 'password456' } });
+        
+        // Click the submit button
+        fireEvent.click(submitButton);
+
+        // Use `findByText` to check for the error message since state updates can be asynchronous
+        const errorMessage = getByTestId('password-error');
+
+        expect(errorMessage).toBeInTheDocument();
+    });
+
+    it('Provides a way to return to the login page', () => {
+        
+        // Move mockContextValue inside the test
+        const mockContextValue = {
+            user: { uid: '12345', email: 'admin@example.com' },
+            isAdmin: true,
+            setUserManually: jest.fn(),
+            setIsAdmin: jest.fn(),
+        };
+
+        const { getByText } = render(
+            <AuthContext.Provider value={mockContextValue}>
+                <BrowserRouter>
+                    <AdminPanel />
+                </BrowserRouter>
+            </AuthContext.Provider>
+        );
+    
+        const returnToLoginLink = getByText('Return to Home');
+        expect(returnToLoginLink).toBeInTheDocument();
     });
 });
