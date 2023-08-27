@@ -110,6 +110,7 @@ export const toggleMachine = async (machID) => {
       });
   } catch (error) {
     console.error("Error reading machine status:", error);
+    throw error;
   }
 }
 
