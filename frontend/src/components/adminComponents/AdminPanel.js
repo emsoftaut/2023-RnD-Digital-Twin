@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useTheme, Box } from "@mui/material";
@@ -8,35 +8,31 @@ import styles from "../style.module.css";
 import Navbar from '../Navbar';
 import NewUserForm from './NewUserForm';
 import AuthUserList from './AuthUserList';
+import AuthContext from '../AuthContext';
 
-const AdminPanel = ({user}) => {
+const AdminPanel = ({ user }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registerMessage, setRegisterMessage] = useState("");
   const [error, setError] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
   const [users, setUsers] = useState([]);
-  const [authUsers, setAuthUsers] = useState([]);
-
-  const theme = useTheme().palette;
+  const { isAdmin = false } = useContext(AuthContext) || {};
+  const theme = useTheme();
 
   const auth = getAuth();
   const functions = getFunctions();
   const toggleUserStatus = httpsCallable(functions, 'toggleUserStatus');
   const createUserClient = httpsCallable(functions, 'createUser');
 
-  const checkAdminStatus = async () => {
-    const checkAdmin = httpsCallable(functions, 'checkAdmin');
-    const result = await checkAdmin();
-    setIsAdmin(result.data.isAdmin);
-  };
+
+  const unsubscribeRef = useRef(null);
 
   const toggleUserStatusClient = async (user) => {
     try {
       console.log("Calling toggle user.");
-      const result = await toggleUserStatus({uid: user.uid, status: !user.disabled });
+      const result = await toggleUserStatus({ uid: user.uid, status: !user.disabled });
       if (result.data.success) {
         // Find the index of the user and update their status
         const updatedUsers = users.map(u => {
@@ -52,66 +48,70 @@ const AdminPanel = ({user}) => {
     }
   }
 
+  const fetchAndMergeUsers = async () => {
+    try {
+      const getAuths = httpsCallable(functions, 'getAllUsers');
+      const authResult = await getAuths();
+      const authUsersMap = {};
+
+      authResult.data.users.forEach((user) => {
+        authUsersMap[user.email] = user;
+      });
+
+      unsubscribeRef.current = getUsers((usersArray) => { // Use ref to store unsubscribe function
+        const mergedUsers = usersArray.map((user) => ({
+          ...user,
+          ...authUsersMap[user.email],
+        }));
+
+        setUsers(mergedUsers);
+      });
+    } catch (error) {
+      console.error("Error fetching and merging users:", error);
+    }
+  };
 
   useEffect(() => {
-    const checkAdmin = httpsCallable(functions, 'checkAdmin');
-    checkAdmin().then((result) => {
-      console.log("isAdmin: ", result.data.isAdmin);
-      setIsAdmin(result.data.isAdmin);
+    if (isAdmin) {
+      fetchAndMergeUsers();
+    }
 
-      if (result.data.isAdmin) {
-        const getAuths = httpsCallable(functions, 'getAllUsers');
-        getAuths().then((authResult) => {
-          const authUsersMap = {};
-          authResult.data.users.forEach((user) => {
-            authUsersMap[user.email] = user;
-          });
-
-          const unsubscribe = getUsers((usersArray) => {
-            const mergedUsers = usersArray.map((user) => ({
-              ...user,
-              ...authUsersMap[user.email],
-            }));
-
-            setUsers(mergedUsers);
-            console.log(mergedUsers);
-          });
-
-          return () => unsubscribe(); // Unsubscribing on component unmount
-        });
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();  // Cleanup using ref value
       }
-    });
-  }, []);
+    };
+  }, [isAdmin]);
 
   const handleRegister = (e) => {
     e.preventDefault();
-  
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-  
+
     createUserClient({ email, password })
-    .then((result) => {
-      if (result.data.success) {
-        createUser(email,name); //RTDB Call to create user as a Node
-        console.log("User registered successfully");
-        setRegisterMessage("User registered successfully!");
-        setError("");
-        setName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-      } else {
-        setError("Error registering user: " + result.data.error);
+      .then((result) => {
+        if (result.data.success) {
+          createUser(email, name); //RTDB Call to create user as a Node
+          console.log("User registered successfully");
+          setRegisterMessage("User registered successfully!");
+          setError("");
+          setName("");
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+        } else {
+          setError("Error registering user: " + result.data.error);
+          setRegisterMessage("");
+        }
+      })
+      .catch((error) => {
+        // Error registering user.
+        setError("Error registering user: " + error.message); // use 'error' instead of 'result'
         setRegisterMessage("");
-      }
-    })
-    .catch((error) => {
-      // Error registering user.
-      setError("Error registering user: " + error.message); // use 'error' instead of 'result'
-      setRegisterMessage("");
-    });
+      });
   };
 
   if (!isAdmin) {
@@ -127,7 +127,7 @@ const AdminPanel = ({user}) => {
     <Box sx={{
       padding: 0,
       overflow: "hidden",
-      backgroundColor: (theme.mode === "dark" ? theme.divider : "auto"),
+      backgroundColor: (theme.palette.mode === "dark" ? theme.palette.divider : "auto"),
       height: '100%'
     }}
     >
@@ -135,7 +135,7 @@ const AdminPanel = ({user}) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', height: '100%' }}>
         <h1 style={{ textAlign: 'center' }}>Admin Panel</h1>
         <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>
-          <Box sx={{ flex: '1', marginRight: '20px',alignItems: 'center' }}>
+          <Box sx={{ flex: '1', marginRight: '20px', alignItems: 'center' }}>
             <NewUserForm
               name={name}
               password={password}
@@ -155,9 +155,9 @@ const AdminPanel = ({user}) => {
             <AuthUserList users={users} toggleUserStatus={toggleUserStatusClient} />
           </Box>
         </Box>
-        <br/>
-        <br/>
-      <Link to="/">Return to Home</Link>
+        <br />
+        <br />
+        <Link to="/">Return to Home</Link>
       </Box>
     </Box>
   );
