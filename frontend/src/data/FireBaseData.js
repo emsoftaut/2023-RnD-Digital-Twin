@@ -1,33 +1,64 @@
-import {useState, useEffect} from "react";
-import {appDb} from "../firebaseConfig";
-import {ref, onValue} from "firebase/database";
+import { useState, useEffect } from "react";
+import { ref, onValue, off, get, set } from "firebase/database";
+import { appDb } from "../firebaseConfig";
 
-const FireBaseData = () => {
-  const [data, setData] = useState([]);
+export const useMachineData = () => {
+  const [machineData, setMachineData] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const databaseRef = ref(appDb, "");
-    
-    const dataListener = onValue(databaseRef, (snapshot) => {
+    const machineRef = ref(appDb, "factory_io/data");
+
+    const handleDataChange = (snapshot) => {
       const data = snapshot.val();
-      if(data) {
-        const dataArray = Object.keys(data).map((key) => ({
-          title: key,
-          path: `/${key}`,
-          info: data[key],
-        }));
-        setData(dataArray);
+      if (data) {
+        const dataArray = Object.values(data)
+          .filter(validateMachineData)
+          .map((machine) => ({
+            machID: machine.machineID,
+            ...machine,
+          }));
+        setMachineData(dataArray);
       }
-    });
+    };
 
-      //Remove listener if component unmounts
-      return () => {
-        databaseRef.off("value", dataListener);
-      };
+    onValue(machineRef, handleDataChange, (err) => setError(err));
 
+    return () => {
+      off(machineRef, handleDataChange);
+    };
   }, []);
 
-  return JSON.stringify(data, null, 2);
+  return { machineData, error };
 };
 
-export default FireBaseData;
+export const toggleMachine = async (machID) => {
+  // Get the reference to the database path where "running" variable is stored
+  const databasePath = `factory_io/data/${machID}/coils/running`;
+  const databaseRef = ref(appDb, databasePath);
+
+  try {
+    // Read the current status from the database
+    const snapshot = await get(databaseRef);
+    const currentStatus = snapshot.val();
+
+    // Calculate the new status (toggle the status) and update the database
+    const newStatus = !currentStatus;
+    set(databaseRef, newStatus)
+      .then(() => {
+        console.log("Machine status updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating machine status:", error);
+      });
+  } catch (error) {
+    console.error("Error reading machine status:", error);
+  }
+}
+
+function validateMachineData(machine) {
+  const requiredKeys = ['machineID', 'coils', 'lastModified', 'sensors'];
+  return requiredKeys.every(key => machine.hasOwnProperty(key)
+    && machine[key] !== null
+    && Object.keys(machine[key]).length !== 0);
+}

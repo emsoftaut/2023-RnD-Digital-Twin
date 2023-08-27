@@ -56,7 +56,7 @@ const App = () => {
             {machines.map((machine) => (
               <Route 
               key={machine.machineID}
-              path={"/*"+machine.machineID} 
+              path={machine.machineID} 
               element={<MachineDetails 
               title={machine.machineID} />} />
             ))}

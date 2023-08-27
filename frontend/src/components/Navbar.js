@@ -1,25 +1,25 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ColorModeContext } from "../theme";
-import { Box, IconButton, useTheme } from "@mui/material";
+import { Box, IconButton, Popover, useTheme, Button } from "@mui/material";
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import { authInstance } from "../firebaseConfig";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { Button } from "@mui/material";
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
+import { useLocation } from "react-router-dom";
 import DropdownProfile from "./DropdownProfile";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 
 const Navbar = () => {
     const theme = useTheme();
     const colorMode = useContext(ColorModeContext);
-    const [openProfile, setOpenProfile] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const auth = authInstance;
     const functions = getFunctions();
+    const location = useLocation();
 
     useEffect(() => {
         // Listen for auth state changes
@@ -43,31 +43,30 @@ const Navbar = () => {
     }, [auth, functions]);
 
 
-    const handleProfileClick = () => {
-        setOpenProfile((prev) => !prev); // Toggle the openProfile state
-    };
-
 
     return (
         <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2, backgroundColor: (theme.palette.mode === "dark") ? theme.palette.grey[900] : theme.palette.primary.main }}>
-            <Box display="flex">
+            <Box display="flex" height={50}>
                 {theme.palette.mode === 'dark' ? (
-                    <img src="./logo-dark.png" alt="logo" width={50} style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} />
+                    <img src="./logo-dark.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 ) : (
-                    <img src="./logo-light.png" alt="logo" width={50} style={{ marginTop: 5 + 'px', marginBottom: 5 + 'px' }} />
+                    <img src="./logo-light.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 )}
             </Box>
             <Box display="flex">
-                {isAdmin &&
+                {isAdmin && location.pathname !== '/login' ? (
                     <Link to="/admin">
                         <Button sx={{
                             height: 50,
+                            marginRight: "10px",
                         }}
+                            color="info"
                             variant="contained"
-                            type="submit">
+                            type="submit"
+                            disableElevation>
                             Admin Panel
                         </Button>
-                    </Link>}
+                    </Link>):null}
                 <IconButton
                     onClick={colorMode.toggleColorMode}
                     aria-label="Display Mode Toggle">
@@ -77,19 +76,29 @@ const Navbar = () => {
                         <DarkModeOutlinedIcon />
                     )}
                 </IconButton>
-                {isAuthenticated && (
-                    <>
-                        <IconButton aria-label="Settings">
-                            <SettingsOutlinedIcon />
-                        </IconButton>
-                        <IconButton aria-label="Profile" onClick={handleProfileClick}>
-                            <PersonOutlinedIcon />
-                        </IconButton>
-                        {
-                            openProfile && (<DropdownProfile />)
-                        }
-                    </>
-                )}
+                {isAuthenticated && location.pathname !== '/login' ? (
+                    <PopupState variant="popover" popupId="profilePopup">
+                    {(popupState) => (
+                        <>
+                            <IconButton aria-label="Profile" {...bindTrigger(popupState)}>
+                                <PersonOutlinedIcon />
+                            </IconButton>
+                            <Popover 
+                            {...bindPopover(popupState)} 
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}>
+                                <DropdownProfile/>
+                            </Popover>
+                        </>
+                    )}
+                    </PopupState>
+                ):null}
             </Box>
         </Box>
     );
