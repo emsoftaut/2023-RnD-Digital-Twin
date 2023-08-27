@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Box, useTheme } from "@mui/material";
-import styles from "./style.module.css";
+import styles from "../style.module.css";
 
 const JobPopup = ({ onClick, machineName, onClose }) => {
 	const [jobsQueueNum, setjobsQueue] = useState();
@@ -34,6 +34,7 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 				justifyContent: "center",
 				alignItems: "center",
 				zIndex: 10000,
+				cursor: "default",
 				backgroundColor: "rgba(0, 0, 0, 0.5)",
 			}}
 		>
@@ -64,9 +65,9 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 							marginTop: "16px",
 						}}
 					>
-						<Button className={styles.popbutton} variant="contained" type="submit">
+						<button className={styles.popbutton} variant="contained" type="submit">
 							SUBMIT
-						</Button>
+						</button>
 						<button className={styles.popbutton} variant="contained" onClick={handleClose}>
 							CLOSE
 						</button>

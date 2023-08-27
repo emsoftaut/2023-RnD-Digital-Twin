@@ -3,11 +3,12 @@ import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearPr
 import { appDb } from "../../firebaseConfig";
 import { ref, get, set, onValue, off } from "firebase/database";
 import { Link } from "react-router-dom";
-import JobPopup from "../JobPopup"
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
+import JobPopup from "../PopUps/JobPopup";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
 import { grey } from "@mui/material/colors";
+import WarningPopUp from "../PopUps/WarningPopUp";
 
 async function toggleMachine(machID) {
 	// Get the reference to the database path where "running" variable is stored
@@ -33,7 +34,7 @@ async function toggleMachine(machID) {
 	}
 }
 
-async function setJQMachine(machID, JQ) {
+export async function setJQMachine(machID, JQ) {
 	// Get the reference to the database path where "jobsQueued" variable is stored
 	const databasePath = `factory_io/data/${machID}/coils/jobsQueued`;
 	const databaseRef = ref(appDb, databasePath);
@@ -64,13 +65,11 @@ const PopUpButton = ({ machID, showpop }) => {
 	const handlePopupClick = (jQ) => {
 		if (jQ > 0) {
 			setJQMachine(machID, parseInt(jQ));
-			console.log(jQ);
 		}
 		setshowPopup(false);
 	};
 
 	const handlePopupClose = (popup) => {
-		console.log(popup);
 		setshowPopup(popup);
 	};
 
@@ -84,20 +83,24 @@ const PopUpButton = ({ machID, showpop }) => {
 
 const MachineButton = (props) => {
 	let { machID, running, method, jQ } = props;
-	let innerIcon = method === "toggle" ? (running ? <PauseIcon /> : <PlayArrowIcon/>) : <StopIcon/>;
+	let innerIcon = method === "toggle" ? running ? <PauseIcon /> : <PlayArrowIcon /> : <StopIcon />;
 	let innerText = method === "toggle" ? (running ? "Pause" : "Resume") : "Stop";
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+
 	const handleClick = () => {
-		method === "toggle" ? toggleMachine(machID) : console.log('cancelFunction');
+		method === "toggle" ? toggleMachine(machID) : cancelFunction();
+	};
+
+	const cancelFunction = () => {
+		if (method !== "toggle" && !isPopupOpen) {
+			setIsPopupOpen(true);
+		}
 	};
 
 	return (
-		<Button startIcon={innerIcon} 
-		disableElevation 
-		variant="contained" 
-		color="grey" 
-		onClick={handleClick}
-		disabled={(jQ > 0) ? false: true}>
+		<Button startIcon={innerIcon} disableElevation variant="contained" color="grey" onClick={handleClick} disabled={jQ > 0 ? false : true}>
 			<Typography variant="p">{innerText}</Typography>
+			{isPopupOpen && method !== "toggle" && <WarningPopUp machID={machID} onCancel={() => setIsPopupOpen(false)} onClose={() => setIsPopupOpen(false)} />}
 		</Button>
 	);
 };
@@ -185,12 +188,13 @@ const AllMachineTable = () => {
 							<TableCell align="right">{machine.coils.beltSpeed || "0"}</TableCell>
 							<TableCell align="right">{machine.sensors.temperature || "0"}</TableCell>
 							<TableCell>
-							<Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-								<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)}></PopUpButton>
-								<MachineButton machID={machine.machineID} running={machine.coils.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"}/>
-								<MachineButton machID={machine.machineID} running={machine.coils.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"}/>
+								<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} />
+									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
+									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
 								</Box>
 							</TableCell>
+							<TableCell></TableCell>
 						</TableRow>
 					))}
 				</TableBody>
