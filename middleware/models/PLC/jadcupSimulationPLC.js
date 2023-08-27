@@ -1,5 +1,4 @@
 let jadcupSimulationPLC = {
-<<<<<<< HEAD
 	name: "jadcupSimulationPLC",
 	coils: {
 		jobsQueued: {
@@ -8,20 +7,20 @@ let jadcupSimulationPLC = {
 			valueType: "BYTE",
 		},
 		override: {
-			value: true,
+			value: false,
 			register: 2,
 			valueType: "BIT",
 		},
 	},
 	sensors: {
-		jobsDone: {
-			value: 0,
-			register: 1,
-			valueType: "BYTE",
-		},
 		jobsStarted: {
 			value: 0,
 			register: 0,
+			valueType: "BYTE",
+		},
+		jobsDone: {
+			value: 0,
+			register: 1,
 			valueType: "BYTE",
 		},
 		running: {
@@ -29,42 +28,19 @@ let jadcupSimulationPLC = {
 			register: 2,
 			valueType: "BIT",
 		},
+		WaterLevel: {
+			value: 0,
+			register: 3,
+			valueType: "BYTE",
+		},
+		totalWeight: {
+			value: 0,
+			register: 4,
+			valueType: "BYTE",
+		},
 	},
 };
 
 module.exports = function createModelInstance() {
 	return JSON.parse(JSON.stringify(jadcupSimulationPLC));
 };
-=======
-    name: "jadcupSimulationPLC",
-    coils: {
-        jobsQueued: {
-            value: 0,
-            register: 1,
-            valueType: "BYTE"
-        },
-        running: {
-            value: true,
-            register: 0,
-            valueType: "BIT"
-        }
-    },
-    sensors: {
-        jobsDone: {
-            value: 0,
-            register: 1,
-            valueType: "BYTE"
-        },
-        jobsStarted: {
-            value: 0,
-            register: 0,
-            valueType: "BYTE"
-        },
-    }
-}
-
-
-module.exports = function createModelInstance() {
-    return JSON.parse(JSON.stringify(jadcupSimulationPLC));
-};
->>>>>>> main
