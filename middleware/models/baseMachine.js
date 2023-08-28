@@ -20,7 +20,10 @@ let base = {
             {
                 if (this.sensors[sensor].register == reg)
                 {
-                    this.sensors[sensor].value = values[reg];
+                    if (this.sensors[sensor].variableType == "f")
+                        this.sensors[sensor].value = values[reg] / 100;
+                    else
+                        this.sensors[sensor].value = values[reg];
                 }
             }
         }
