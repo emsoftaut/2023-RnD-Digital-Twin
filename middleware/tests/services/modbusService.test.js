@@ -74,7 +74,7 @@ describe('Modbus Service', () => {
 
   it('should receive the correct "readFromModbus" result', async () => {
     const expectedResult = [3, 1, 3, 1];
-    const actualResult = await ReadFromModbus(4);
+    const actualResult = await ReadFromModbus(machineMock);
 
     expect(actualResult).toEqual(expectedResult);
   });

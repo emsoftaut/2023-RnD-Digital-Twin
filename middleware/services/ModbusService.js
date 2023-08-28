@@ -78,7 +78,7 @@ function HandleModbusError(error) {
   if (error.err == "Offline") {
     throw new Error(OfflineErrorMessage);
   } else {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 }
 
