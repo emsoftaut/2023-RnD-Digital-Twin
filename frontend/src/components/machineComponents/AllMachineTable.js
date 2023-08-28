@@ -113,7 +113,7 @@ const AllMachineTable = () => {
 								<ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} />
 							</TableCell>
 							<TableCell align="right">{machine.sensors.averageSpeed || "0"}</TableCell>
-							<TableCell align="right">{machine.sensors.WaterLevel || "0"}</TableCell>
+							<TableCell align="right">{machine.sensors.waterLevel || "0"}</TableCell>
 							<TableCell>
 								<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} />
