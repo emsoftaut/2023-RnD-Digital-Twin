@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Button, TableContainer } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
 
 const AuthUserList = ({ users, toggleUserStatus }) => (
   <Box sx={{

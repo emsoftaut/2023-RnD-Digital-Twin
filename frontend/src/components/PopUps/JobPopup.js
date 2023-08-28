@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Box, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import styles from "../style.module.css";
 
 const JobPopup = ({ onClick, machineName, onClose }) => {
