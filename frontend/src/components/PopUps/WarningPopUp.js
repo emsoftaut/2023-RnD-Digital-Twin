@@ -43,7 +43,7 @@ const WarningPopUp = ({ machID, onCancel, onClose }) => {
 					background: theme.palette.background.default,
 				}}
 			>
-				<h1 sx={{ margin: 0 }}>Warning!</h1>
+				<h1 sx={{ margin: 0 }}>Machine: {machID} Warning!</h1>
 				<p>This action cannot be undone. Are you sure you want to proceed?</p>
 				<Box
 					sx={{

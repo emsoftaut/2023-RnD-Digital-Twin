@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import JobPopup from "./PopUps/JobPopup";
+import JobPopup from "./JobPopup";
 
 describe("JobPopup Component", () => {
 	it("renders the job popup properly", () => {
