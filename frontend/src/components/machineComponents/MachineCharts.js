@@ -11,11 +11,11 @@ const MachineCharts = ({ machineID, mode }) => {
 
   const jobsDone = currentMachine?.sensors.jobsDone;
   const jobsQueued = currentMachine?.coils.jobsQueued;
-  const beltSpeed = currentMachine?.coils.beltSpeed;
-  const temperature = currentMachine?.sensors.temperature;
+  const beltSpeed = currentMachine?.sensors.averageSpeed / 1000;
+  const temperature = currentMachine?.sensors.WaterLevel;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', height: '100%', width: '100%' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', height: 'auto', width: '100%' }}>
 
       <div style={{ width: '100%', height: '80%' }}>
         <JobsChart jobsDone={jobsDone} jobsQueued={jobsQueued} mode={mode} />
