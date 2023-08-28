@@ -5,7 +5,7 @@ import JobPopup from "../PopUps/JobPopup";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import { toggleMachine, useMachineData } from "../../data/FireBaseData";
+import { toggleMachine, useMachineData, setJQMachine } from "../../data/FireBaseData";
 import WarningPopUp from "../PopUps/WarningPopUp";
 
 export const PopUpButton = ({ machID, showpop }) => {
@@ -77,12 +77,13 @@ export const ProgressBar = ({ done, queued }) => {
 };
 
 const AllMachineTable = () => {
-	const { machineData, error } = useMachineData();
+	const { machineData } = useMachineData();
 	const [showPopup] = useState(false);
+	const [error, setError] = useState("");
 
 	if (error) {
 		setError(error);
-		return <p>Error: {error}</p>;
+		return <p>Error: {error}</p>; 
 	}
 
 	return (
