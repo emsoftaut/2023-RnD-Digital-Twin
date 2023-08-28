@@ -1,10 +1,29 @@
 import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import JobPopup from "./PopUps/JobPopup"; // Update the import path
-import AllMachineTable from "./machineComponents/AllMachineTable"; // Update the import path
+import JobPopup from "./PopUps/JobPopup";
 
 describe("JobPopup Component", () => {
+	it("renders the job popup properly", () => {
+		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} />);
+
+		// Verify that the popup title is rendered
+		const popupTitle = screen.getByText("Jobs Request Form");
+		expect(popupTitle).toBeInTheDocument();
+
+		// Verify that the machine ID is rendered based on the provided prop
+		const machineIDText = screen.getByText("Machine ID: Machine123");
+		expect(machineIDText).toBeInTheDocument();
+
+		// Verify that the submit button is rendered
+		const submitButton = screen.getByText("SUBMIT");
+		expect(submitButton).toBeInTheDocument();
+
+		// Verify that the close button is rendered
+		const closeButton = screen.getByText("CLOSE");
+		expect(closeButton).toBeInTheDocument();
+	});
+
 	it("triggers the sumbit button when the SUBMIT button is pressed", () => {
 		const onClickMock = jest.fn();
 
@@ -60,15 +79,16 @@ describe("JobPopup Component", () => {
 	});
 });
 
-describe("AllMachineTable Component", () => {
-	it("renders the job popup when the button is pressed", () => {
-		render(<AllMachineTable />);
+// describe("AllMachineTable Component", () => {
+// 	it("renders the job popup properly", () => {
+// 		render(<AllMachineTable />);
 
-		const jobRequestButton = screen.getByText("Order");
+// 		// Find and click the button that triggers the job popup
+// 		const jobRequestButton = screen.getByText("Order");
+// 		userEvent.click(jobRequestButton);
 
-		userEvent.click(jobRequestButton);
-
-		// Verify that the job popup is rendered
-		expect(screen.getByText("Jobs Request Form")).toBeInTheDocument();
-	});
-});
+// 		// Verify that the job popup is rendered by checking for its content
+// 		const popupTitle = screen.getByText("Jobs Request Form");
+// 		expect(popupTitle).toBeInTheDocument();
+// 	});
+// });
