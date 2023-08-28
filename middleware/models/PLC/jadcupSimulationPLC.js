@@ -38,6 +38,11 @@ let jadcupSimulationPLC = {
 			register: 4,
 			valueType: "BYTE",
 		},
+		averageSpeed: {
+			value:0,
+			register:5,
+			valueType: "BYTE",
+		}
 	},
 };
 
