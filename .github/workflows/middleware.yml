@@ -2,9 +2,9 @@ name: middleware nodejs CI
 
 on:
   push:
-    branches: [ MiddlewareUnitTests ]
+    branches: [ main ]
   pull_request:
-    branches: [ MiddlewareUnitTests ]
+    branches: [ main ]
 
 jobs:
   build:
