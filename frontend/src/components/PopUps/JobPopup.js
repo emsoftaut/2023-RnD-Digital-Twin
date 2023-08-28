@@ -18,7 +18,7 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 	};
 
 	const handleClose = () => {
-		setjobsQueue();
+		setjobsQueue(0);
 		onClose(false);
 	};
 
