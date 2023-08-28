@@ -16,7 +16,7 @@ const MachineDetails = ({title}) => {
             overflow: "hidden",
             overflowY: "scroll",
         }} >
-            <Box p="20px" height="110%" component={Paper}>
+            <Box p="20px" height="110%" component={Paper} sx={{backgroundImage: 'none'}}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Header title="Machine Details" subtitle={"Machine #"+title} />
                     <Button sx={{ height: 50 }} variant="contained" color="error">stop</Button>
