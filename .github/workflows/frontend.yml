@@ -1,4 +1,4 @@
-name: Middleware NodeJS CI
+name: Frontend/React NodeJS CI
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./middleware
+        working-directory: ./frontend
 
     strategy:
       matrix:
@@ -27,9 +27,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-# middleware tests
-    - name: install middleware dependencies
+# frontend tests
+    - name: Install React dependencies
       run: npm ci
     
-    - name: Run middleware jest tests
+    - name: Build React
+      run: npm run build
+      env:
+        CI: false
+    
+    - name: Test React
       run: npm run test
