@@ -106,18 +106,18 @@ const AllMachineTable = () => {
 							<TableCell>
 								<Link to={"/" + machine.machID}>{machine.machID}</Link>
 							</TableCell>
-							<TableCell>{machine.sensors.machineStatus === 1 ? "Running" : "Not Running"}</TableCell>
+							<TableCell>{machine.sensors.running === true ? "Running" : "Not Running"}</TableCell>
 							<TableCell>{machine.lastModified}</TableCell>
 							<TableCell>
 								<ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} />
 							</TableCell>
-							<TableCell align="right">{machine.coils.beltSpeed || "0"}</TableCell>
-							<TableCell align="right">{machine.sensors.temperature || "0"}</TableCell>
+							<TableCell align="right">{machine.sensors.averageSpeed || "0"}</TableCell>
+							<TableCell align="right">{machine.sensors.WaterLevel || "0"}</TableCell>
 							<TableCell>
 								<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} />
-									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
-									<MachineButton machID={machine.machineID} running={machine.coils.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
+									<MachineButton machID={machine.machineID} running={machine.sensors.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
+									<MachineButton machID={machine.machineID} running={machine.sensors.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
 								</Box>
 							</TableCell>
 							<TableCell></TableCell>
