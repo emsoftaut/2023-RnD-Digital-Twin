@@ -59,4 +59,18 @@ describe("JobPopup Component", () => {
 		// Verify that the input value is reset to blank
 		expect(inputField.value).toBe("0");
 	});
+
+	it("closes the popup when the close button is clicked", async () => {
+		const mockOnClose = jest.fn();
+		render(<JobPopup onClose={mockOnClose} onClick={() => {}} machineName="Machine123" />);
+
+		const closeButton = screen.getByText("CLOSE");
+		userEvent.click(closeButton);
+
+		// Wait for the component to re-render after state update
+		await waitFor(() => {
+			expect(mockOnClose).toHaveBeenCalledWith(false);
+		});
+	});
+
 });
