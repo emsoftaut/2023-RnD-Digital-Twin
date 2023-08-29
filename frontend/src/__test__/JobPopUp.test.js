@@ -1,9 +1,7 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor  } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom/extend-expect";
 import JobPopup from "../components/PopUps/JobPopup";
-import { PopUpButton } from "../components/machineComponents/AllMachineTable";
 
 describe("JobPopup Component", () => {
 	it("renders the job popup properly", () => {
@@ -26,24 +24,26 @@ describe("JobPopup Component", () => {
 		expect(closeButton).toBeInTheDocument();
 	});
 
-	it("triggers the submit button and uses the value when pressed", () => {
-		// Mock function for onClick
+	it("submits the form with the correct value when the submit button is pressed", async () => {
 		const onClickMock = jest.fn();
-
-		// Render the component
+	
 		render(<JobPopup onClick={onClickMock} machineName="Machine123" onClose={() => {}} />);
-
-		// Find the input field and set its value
+	
+		// Find the input field
 		const inputField = screen.getByLabelText("Number of Boxes:");
+	
+		// Type the value into the input field
 		userEvent.type(inputField, "5");
-
+	
 		// Find and click the submit button
 		const submitButton = screen.getByText("SUBMIT");
-		fireEvent.click(submitButton);
-
-		// Check if onClickMock was called with the correct value
-		expect(onClickMock).toHaveBeenCalledWith(5);
-	});
+		userEvent.click(submitButton);
+	
+		// Verify that onClickMock was called with the correct value
+		await waitFor(() => {
+		  expect(onClickMock).toHaveBeenCalledWith(5);
+		});
+	  });
 
 	it("resets the text box when close button is pressed", () => {
 		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} />);
