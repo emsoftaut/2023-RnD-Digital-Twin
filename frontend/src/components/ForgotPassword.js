@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { TextField, Button, Box, useTheme } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
 const ForgotPassword = () => {
