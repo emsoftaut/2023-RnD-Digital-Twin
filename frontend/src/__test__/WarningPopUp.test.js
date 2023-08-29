@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import WarningPopUp from "../components/PopUps/WarningPopUp";
-import * as AllMachineTableModule from "../components/machineComponents/AllMachineTable";
+import WarningPopUp from "./WarningPopUp";
+import * as AllMachineTableModule from "../machineComponents/AllMachineTable";
 
 describe("WarningPopUp Component", () => {
 	it("renders the warning popup properly", () => {
