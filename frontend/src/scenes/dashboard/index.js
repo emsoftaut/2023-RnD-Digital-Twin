@@ -2,23 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useTheme, Box, Button, Paper } from "@mui/material";
 import Header from "../../components/Header";
 import AllMachineTable from "../../components/machineComponents/AllMachineTable";
-import { useMachineData, toggleMachine } from "../../data/FireBaseData"
+import { useMachineData, toggleMachine, setJQMachine } from "../../data/FireBaseData"
 
-async function cancelAll() {
-	console.log('cancellAll'); //replace with function that asks all machine's jQ to 0 in firebaseData
-}
-
-const CancelAllButton = () => {
-    const { machineData, error } = useMachineData();
+export const CancelAllButton = () => {
+    const {machineData, error} = useMachineData();
     if (error) {
         return <p>Error: {error.message}</p>; // Adjust error display as needed
     }
-    const allOff = (machineData.every((machine) => machine.coils.running === false) ? true : false);
+    const allOff = (machineData.every((machine) => machine.coils.override === false) ? true : false);
     
     const handleClick = () => {
-        machineData.filter((m) => m.coils.running === true).map(filteredM => toggleMachine(filteredM.machineID));
-        machineData.map(m => m.coils.jobsQueued = 0); //replace w cancelJobs function
-        cancelAll();
+        machineData.filter((m) => m.coils.override === false).map(filteredM => toggleMachine(filteredM.machineID));
+        machineData.map(m => setJQMachine(m.machineID, 0)); //replace w cancelJobs function
+        console.log('all machines stopped');
     }
 
     return(

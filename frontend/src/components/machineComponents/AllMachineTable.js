@@ -128,7 +128,7 @@ const AllMachineTable = () => {
 							<StyledTableCell>
 								<Link component={RouterLink} to={"/" + machine.machID}>{machine.machID}</Link>
 							</StyledTableCell>
-							<StyledTableCell>{machine.sensors.machineStatus === true ? "Running" : "Not Running"}</StyledTableCell>
+							<StyledTableCell>{machine.coils.override === true ? "Running" : "Not Running"}</StyledTableCell>
 							<StyledTableCell>{machine.lastModified}</StyledTableCell>
 							<StyledTableCell>
 								<ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} />
@@ -138,8 +138,8 @@ const AllMachineTable = () => {
 							<StyledTableCell>
 								<Box sx={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
 									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} />
-									<MachineButton machID={machine.machineID} running={machine.sensors.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
-									<MachineButton machID={machine.machineID} running={machine.sensors.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
+									<MachineButton machID={machine.machineID} running={machine.coils.override} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
+									<MachineButton machID={machine.machineID} running={machine.coils.override} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
 								</Box>
 							</StyledTableCell>
 						</StyledTableRow>
