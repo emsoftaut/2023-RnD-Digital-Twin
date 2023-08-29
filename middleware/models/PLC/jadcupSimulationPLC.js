@@ -34,7 +34,7 @@ let jadcupSimulationPLC = {
 			variableType: "i"
 		},
 		running: {
-			value: 0,
+			value: false,
 			register: 2,
 			valueType: "BIT",
 			variableType: "b"
