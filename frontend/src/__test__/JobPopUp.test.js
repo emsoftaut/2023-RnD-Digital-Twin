@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor  } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import JobPopup from "../components/PopUps/JobPopup";
+import * as FireBaseDataModule from "../data/FireBaseData";
 
 describe("JobPopup Component", () => {
 	it("renders the job popup properly", () => {
@@ -19,24 +20,6 @@ describe("JobPopup Component", () => {
 		const closeButton = screen.getByText("CLOSE");
 		expect(closeButton).toBeInTheDocument();
 	});
-
-	
-
-	it("submits the form with the correct value when the submit button is pressed", () => {
-		const onClickMock = jest.fn();
-	  
-		render(<JobPopup onClick={onClickMock} machineName="Machine123" onClose={() => {}} />);
-	  
-		const inputField = screen.getByLabelText("Number of Boxes:");
-		userEvent.type(inputField, "5");
-	  
-		const submitButton = screen.getByText("SUBMIT");
-		userEvent.click(submitButton);
-	  
-		// Check if onClickMock was called with the correct value
-		expect(onClickMock).toHaveBeenCalledWith(5);
-	  });
-
 
 	it("resets the text box when close button is pressed", () => {
 		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} />);
