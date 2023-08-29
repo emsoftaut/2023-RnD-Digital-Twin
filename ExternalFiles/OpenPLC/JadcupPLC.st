@@ -21,6 +21,7 @@ PROGRAM JadcupPLC
     FactoryRunning AT %IX100.2 : BOOL := False;
     M1RetroflectiveSensor1 AT %IX100.3 : BOOL := False;
     M1RetroflectiveSensor2 AT %IX100.4 : BOOL := False;
+    M1RetroflectiveSensor3 AT %IX100.5 : BOOL := False;
     M1LightArray1 AT %IW101 : INT := 0;
     M1LightArray2 AT %IW102 : INT := 0;
     M1ConveyorScale AT %IW103 : INT := 0;
@@ -32,14 +33,33 @@ PROGRAM JadcupPLC
     M1JobsQueued AT %QW081 : INT := 0;
     M1JobsStarted AT %IW080 : INT := 0;
     M1JobsDone AT %IW081 : INT := 0;
-    M1Running AT %IX010.2 : BOOL := false;
+    M1WaterLevel AT %IW83 : INT := 0;
+    M1Running AT %IX010.1 : BOOL := false;
   END_VAR
   VAR
     M1JobStartedCheck : BOOL := false;
     M1JobDoneCheck : BOOL := false;
+    M1WeightCheck : BOOL := false;
   END_VAR
   VAR
-    M1MachineOverride AT %QX10.2 : BOOL := false;
+    M1MachineOverride AT %QX10.1 : BOOL := false;
+    M1EmergencyStop AT %QX10.2 : BOOL := false;
+    M1TotalWeight AT %IW84 : INT := 0;
+  END_VAR
+  VAR
+    M1RealTimeClock : RTC;
+    M1trackedTimeEnd : DT;
+    M1trackedTimestart : DT;
+    M1TimerCounter : INT := 0;
+    M1TotalTime : TIME;
+  END_VAR
+  VAR
+    M1AverageTime AT %IW85 : INT := 0;
+  END_VAR
+  VAR
+    M1TimerSensorCheck : BOOL := false;
+  END_VAR
+  VAR
     M2BConeyor1 AT %QX101.4 : BOOL := FALSE;
     M2BConeyor2 AT %QX101.5 : BOOL := FALSE;
     M2BConeyor3 AT %QX101.6 : BOOL := FALSE;
@@ -53,8 +73,9 @@ PROGRAM JadcupPLC
     M2TankDrainValve1 AT %QW105 : INT := 0;
     M2TankFillValve2 AT %QW106 : INT := 0;
     M2TankDrainValve2 AT %QW107 : INT := 0;
-    M2RetroflectiveSensor1 AT %IX100.5 : BOOL := False;
-    M2RetroflectiveSensor2 AT %IX100.6 : BOOL := False;
+    M2RetroflectiveSensor1 AT %IX100.6 : BOOL := TRUE;
+    M2RetroflectiveSensor2 AT %IX100.7 : BOOL := TRUE;
+    M2RetroflectiveSensor3 AT %IX101.0 : BOOL := TRUE;
     M2LightArray1 AT %IW109 : INT := 0;
     M2LightArray2 AT %IW110 : INT := 0;
     M2ConveyorScale AT %IW111 : INT := 0;
@@ -66,25 +87,50 @@ PROGRAM JadcupPLC
     M2JobsQueued AT %QW091 : INT := 0;
     M2JobsStarted AT %IW090 : INT := 0;
     M2JobsDone AT %IW091 : INT := 0;
+    M2WaterLevel AT %IW93 : INT := 0;
     M2Running AT %IX11.4 : BOOL := FALSE;
   END_VAR
   VAR
     M2JobStartedCheck : BOOL := FALSE;
     M2JobDoneCheck : BOOL := FALSE;
-    M2Cos1 : REAL := 0.0;
+    M2TimerSensorCheck : BOOL := FALSE;
+    M2WeightCheck : BOOL := FALSE;
   END_VAR
   VAR
+    M2TotalWeight AT %IW94 : INT := 0;
     M2MachineOverride AT %QX11.4 : BOOL := FALSE;
+    M2EmergencyStop AT %QX11.5 : BOOL := FALSE;
+  END_VAR
+  VAR
+    M2TrackedTimeStart : DT;
+    M2TrackedTimeEnd : DT;
+    M2NewTime : TIME;
+    M2TotalTime : TIME;
+    M2TimerCounter : INT := 0;
+  END_VAR
+  VAR
+    M2AverageTime AT %IW95 : INT := 0;
+  END_VAR
+  VAR
+    M2RealTimeClock : RTC;
   END_VAR
 
   (* Code can only exicute if factoryIO is running*)
   IF FACTORYRUNNING THEN
-    (*RESET JOB STARTED AND DONE VALUES WHEN THE FACTORY I/O RESET BUTTON IS PRESSED*)
+    (*RESET JOB STARTED AND DONE VALUES WHEN THE FACsTORY I/O RESET BUTTON IS PRESSED*)
       IF FACTORYRESETTING = TRUE THEN
         M1JOBSSTARTED := 0;
         M1JOBSDONE := 0;
         M2JOBSSTARTED := 0;
         M2JOBSDONE := 0;
+        END_IF;
+      IF(M1emergencyStop) then
+        M1JOBSSTARTED := 0;
+        M1JOBSDONE := 0;
+        END_IF;
+      IF(M2EMERGENCYSTOP) THEN
+        M2JOBSSTARTED :=0;
+        M2JOBSDONE:=0;
         END_IF;
       
     (*START OF MACHINE 1 CODE*)
@@ -105,23 +151,38 @@ PROGRAM JadcupPLC
         M1EMITTER := TRUE;
         M1Remover := true;
         END_IF;
-      (*if there are still pending jobs M1Emitter is on*)
-      IF M1JOBSQUEUED > M1JOBSSTARTED then
-        M1EMITTER := true;
-        END_IF;
-      (*turn off emitter when enough jobs have been started*)
-      IF M1JOBSSTARTED = M1JobsQueued THEN
-        M1EMITTER := FALSE;
-        END_IF;
+      (*if there are still pending jobs M1Emitter is on otherwise turn off*)
+        IF M1JOBSQUEUED > M1JOBSSTARTED then
+          M1EMITTER := true;
+          ELSE
+          M1EMITTER := FALSE;
+          END_IF;
         
+        (*M1Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
+        IF (M1RETROFLECTIVESENSOR1 = FALSE) AND (M1JOBSTARTEDCHECK = FALSE) THEN
+          M1JOBSTARTEDCHECK :=TRUE;
+          M1JOBSSTARTED := M1JOBSSTARTED + 1;
+          M1RealTimeClock(CDT => M1TrackedTimeStart);
+          END_IF;
+          (*track average speed of boxes passing through the conveyor*)
+        IF (NOT M1RETROFLECTIVESENSOR2) AND (NOT M1TIMERSENSORCHECK) THEN
+          M1RealTimeClock(CDT => M1TrackedTimeEnd);
+          M1TOTALTIME := ADD_TIME(M1TOTALTIME, SUB_DT_DT(M1TRACKEDTIMESTART, M1TRACKEDTIMEEND));
+          M1TIMERCOUNTER := M1TIMERCOUNTER +1;
+          M1AVERAGETIME := (TIME_TO_INT(M1TOTALTIME)/M1TIMERCOUNTER);
+          M1TIMERSENSORCHECK := TRUE;
+          END_IF;
+        IF (M1RETROFLECTIVESENSOR2) AND (M1TIMERSENSORCHECK) THEN
+          M1TIMERSENSORCHECK := FALSE;
+          END_IF;
       (*M1Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
       IF (M1RETROFLECTIVESENSOR1 = false) AND (M1JOBSTARTEDCHECK = FALSE) then
         M1JOBSSTARTED := M1JOBSSTARTED + 1;
         M1JOBSTARTEDCHECK := TRUE;
         END_IF;
         
-      (*RETROFLECTIVESENSOR2 tracts boxes leaving the machine into the remover*)
-      IF (M1RETROFLECTIVESENSOR2 = false) AND (M1JOBDONECHECK = FALSE) THEN
+      (*RETROFLECTIVESENSOR3 tracts boxes leaving the machine into the remover*)
+      IF (M1RetroflectiveSensor3 = false) AND (M1JOBDONECHECK = FALSE) THEN
         M1JOBSDONE := M1JOBSDONE +1;
         M1JOBDONECHECK := TRUE;
         END_IF;
@@ -131,9 +192,13 @@ PROGRAM JadcupPLC
         M1JOBSTARTEDCHECK :=FALSE;
         END_IF;
       (*RESET JOBS DONE CHECK IF SENSOR ISNT TRIGGERED*)
-      IF M1RETROFLECTIVESENSOR2 = TRUE then
+      IF M1RetroflectiveSensor3 = TRUE then
         M1JOBDONECHECK := FALSE;
         END_IF;
+      M1TANKFILLVALVE1 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
+      M1TANKDRAINVALVE1 := REAL_TO_INT(((SIN(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
+      M1TANKFILLVALVE2 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)*1000.0);
+      M1TANKDRAINVALVE2 := REAL_TO_INT(((SIN(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)*1000.0);
     ELSE
       M1BCONEYOR1 := false;
       M1BCONEYOR2 := false;
@@ -144,11 +209,17 @@ PROGRAM JadcupPLC
       M1BCONEYORSCALE1 :=FALSE;
       M1REMOVER := false;
       M1EMITTER :=FALSE;
+      M1TANKDRAINVALVE1 := 1000;
+      M1TANKDRAINVALVE2 := 1000;
       END_IF;
-      M1TANKFILLVALVE1 := REAL_TO_INT((-(COS(INT_TO_REAL(M1LIGHTARRAY1)))/2.0)*1000.0);
-      M1TANKDRAINVALVE1 := REAL_TO_INT(((SIN(INT_TO_REAL(M1LIGHTARRAY1)))/2.0)*1000.0);
-      M1TANKFILLVALVE2 := REAL_TO_INT((-(COS(INT_TO_REAL(M1LIGHTARRAY2)))/2.0)*1000.0);
-      M1TANKDRAINVALVE2 := REAL_TO_INT(((SIN(INT_TO_REAL(M1LIGHTARRAY2)))/2.0)*1000.0);
+      
+    M1wATERLEVEL := (M1TANKLEVELMETER1 + M1TANKLEVELMETER2) /2;
+    IF (M1CONVEYORSCALE > 0) AND (NOT M1WEIGHTCHECK) THEN
+      M1WEIGHTCHECK := TRUE;
+      M1TOTALWEIGHT := M1TOTALWEIGHT + M1CONVEYORSCALE;
+    ELSIF (M1CONVEYORSCALE = 0) AND M1WEIGHTCHECK THEN
+      M1WEIGHTCHECK := FALSE;
+      END_IF;
     (*END OF MACHINE 1 CODE  *)
     (*-----------------------*)
     (*START OF MACHINE 2 CODE*)
@@ -169,29 +240,47 @@ PROGRAM JadcupPLC
         M2EMITTER := TRUE;
         M2REMOVER  :=TRUE;
         END_IF;
-      (*if there are still pending jobs M2Emitter is on otherwise turn off*)
-      IF M2JOBSQUEUED > M2JOBSSTARTED then
-        M2EMITTER := true;
-        ELSE
-        M2EMITTER := FALSE;
-        END_IF;
-
-      (*M2Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
-      IF (M2RETROFLECTIVESENSOR1 = FALSE) AND (M2JOBSTARTEDCHECK = FALSE) THEN
-        M2JOBSSTARTED := M2JOBSSTARTED + 1;
-        END_IF;
-      (*RETROFLECTIVESENSOR2 tracts boxes leaving the machine into the remover*)
-      IF (M2RETROFLECTIVESENSOR2 = FALSE) AND (M2JOBDONECHECK = FALSE) THEN
+        (*if there are still pending jobs M2Emitter is on otherwise turn off*)
+        IF M2JOBSQUEUED > M2JOBSSTARTED then
+          M2EMITTER := true;
+          ELSE
+          M2EMITTER := FALSE;
+          END_IF;
+        
+        (*M2Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
+        IF (M2RETROFLECTIVESENSOR1 = FALSE) AND (M2JOBSTARTEDCHECK = FALSE) THEN
+          M2JOBSTARTEDCHECK :=TRUE;
+          M2JOBSSTARTED := M2JOBSSTARTED + 1;
+          M2RealTimeClock(CDT => M2TrackedTimeStart);
+          END_IF;
+          (*track average speed of boxes passing through the conveyor*)
+        IF (NOT M2RETROFLECTIVESENSOR2) AND (NOT M2TIMERSENSORCHECK) THEN
+          M2RealTimeClock(CDT => M2TrackedTimeEnd);
+          M2TOTALTIME := ADD_TIME(M2TOTALTIME, SUB_DT_DT(M2TRACKEDTIMESTART, M2TRACKEDTIMEEND));
+          M2TIMERCOUNTER := M2TIMERCOUNTER +1;
+          M2AVERAGETIME := (TIME_TO_INT(M2TOTALTIME)/M2TIMERCOUNTER);
+          M2TIMERSENSORCHECK := TRUE;
+          END_IF;
+        IF (M2RETROFLECTIVESENSOR2) AND (M2TIMERSENSORCHECK) THEN
+          M2TIMERSENSORCHECK := FALSE;
+          END_IF;
+      (*RETROFLECTIVESENSOR3 tracts boxes leaving the machine into the remover*)
+      IF (M2RetroflectiveSensor3 = FALSE) AND (M2JOBDONECHECK = FALSE) THEN
         M2JOBSDONE := M2JOBSDONE +1;
+        M2JOBDONECHECK := TRUE;
         END_IF; 
       (*RESET JOBS STARTED CHECK IF SENSOR ISNT TRIGGERED*)
       IF M2RETROFLECTIVESENSOR1 = TRUE then
         M2JOBSTARTEDCHECK :=FALSE;
         END_IF;
       (*RESET JOBS DONE CHECK IF SENSOR ISNT TRIGGERED*)
-      IF M2RETROFLECTIVESENSOR2 = TRUE then
-        M2JOBDONECHECK := FALSE;
+      IF M2RETROFLECTIVESENSOR3 = TRUE then
+        M2JOBDONECHECK := FALSE;      
         END_IF;
+      M2TANKFILLVALVE1 := REAL_TO_INT(((-(COS(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)+0.5)*1000.0);
+      M2TANKDRAINVALVE1 := REAL_TO_INT((((SIN(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)+0.5)*1000.0);
+      M2TANKFILLVALVE2 := REAL_TO_INT(((-(COS(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)+0.5)*1000.0);
+      M2TANKDRAINVALVE2 := REAL_TO_INT((((SIN(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)+0.5)*1000.0);
     ELSE
       M2BCONEYOR1 := false;
       M2BCONEYOR2 := false;
@@ -202,15 +291,17 @@ PROGRAM JadcupPLC
       M2BCONEYORSCALE1 :=FALSE;
       M2REMOVER := false;
       M2EMITTER := FALSE;
-      
       END_IF;
-      
-      M2TANKFILLVALVE1 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
-      M2TANKDRAINVALVE1 := REAL_TO_INT(((SIN(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
-      M2TANKFILLVALVE2 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)*1000.0);
-      M2TANKDRAINVALVE2 := REAL_TO_INT(((SIN(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)*1000.0);
+    (*output value setting*)
+    M2WATERLEVEL := (M2TANKLEVELMETER1 + M2TANKLEVELMETER2) /2;
+    IF (M2CONVEYORSCALE > 0) AND (NOT M2WEIGHTCHECK) THEN
+      M2WEIGHTCHECK := TRUE;
+      M2TOTALWEIGHT := M2TOTALWEIGHT + M2CONVEYORSCALE;
+    ELSIF (M2CONVEYORSCALE = 0) AND M2WEIGHTCHECK THEN
+      M2WEIGHTCHECK := FALSE;
+      END_IF;
     (*END OF MACHINE 2 CODE*)
-    END_IF;
+  END_IF;
 END_PROGRAM
 
 
