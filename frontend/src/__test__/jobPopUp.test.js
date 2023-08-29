@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import JobPopup from "./JobPopup";
+import JobPopup from "../components/PopUps/JobPopup";
 
 describe("JobPopup Component", () => {
 	it("renders the job popup properly", () => {
@@ -78,17 +78,3 @@ describe("JobPopup Component", () => {
 		expect(onCloseMock).toHaveBeenCalledWith(false);
 	});
 });
-
-// describe("AllMachineTable Component", () => {
-// 	it("renders the job popup properly", () => {
-// 		render(<AllMachineTable />);
-
-// 		// Find and click the button that triggers the job popup
-// 		const jobRequestButton = screen.getByText("Order");
-// 		userEvent.click(jobRequestButton);
-
-// 		// Verify that the job popup is rendered by checking for its content
-// 		const popupTitle = screen.getByText("Jobs Request Form");
-// 		expect(popupTitle).toBeInTheDocument();
-// 	});
-// });
