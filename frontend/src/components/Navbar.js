@@ -11,7 +11,7 @@ import AuthContext from "./AuthContext";
 
 const Navbar = ({user, showProps = false}) => {
     const { isAdmin = false } = useContext(AuthContext) || {};
-    const theme = useTheme();
+    const theme = useTheme().palette;
     const colorMode = useContext(ColorModeContext);
 
     return (
