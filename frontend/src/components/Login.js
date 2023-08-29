@@ -1,8 +1,8 @@
 import { appAuth } from "../firebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { TextField, Button, Box, useTheme } from "@mui/material";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { TextField, Button, Box, Link, useTheme } from "@mui/material";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import AuthContext from "./AuthContext";
 import Navbar from "./Navbar";
@@ -91,7 +91,7 @@ const Login = ({ user }) => {
           <br />
           <Button sx={{ height: 50 }} variant="contained" type="submit" aria-label="Log In">Log In</Button>
           <br />
-          <Link onClick={() => navigate("/forgot-password")} to="/forgot-password">Forgot Password?</Link>
+          <Link component={RouterLink} onClick={() => navigate("/forgot-password")} to="/forgot-password">Forgot Password?</Link>
         </Box>
         {error && <p sx={{ color: "error.main" }}>{error}</p>}
       </Box>

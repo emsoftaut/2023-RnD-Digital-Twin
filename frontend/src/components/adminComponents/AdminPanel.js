@@ -124,7 +124,7 @@ const AdminPanel = ({ user }) => {
   return (
     <Box sx={{
       padding: 0,
-      overflow: "hidden",
+      overflow: "scroll",
       backgroundColor: (theme.palette.mode === "dark" ? theme.palette.divider : "auto"),
       height: '100%'
     }}
