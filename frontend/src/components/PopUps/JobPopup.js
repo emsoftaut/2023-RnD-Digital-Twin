@@ -18,7 +18,7 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 	};
 
 	const handleClose = () => {
-		setjobsQueue();
+		setjobsQueue(0);
 		onClose(false);
 	};
 
@@ -54,7 +54,13 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 					<label sx={{ display: "block", marginButtom: "8px" }}>
 						Number of Boxes:
 						<br />
-						<input sx={{ width: "100%", padding: "8px", border: "1px solid #a1a1a1", borderRadius: "4px" }} type="number" value={jobsQueueNum} onChange={handlevalueChange} />
+						<input
+							sx={{ width: "100%", padding: "8px", border: "1px solid #a1a1a1", borderRadius: "4px" }}
+							type="number"
+							value={jobsQueueNum}
+							onChange={handlevalueChange}
+							aria-label="Number of Boxes:"
+						/>
 						<br />
 					</label>
 					<Box

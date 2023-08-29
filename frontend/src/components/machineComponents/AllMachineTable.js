@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, tableCellClasses, LinearProgress, Typography, Link, useTheme, styled } from "@mui/material";
-import { Link as RouterLink} from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import JobPopup from "../PopUps/JobPopup";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -48,13 +48,7 @@ export const MachineButton = (props) => {
 	};
 
 	return (
-		<Button 
-		color="inherit"
-		startIcon={innerIcon} 
-		variant="contained" 
-		onClick={handleClick}
-		disabled={(jQ > 0) ? false: true}
-		sx={{width: 100}}>
+		<Button color="inherit" startIcon={innerIcon} variant="contained" onClick={handleClick} disabled={jQ > 0 ? false : true} sx={{ width: 100 }}>
 			<Typography variant="p">{innerText}</Typography>
 			{isPopupOpen && method !== "toggle" && <WarningPopUp machID={machID} onCancel={() => setIsPopupOpen(false)} onClose={() => setIsPopupOpen(false)} />}
 		</Button>
@@ -79,23 +73,23 @@ export const ProgressBar = ({ done, queued }) => {
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
-	  backgroundColor: `${(theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.primary.main)}`,
-	  color: theme.palette.primary.contrastText,
+		backgroundColor: `${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.primary.main}`,
+		color: theme.palette.primary.contrastText,
 	},
 	[`&.${tableCellClasses.body}`]: {
-	  fontSize: 14,
+		fontSize: 14,
 	},
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-	'&:nth-of-type(odd)': {
-	  backgroundColor: theme.palette.action.hover,
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+	"&:nth-of-type(odd)": {
+		backgroundColor: theme.palette.action.hover,
 	},
 	// hide last border
-	'&:last-child td, &:last-child th': {
-	  border: 0,
+	"&:last-child td, &:last-child th": {
+		border: 0,
 	},
-  }));
+}));
 
 const AllMachineTable = () => {
 	const { machineData } = useMachineData();
@@ -105,13 +99,13 @@ const AllMachineTable = () => {
 
 	if (error) {
 		setError(error);
-		return <p>Error: {error}</p>; 
+		return <p>Error: {error}</p>;
 	}
 
 	return (
 		<Box sx={{ overflowX: "scroll" }}>
 			<Table size="small" stickyHeader width="max-content">
-				<TableHead  sx={{backgroundColor: (theme.mode === 'dark' ? 'auto' : theme.primary)}}>
+				<TableHead sx={{ backgroundColor: theme.mode === "dark" ? "auto" : theme.primary }}>
 					<StyledTableRow>
 						<StyledTableCell>Machine #</StyledTableCell>
 						<StyledTableCell>Job Status</StyledTableCell>
@@ -126,7 +120,9 @@ const AllMachineTable = () => {
 					{machineData.map((machine) => (
 						<StyledTableRow>
 							<StyledTableCell>
-								<Link component={RouterLink} to={"/" + machine.machID}>{machine.machID}</Link>
+								<Link component={RouterLink} to={"/" + machine.machID}>
+									{machine.machID}
+								</Link>
 							</StyledTableCell>
 							<StyledTableCell>{machine.sensors.machineStatus === true ? "Running" : "Not Running"}</StyledTableCell>
 							<StyledTableCell>{machine.lastModified}</StyledTableCell>
