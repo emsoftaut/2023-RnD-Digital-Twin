@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test-coverage": "jest --coverage",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./controllers/middleware.js testPLCMachine",
     "build": "node ./controllers/middleware.js testPLCMachine",
-    "buildjson": "node ./controllers/fileParser.js"
+	"buildjson": "node ./controllers/fileParser.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,8 +17,5 @@
     "firebase": "^9.20.0",
     "jsmodbus": "^4.0.6",
     "ws": "^8.13.0"
-  },
-  "devDependencies": {
-    "jest": "^29.6.2"
   }
 }

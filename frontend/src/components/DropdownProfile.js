@@ -1,42 +1,27 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Box, Grid, Paper, Avatar, Button, Typography, useTheme, styled } from "@mui/material";
 import { FaCog, FaInfoCircle, FaSignOutAlt } from "react-icons/fa";
 import AuthContext from "./AuthContext";
-import { getSingleUser } from "../data/FireBaseData";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundImage: "none",
-  backgroundColor: `none`,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
   boxShadow: "none",
-  color: theme.palette.text.primary,
+  color: theme.palette.text.secondary,
 }));
 
-const DropdownProfile = ({user, isAdmin}) => {
+const DropdownProfile = () => {
   const theme = useTheme();
   const { handleLogout } = useContext(AuthContext);
-  const [userName, setUserName] = useState('Fetching...');
-
-  useEffect(() => {
-    const fetchUserName = async () => {
-      const name = await getSingleUser(user.email);
-      if (name) {
-        setUserName(name);
-      } else {
-        isAdmin? setUserName("Admin") : setUserName('Not Found');
-      }
-    };
-    fetchUserName();
-  }, [user.email]);
 
   const handleLogoutClick = () => {
     handleLogout();
   }
 
   return (
-    <Box sx={{ flexGrow: 1, background: theme.palette.background.paper }}>
+    <Box sx={{ flexGrow: 1, background: theme.palette.background.default }}>
       <Grid
         container
         direction="column"
@@ -50,11 +35,11 @@ const DropdownProfile = ({user, isAdmin}) => {
           <Item><Avatar sx={{ width: 56, height: 56 }} alt="Jane Jung" /></Item>
         </Grid>
         <Grid item xs>
-          <Item><Typography variant="h6">{userName}</Typography> {isAdmin ? "Admin" : "User" }</Item>
+          <Item><Typography variant="h6">Jane Jung</Typography> {/*something to represent user/admin level*/}</Item>
 
         </Grid>
         <Grid item xs>
-          <Item><Typography variant="p">{user.email}</Typography></Item>
+          <Item><Typography variant="p">janejung@email.com</Typography></Item>
 
         </Grid>
         <Grid item xs>

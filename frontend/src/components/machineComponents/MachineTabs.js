@@ -12,7 +12,7 @@ const MachineTabs = ({ machineID, mode }) => {
     };
 
     return (
-        <Box sx={{ width: '100%', height: '100%', overflowX: "scroll" }} justifyContent={"space-between"}>
+        <Box sx={{ width: '100%', overflowX: "scroll" }} justifyContent={"space-between"}>
             <Tabs
                 value={value}
                 onChange={handleChange}

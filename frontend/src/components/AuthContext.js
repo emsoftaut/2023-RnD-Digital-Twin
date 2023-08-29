@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleLogin = (email, password) => {
     const authInstance = getAuth(appAuth); // Initialize the authentication service
@@ -50,9 +49,7 @@ export const AuthProvider = ({ children }) => {
         error,
         handleLogin,
         handleLogout,
-        setUserManually,
-        isAdmin,
-        setIsAdmin,
+        setUserManually
       }}
     >
       {children}

@@ -9,7 +9,7 @@ function PrivateRoute({ user, machines }) {
   
   return (
     <div className="content">
-      <Navbar user={user} showProps={true}/>
+      <Navbar />
         <div className="app">
         <Sidebar machines={machines}/>
         <Outlet />

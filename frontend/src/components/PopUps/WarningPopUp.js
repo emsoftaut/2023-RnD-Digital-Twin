@@ -1,5 +1,5 @@
 import React from "react";
-import { setJQMachine } from "../../data/FireBaseData";
+import { setJQMachine } from "../machineComponents/AllMachineTable";
 import styles from "../style.module.css";
 import { Button, Box, useTheme } from "@mui/material";
 

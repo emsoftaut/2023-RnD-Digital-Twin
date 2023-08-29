@@ -1,22 +1,19 @@
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 
-//https://mui.com/material-ui/customization/default-theme/?expand-path=$.palette
-
 //color tokens
 export const tokens = (mode) => ({
     ...(mode === 'dark'
         ? {
             primary: '#43a047',
             secondary: '#42a5f5',
-            background: '#303030',
-            paper: '#1e1e1e',
+            paper: '#121212',
+            grey: '#5E5E5E',
         } : {
             primary: '#43a047',
             secondary: '#42a5f5',
-            background: '#eeeeee',
-            paper: '#fff',
-        }),
+            grey: '#EBEBEB',
+            }),
 });
 
 export const themeSettings = (mode) => {
@@ -27,39 +24,29 @@ export const themeSettings = (mode) => {
             ...({
                 primary: { main: colors.primary },
                 secondary: { main: colors.secondary },
-                background: {
-                    default: colors.background,
-                    paper: colors.paper
-                }
+                background: {paper: colors.paper},
+                grey: {main: colors.grey}
             }),
         },
         typography: {
             fontFamily: '"Raleway", "Roboto", "Arial", sans-serif',
-            fontWeight: 500
         },
-        components: {
-            MuiButton: {
-                defaultProps: {
-                    disableElevation: true,
-                },
-            },
-            MuiList: {
-                dense: true,
-            },
-            MuiMenuItem: {
-                dense: true,
-            },
-            MuiTable: {
-                size: 'small',
+        props: {
+        MuiList: {
+            dense: true,
+        },
+        MuiMenuItem: {
+            dense: true,
+        },
+        MuiTable: {
+            size: 'small',
+        },
+        MuiButton: {
+            size: 'small',
             },
             MuiButtonGroup: {
-                size: 'small',
+            size: 'small',
             },
-            root: {
-                "& .MuiPaper-root": {
-                  backgroundImage: 'none'
-                },
-            }
         },
     };
 };

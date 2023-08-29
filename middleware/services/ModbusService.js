@@ -4,6 +4,7 @@ const socket = new net.Socket();
 const client = new Modbus.client.TCP(socket);
 let offset;
 
+
 console.log("Connecting to modbus");
 
 function SetupModbus(ip, IOport, inputOffset)
@@ -78,7 +79,7 @@ function HandleModbusError(error) {
   if (error.err == "Offline") {
     throw new Error(OfflineErrorMessage);
   } else {
-    throw new Error(error.message);
+    throw new Error(error.message)
   }
 }
 
