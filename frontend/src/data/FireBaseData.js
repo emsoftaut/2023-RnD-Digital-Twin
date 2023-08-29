@@ -32,9 +32,93 @@ export const useMachineData = () => {
   return { machineData, error };
 };
 
+
+export const setJQMachine = async (machID, JQ) => {
+	// Get the reference to the database path where "jobsQueued" variable is stored
+	const databasePath = `factory_io/data/${machID}/coils/jobsQueued`;
+	const databaseRef = ref(appDb, databasePath);
+
+	try {
+		// Read the current status from the database
+		const snapshot = await get(databaseRef);
+		const currentStatus = snapshot.val();
+
+		// Calculate the new status (toggle the status) and update the database
+		if (JQ !== currentStatus) {
+			set(databaseRef, JQ)
+				.then(() => {
+					console.log("Machine status updated successfully!");
+				})
+				.catch((error) => {
+					console.error("Error updating machine status:", error);
+				});
+		}
+	} catch (error) {
+		console.error("Error reading machine status:", error);
+	}
+}
+
+
+export const createUser = async (email, name) => {
+  // Define the database path where the user's data will be stored
+  const sanitizedEmail = email.replace('.', ','); // Replace dot with comma to use as key
+  const databasePath = `users/${sanitizedEmail}`;
+  const databaseRef = ref(appDb, databasePath);
+
+  try {
+    // Write the user's name to the database
+    await set(databaseRef, { name: name });
+    console.log("User created successfully!");
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error; // Re-throw the error to be handled in the calling function
+  }
+};
+
+export const getSingleUser = async (email) => {
+  const sanitizedEmail = email.replace('.', ',');
+  const userRef = ref(appDb, `users/${sanitizedEmail}`);
+  
+  const snapshot = await get(userRef);
+  if (snapshot.exists()) {
+    return snapshot.val().name;
+  } else {
+    console.error('User does not exist');
+    return null;
+  }
+};
+
+export const getUsers = (callback) => {
+  const usersRef = ref(appDb, "users");
+  console.log("Users Reference:", usersRef);
+  const handleDataChange = (snapshot) => {
+    const data = snapshot.val();
+    console.log("Raw data:", data);
+    if (data) {
+      const usersArray = Object.keys(data).map((key) => ({
+        email: key.replace(',', '.'), // Replacing commas with dots
+        name: data[key].name,
+      }));
+      console.log(usersArray);
+      callback(usersArray);
+    }
+  };
+
+  onValue(usersRef, handleDataChange);
+
+  return () => {
+    off(usersRef, handleDataChange);
+  };
+};
+
+/*
+*
+* Function to flip the value of 'running' within the current machine
+*
+*/
 export const toggleMachine = async (machID) => {
   // Get the reference to the database path where "running" variable is stored
-  const databasePath = `factory_io/data/${machID}/coils/running`;
+  const databasePath = `factory_io/data/${machID}/coils/override`;
   const databaseRef = ref(appDb, databasePath);
 
   try {
@@ -53,11 +137,12 @@ export const toggleMachine = async (machID) => {
       });
   } catch (error) {
     console.error("Error reading machine status:", error);
+    throw error;
   }
 }
 
 function validateMachineData(machine) {
-  const requiredKeys = ['machineID', 'coils', 'lastModified', 'sensors'];
+  const requiredKeys = ['machineID', 'coils', 'sensors'];
   return requiredKeys.every(key => machine.hasOwnProperty(key)
     && machine[key] !== null
     && Object.keys(machine[key]).length !== 0);

@@ -25,7 +25,6 @@ const CancelAllButton = () => {
         <Button sx={{ height: 50 }} 
         variant="contained" 
         color="error" 
-        disableElevation 
         disabled={allOff}
         onClick={handleClick}>
             STOP ALL MACHINES
@@ -57,9 +56,8 @@ const Homepage = () => {
             flexDirection: "column",
             overflow: "hidden",
             overflowY: "scroll",
-            backgroundColor: (theme.mode === "dark" ? theme.divider : "auto")
         }} >
-            <Box p="20px" height="90%" component={Paper}>
+            <Box p="20px" height="90%" component={Paper} sx={{backgroundImage: "none"}}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Header title="All Machines" subtitle={timestamp} />
                     <CancelAllButton/>
