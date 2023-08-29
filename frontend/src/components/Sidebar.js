@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Box, List, Collapse, ListItemIcon, ListItemButton, ListItemText } from "@mui/material";
+import { useTheme, Box, List, Collapse, ListItemIcon, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
-import "react-pro-sidebar/dist/css/styles.css";
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -12,6 +11,7 @@ const Sidebar = () => {
     const {machineData, error } = useMachineData();
     const [selected, setSelected] = useState("index");
     const [open, setOpen] = useState(true);
+    const theme = useTheme().palette;
 
     const openSubList = () => {
         setOpen(!open);
@@ -36,7 +36,7 @@ const Sidebar = () => {
     };
 
     return (
-        <Box width="300px">
+        <Box width="300px" backgroundColor={(theme.mode === "dark" ? '#121212' : "#fff")}>
             <List component="nav" sx={{paddingX: "5px"}}>
                 <ListItem name="index" text="All Machines" to="/" icon={<DashboardIcon />} />
                 <ListItemButton sx={{paddingY: "15px"}} onClick={openSubList}>

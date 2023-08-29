@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, LinearProgress, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link as RouterLink} from "react-router-dom";
 import JobPopup from "../PopUps/JobPopup";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -49,12 +49,12 @@ export const MachineButton = (props) => {
 
 	return (
 		<Button 
+		color="inherit"
 		startIcon={innerIcon} 
-		disableElevation 
 		variant="contained" 
-		color="grey" 
 		onClick={handleClick}
-		disabled={(jQ > 0) ? false: true}>
+		disabled={(jQ > 0) ? false: true}
+		sx={{width: 100}}>
 			<Typography variant="p">{innerText}</Typography>
 			{isPopupOpen && method !== "toggle" && <WarningPopUp machID={machID} onCancel={() => setIsPopupOpen(false)} onClose={() => setIsPopupOpen(false)} />}
 		</Button>
@@ -77,9 +77,30 @@ export const ProgressBar = ({ done, queued }) => {
 	);
 };
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+	[`&.${tableCellClasses.head}`]: {
+	  backgroundColor: `${(theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.primary.main)}`,
+	  color: theme.palette.primary.contrastText,
+	},
+	[`&.${tableCellClasses.body}`]: {
+	  fontSize: 14,
+	},
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+	'&:nth-of-type(odd)': {
+	  backgroundColor: theme.palette.action.hover,
+	},
+	// hide last border
+	'&:last-child td, &:last-child th': {
+	  border: 0,
+	},
+  }));
+
 const AllMachineTable = () => {
 	const { machineData } = useMachineData();
 	const [showPopup] = useState(false);
+	const theme = useTheme();
 	const [error, setError] = useState("");
 
 	if (error) {
@@ -90,39 +111,38 @@ const AllMachineTable = () => {
 	return (
 		<Box sx={{ overflowX: "scroll" }}>
 			<Table size="small" stickyHeader width="max-content">
-				<TableHead>
-					<TableRow>
-						<TableCell>Machine #</TableCell>
-						<TableCell>Job Status</TableCell>
-						<TableCell>Last Modified</TableCell>
-						<TableCell>Job Progress</TableCell>
-						<TableCell align="right">Belt Speed</TableCell>
-						<TableCell align="right">Temperature</TableCell>
-						<TableCell align="center">Job Actions</TableCell>
-					</TableRow>
+				<TableHead  sx={{backgroundColor: (theme.mode === 'dark' ? 'auto' : theme.primary)}}>
+					<StyledTableRow>
+						<StyledTableCell>Machine #</StyledTableCell>
+						<StyledTableCell>Job Status</StyledTableCell>
+						<StyledTableCell>Last Modified</StyledTableCell>
+						<StyledTableCell>Job Progress</StyledTableCell>
+						<StyledTableCell align="right">Belt Speed</StyledTableCell>
+						<StyledTableCell align="right">Temperature</StyledTableCell>
+						<StyledTableCell align="center">Job Actions</StyledTableCell>
+					</StyledTableRow>
 				</TableHead>
 				<TableBody>
 					{machineData.map((machine) => (
-						<TableRow>
-							<TableCell>
-								<Link to={"/" + machine.machID}>{machine.machID}</Link>
-							</TableCell>
-							<TableCell>{machine.sensors.running === true ? "Running" : "Not Running"}</TableCell>
-							<TableCell>{machine.lastModified}</TableCell>
-							<TableCell>
+						<StyledTableRow>
+							<StyledTableCell>
+								<Link component={RouterLink} to={"/" + machine.machID}>{machine.machID}</Link>
+							</StyledTableCell>
+							<StyledTableCell>{machine.sensors.machineStatus === true ? "Running" : "Not Running"}</StyledTableCell>
+							<StyledTableCell>{machine.lastModified}</StyledTableCell>
+							<StyledTableCell>
 								<ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} />
-							</TableCell>
-							<TableCell align="right">{machine.sensors.averageSpeed || "0"}</TableCell>
-							<TableCell align="right">{machine.sensors.waterLevel || "0"}</TableCell>
-							<TableCell>
-								<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+							</StyledTableCell>
+							<StyledTableCell align="right">{machine.sensors.averageSpeed || "0"}</StyledTableCell>
+							<StyledTableCell align="right">{machine.sensors.waterLevel || "0"}</StyledTableCell>
+							<StyledTableCell>
+								<Box sx={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
 									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} />
 									<MachineButton machID={machine.machineID} running={machine.sensors.running} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
 									<MachineButton machID={machine.machineID} running={machine.sensors.running} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
 								</Box>
-							</TableCell>
-							<TableCell></TableCell>
-						</TableRow>
+							</StyledTableCell>
+						</StyledTableRow>
 					))}
 				</TableBody>
 			</Table>
