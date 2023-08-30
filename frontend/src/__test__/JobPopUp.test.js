@@ -45,4 +45,35 @@ describe("JobPopup Component", () => {
 		});
 	});
 
+	it('handles input change correctly', () => {
+		render(<JobPopup />);
+		
+		const inputElement = screen.getByLabelText('Number of Boxes:');
+		fireEvent.change(inputElement, { target: { value: '5' } });
+	  
+		expect(inputElement).toHaveValue(5);
+	  });
+
+	  it('calls onClick when the form is submitted', () => {
+		const onClickMock = jest.fn();
+		render(<JobPopup onClick={onClickMock} />);
+		
+		const submitButton = screen.getByText('SUBMIT');
+		fireEvent.click(submitButton);
+	
+		expect(onClickMock).toHaveBeenCalled();
+	  });
+
+	  it('handles valid positive integer input', () => {
+		render(<JobPopup />);
+		
+		const inputElement = screen.getByLabelText('Number of Boxes:');
+	  
+		fireEvent.change(inputElement, { target: { value: '10' } });
+	  
+		expect(inputElement).toHaveValue(10);
+	  
+		const validIntegerPattern = /^\d+$/;
+		expect(validIntegerPattern.test(inputElement.value)).toBe(true);
+	  });
 });
