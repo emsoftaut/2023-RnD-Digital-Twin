@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ref, onValue, off, get, set } from "firebase/database";
+import { ref, onValue, off, get, set, remove } from "firebase/database";
 import { appDb } from "../firebaseConfig";
 
 export const useMachineData = () => {
@@ -58,6 +58,21 @@ export const setJQMachine = async (machID, JQ) => {
 	}
 }
 
+export const deleteUser = async (email) => {
+  // Define the database path where the user's data is stored
+  const sanitizedEmail = email.replace('.', ','); // Replace dot with comma to use as key
+  const databasePath = `users/${sanitizedEmail}`;
+  const databaseRef = ref(appDb, databasePath);
+  console.log("FireBaseData deleteuser");
+  try {
+    // Remove the user's data from the database
+    await remove(databaseRef);
+    console.log("User deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error; // Re-throw the error to be handled in the calling function
+  }
+};
 
 export const createUser = async (email, name) => {
   // Define the database path where the user's data will be stored

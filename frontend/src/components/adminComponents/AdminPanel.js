@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useTheme, Box } from "@mui/material";
 import { Link } from 'react-router-dom';
-import { createUser, getUsers } from '../../data/FireBaseData';
+import { createUser, getUsers, deleteUser } from '../../data/FireBaseData';
 import styles from "../style.module.css";
 import Navbar from '../Navbar';
 import NewUserForm from './NewUserForm';
@@ -23,6 +23,7 @@ const AdminPanel = ({ user }) => {
   const functions = getFunctions();
   const toggleUserStatus = httpsCallable(functions, 'toggleUserStatus');
   const createUserClient = httpsCallable(functions, 'createUser');
+  const deleteUserClient = httpsCallable(functions, 'deleteUser');
 
 
   const unsubscribeRef = useRef(null);
@@ -81,6 +82,21 @@ const AdminPanel = ({ user }) => {
     };
   }, [isAdmin]);
 
+
+  const handleDeleteUser = async (user) => {
+    console.log("handleDeleteUser", user.email);
+    try {
+      const result = await deleteUserClient({ uid: user.uid, email: user.email });
+      if (result.data.success) {
+        deleteUser(user.email);  // Await removed however might re-visit
+        const updatedUsers = users.filter(u => u.uid !== user.uid);
+        setUsers(updatedUsers);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  }
+
   const handleRegister = (e) => {
     e.preventDefault();
 
@@ -133,7 +149,7 @@ const AdminPanel = ({ user }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', height: '100%' }}>
         <h1 style={{ textAlign: 'center' }}>Admin Panel</h1>
         <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>
-          <Box sx={{ flex: '1', marginRight: '20px', alignItems: 'center' }}>
+          <Box sx={{ flex: '1', marginRight: '20px', alignItems: 'center', textAlign: 'start' }}>
             <NewUserForm
               name={name}
               password={password}
@@ -150,7 +166,11 @@ const AdminPanel = ({ user }) => {
             {registerMessage && <p sx={{ textAlign: 'center', color: 'success.main' }}>{registerMessage}</p>}
           </Box>
           <Box sx={{ flex: '1', marginLeft: '20px' }}> {/* Users List Box */}
-            <AuthUserList users={users} toggleUserStatus={toggleUserStatusClient} />
+            <AuthUserList 
+              users={users} 
+              toggleUserStatus={toggleUserStatusClient}
+              deleteUser={handleDeleteUser}
+              />
           </Box>
         </Box>
         <br />

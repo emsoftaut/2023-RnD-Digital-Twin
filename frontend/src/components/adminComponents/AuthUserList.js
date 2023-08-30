@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
 
-const AuthUserList = ({ users, toggleUserStatus }) => (
+const AuthUserList = ({ users, toggleUserStatus, deleteUser }) => (
   <Box sx={{
     display: "flex",
     flexDirection: "column",
@@ -29,9 +29,19 @@ const AuthUserList = ({ users, toggleUserStatus }) => (
               <TableCell align='center'>
                 <Button
                   variant="contained"
+                  style={{ backgroundColor: user.disabled ? '#43a047' : '#7d0606' }}
                   onClick={() => toggleUserStatus(user)}
                 >
                   {user.disabled ? "Enable" : "Disable"}
+                </Button>
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  style={{backgroundColor: '#7d0606'}}
+                  onClick={() => deleteUser(user)}
+                >
+                  Delete User
                 </Button>
               </TableCell>
             </TableRow>
