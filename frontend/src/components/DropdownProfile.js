@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import { Box, Grid, Paper, Avatar, Button, Typography, useTheme, styled } from "@mui/material";
 import { FaCog, FaInfoCircle, FaSignOutAlt } from "react-icons/fa";
 import AuthContext from "./AuthContext";
-import { getSingleUser } from "../data/FireBaseData";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundImage: "none",
@@ -20,15 +19,7 @@ const DropdownProfile = ({user, isAdmin}) => {
   const [userName, setUserName] = useState('Fetching...');
 
   useEffect(() => {
-    const fetchUserName = async () => {
-      const name = await getSingleUser(user.email);
-      if (name) {
-        setUserName(name);
-      } else {
-        isAdmin? setUserName("Admin") : setUserName('Not Found');
-      }
-    };
-    fetchUserName();
+        isAdmin? setUserName("Admin") : setUserName(`${user.displayName}`);
   }, [user.email]);
 
   const handleLogoutClick = () => {

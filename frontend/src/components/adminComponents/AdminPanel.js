@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { useTheme, Box } from "@mui/material";
-import { Link } from 'react-router-dom';
-import { createUser, getUsers } from '../../data/FireBaseData';
+import { useTheme, Box, Link, Paper } from "@mui/material";
+import { Link as RouterLink } from 'react-router-dom';
 import styles from "../style.module.css";
 import Navbar from '../Navbar';
+import Header from '../Header';
 import NewUserForm from './NewUserForm';
 import AuthUserList from './AuthUserList';
 import AuthContext from '../AuthContext';
@@ -23,13 +23,14 @@ const AdminPanel = ({ user }) => {
   const functions = getFunctions();
   const toggleUserStatus = httpsCallable(functions, 'toggleUserStatus');
   const createUserClient = httpsCallable(functions, 'createUser');
-
+  const deleteUserClient = httpsCallable(functions, 'deleteUser');
 
   const unsubscribeRef = useRef(null);
 
   const toggleUserStatusClient = async (user) => {
     try {
       console.log("Calling toggle user.");
+      console.log("User UID", user);
       const result = await toggleUserStatus({ uid: user.uid, status: !user.disabled });
       if (result.data.success) {
         // Find the index of the user and update their status
@@ -46,32 +47,22 @@ const AdminPanel = ({ user }) => {
     }
   }
 
-  const fetchAndMergeUsers = async () => {
+  const fetchAndSetUsers = async () => {
     try {
       const getAuths = httpsCallable(functions, 'getAllUsers');
       const authResult = await getAuths();
-      const authUsersMap = {};
-
-      authResult.data.users.forEach((user) => {
-        authUsersMap[user.email] = user;
-      });
-
-      unsubscribeRef.current = getUsers((usersArray) => { // Use ref to store unsubscribe function
-        const mergedUsers = usersArray.map((user) => ({
-          ...user,
-          ...authUsersMap[user.email],
-        }));
-
-        setUsers(mergedUsers);
-      });
+      if (authResult.data.users) {
+        //console.log(authResult.data.users);
+        setUsers(authResult.data.users);
+      }
     } catch (error) {
-      console.error("Error fetching and merging users:", error);
+      console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
     if (isAdmin) {
-      fetchAndMergeUsers();
+      fetchAndSetUsers();
     }
 
     return () => {
@@ -81,6 +72,20 @@ const AdminPanel = ({ user }) => {
     };
   }, [isAdmin]);
 
+
+  const handleDeleteUser = async (user) => {
+    console.log("handleDeleteUser", user.email);
+    try {
+      const result = await deleteUserClient({ uid: user.uid, email: user.email });
+      if (result.data.success) {
+        const updatedUsers = users.filter(u => u.uid !== user.uid);
+        setUsers(updatedUsers);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  }
+
   const handleRegister = (e) => {
     e.preventDefault();
 
@@ -89,10 +94,10 @@ const AdminPanel = ({ user }) => {
       return;
     }
 
-    createUserClient({ email, password })
+    createUserClient({ email, password, name })
       .then((result) => {
         if (result.data.success) {
-          createUser(email, name); //RTDB Call to create user as a Node
+          //createUser(email, name); //RTDB Call to create user as a Node
           console.log("User registered successfully");
           setRegisterMessage("User registered successfully!");
           setError("");
@@ -100,6 +105,7 @@ const AdminPanel = ({ user }) => {
           setEmail("");
           setPassword("");
           setConfirmPassword("");
+          fetchAndSetUsers();
         } else {
           setError("Error registering user: " + result.data.error);
           setRegisterMessage("");
@@ -122,42 +128,53 @@ const AdminPanel = ({ user }) => {
   }
 
   return (
-    <Box sx={{
-      padding: 0,
-      overflow: "scroll",
-      backgroundColor: (theme.palette.mode === "dark" ? theme.palette.divider : "auto"),
-      height: '100%'
-    }}
-    >
+    <>
       < Navbar user={user} showProps={true} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', height: '100%' }}>
-        <h1 style={{ textAlign: 'center' }}>Admin Panel</h1>
-        <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>
-          <Box sx={{ flex: '1', marginRight: '20px', alignItems: 'center' }}>
-            <NewUserForm
-              name={name}
-              password={password}
-              email={email}
-              handleRegister={handleRegister}
-              confirmPassword={confirmPassword}
-              error={error}
-              setConfirmPassword={setConfirmPassword}
-              setEmail={setEmail}
-              setName={setName}
-              setPassword={setPassword}
-            />
-            {error && <p className={styles.error} data-testid="password-error" sx={{ color: 'error.main' }}>{error}</p>}
-            {registerMessage && <p sx={{ textAlign: 'center', color: 'success.main' }}>{registerMessage}</p>}
+      <Box sx={{
+        mb: 1,
+        padding: 3,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "scroll",
+      }}
+      >
+        <Box p="20px" height="90%" component={Paper} sx={{ backgroundImage: "none", display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Header title="Admin Panel" />
           </Box>
-          <Box sx={{ flex: '1', marginLeft: '20px' }}> {/* Users List Box */}
-            <AuthUserList users={users} toggleUserStatus={toggleUserStatusClient} />
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+            <Box>
+              <NewUserForm
+                name={name}
+                password={password}
+                email={email}
+                handleRegister={handleRegister}
+                confirmPassword={confirmPassword}
+                error={error}
+                setConfirmPassword={setConfirmPassword}
+                setEmail={setEmail}
+                setName={setName}
+                setPassword={setPassword}
+              />
+              {error && <p className={styles.error} data-testid="password-error" sx={{ color: 'error.main' }}>{error}</p>}
+              {registerMessage && <p sx={{ textAlign: 'center', color: 'success.main' }}>{registerMessage}</p>}
+            </Box>
+            <Box> {/* Users List Box */}
+              <AuthUserList
+                users={users}
+                toggleUserStatus={toggleUserStatusClient}
+                deleteUser={handleDeleteUser}
+              />
+            </Box>
+            
           </Box>
+          
+          <Link component={RouterLink} to="/">Return to Home</Link>
         </Box>
-        <br />
-        <br />
-        <Link to="/">Return to Home</Link>
       </Box>
-    </Box>
+    </>
   );
 };
 

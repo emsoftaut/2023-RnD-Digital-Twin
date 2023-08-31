@@ -17,35 +17,30 @@ const Login = ({ user }) => {
   const theme = useTheme();
   const functions = getFunctions();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => { // <-- made it asynchronous
     e.preventDefault();
-
+  
     const authInstance = getAuth(appAuth); // Initialize the authentication service
     
-    signInWithEmailAndPassword(authInstance, email, password)
-      .then((userCredential) => {
-        console.log(userCredential.user);
-        setUserManually(userCredential.user);
-
-        const checkAdmin = httpsCallable(functions, 'checkAdmin');
-        checkAdmin().then((result) => {
-          console.log('Is Admin Result:', result);
-          setIsAdmin(result.data.isAdmin);
-          navigate("/"); // Redirect to the desired route upon successful login
-        })
-
-      })
-      .catch((error) => {
-        setError(`Invalid Username or Password.`);
-      });
-
+    try {
+      const userCredential = await signInWithEmailAndPassword(authInstance, email, password); // <-- await here
+      console.log(userCredential.user);
+      setUserManually(userCredential.user);
+  
+      const checkAdmin = httpsCallable(functions, 'checkAdmin');
+      const result = await checkAdmin(); // <-- await here
+      console.log('Is Admin Result:', result);
+      setIsAdmin(result.data.isAdmin);
+      navigate("/"); // Redirect to the desired route upon successful login
+    } catch (error) {
+      setError(`Invalid Username or Password.`);
+    }
   };
 
   return (
     <Box sx={{
       padding: 0,
       overflow: "hidden",
-      backgroundColor: (theme.palette.mode === "dark" ? theme.palette.divider : "auto"),
     }}>
       <Navbar user={user} showProps={false} />
       <Box sx={{
