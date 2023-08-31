@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { useTheme, Box } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { useTheme, Box, Link, Paper } from "@mui/material";
+import { Link as RouterLink } from 'react-router-dom';
 import styles from "../style.module.css";
 import Navbar from '../Navbar';
+import Header from '../Header';
 import NewUserForm from './NewUserForm';
 import AuthUserList from './AuthUserList';
 import AuthContext from '../AuthContext';
@@ -18,7 +19,7 @@ const AdminPanel = ({ user }) => {
   const [users, setUsers] = useState([]);
   const { isAdmin = false } = useContext(AuthContext) || {};
   const theme = useTheme();
-  
+
   const functions = getFunctions();
   const toggleUserStatus = httpsCallable(functions, 'toggleUserStatus');
   const createUserClient = httpsCallable(functions, 'createUser');
@@ -127,46 +128,53 @@ const AdminPanel = ({ user }) => {
   }
 
   return (
-    <Box sx={{
-      padding: 0,
-      overflow: "scroll",
-      backgroundColor: (theme.palette.mode === "dark" ? theme.palette.divider : "auto"),
-      height: '100%'
-    }}
-    >
+    <>
       < Navbar user={user} showProps={true} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', height: '100%' }}>
-        <h1 style={{ textAlign: 'center' }}>Admin Panel</h1>
-        <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>
-          <Box sx={{ flex: '1', marginRight: '20px', alignItems: 'center', textAlign: 'start' }}>
-            <NewUserForm
-              name={name}
-              password={password}
-              email={email}
-              handleRegister={handleRegister}
-              confirmPassword={confirmPassword}
-              error={error}
-              setConfirmPassword={setConfirmPassword}
-              setEmail={setEmail}
-              setName={setName}
-              setPassword={setPassword}
-            />
-            {error && <p className={styles.error} data-testid="password-error" sx={{ color: 'error.main' }}>{error}</p>}
-            {registerMessage && <p sx={{ textAlign: 'center', color: 'success.main' }}>{registerMessage}</p>}
+      <Box sx={{
+        mb: 1,
+        padding: 3,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "scroll",
+      }}
+      >
+        <Box p="20px" height="90%" component={Paper} sx={{ backgroundImage: "none", display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Header title="Admin Panel" />
           </Box>
-          <Box sx={{ flex: '1', marginLeft: '20px' }}> {/* Users List Box */}
-            <AuthUserList 
-              users={users} 
-              toggleUserStatus={toggleUserStatusClient}
-              deleteUser={handleDeleteUser}
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+            <Box>
+              <NewUserForm
+                name={name}
+                password={password}
+                email={email}
+                handleRegister={handleRegister}
+                confirmPassword={confirmPassword}
+                error={error}
+                setConfirmPassword={setConfirmPassword}
+                setEmail={setEmail}
+                setName={setName}
+                setPassword={setPassword}
               />
+              {error && <p className={styles.error} data-testid="password-error" sx={{ color: 'error.main' }}>{error}</p>}
+              {registerMessage && <p sx={{ textAlign: 'center', color: 'success.main' }}>{registerMessage}</p>}
+            </Box>
+            <Box> {/* Users List Box */}
+              <AuthUserList
+                users={users}
+                toggleUserStatus={toggleUserStatusClient}
+                deleteUser={handleDeleteUser}
+              />
+            </Box>
+            
           </Box>
+          
+          <Link component={RouterLink} to="/">Return to Home</Link>
         </Box>
-        <br />
-        <br />
-        <Link to="/">Return to Home</Link>
       </Box>
-    </Box>
+    </>
   );
 };
 

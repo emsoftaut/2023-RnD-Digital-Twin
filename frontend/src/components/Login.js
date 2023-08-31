@@ -41,7 +41,6 @@ const Login = ({ user }) => {
     <Box sx={{
       padding: 0,
       overflow: "hidden",
-      backgroundColor: (theme.palette.mode === "dark" ? theme.palette.divider : "auto"),
     }}>
       <Navbar user={user} showProps={false} />
       <Box sx={{
