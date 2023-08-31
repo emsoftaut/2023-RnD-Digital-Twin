@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useTheme, Box } from "@mui/material";
 import { Link } from 'react-router-dom';
@@ -21,7 +20,6 @@ const AdminPanel = ({ user }) => {
   const { isAdmin = false } = useContext(AuthContext) || {};
   const theme = useTheme();
 
-  const auth = getAuth();
   const functions = getFunctions();
   const toggleUserStatus = httpsCallable(functions, 'toggleUserStatus');
   const createUserClient = httpsCallable(functions, 'createUser');
@@ -126,7 +124,7 @@ const AdminPanel = ({ user }) => {
   return (
     <Box sx={{
       padding: 0,
-      overflow: "hidden",
+      overflow: "scroll",
       backgroundColor: (theme.palette.mode === "dark" ? theme.palette.divider : "auto"),
       height: '100%'
     }}

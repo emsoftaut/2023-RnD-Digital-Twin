@@ -6,11 +6,12 @@ import { getSingleUser } from "../data/FireBaseData";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundImage: "none",
+  backgroundColor: `none`,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
   boxShadow: "none",
-  color: theme.palette.text.secondary,
+  color: theme.palette.text.primary,
 }));
 
 const DropdownProfile = ({user, isAdmin}) => {
@@ -35,7 +36,7 @@ const DropdownProfile = ({user, isAdmin}) => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, background: theme.palette.background.default }}>
+    <Box sx={{ flexGrow: 1, background: theme.palette.background.paper }}>
       <Grid
         container
         direction="column"

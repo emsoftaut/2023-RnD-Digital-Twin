@@ -118,7 +118,7 @@ export const getUsers = (callback) => {
 */
 export const toggleMachine = async (machID) => {
   // Get the reference to the database path where "running" variable is stored
-  const databasePath = `factory_io/data/${machID}/coils/running`;
+  const databasePath = `factory_io/data/${machID}/coils/override`;
   const databaseRef = ref(appDb, databasePath);
 
   try {
@@ -142,7 +142,7 @@ export const toggleMachine = async (machID) => {
 }
 
 function validateMachineData(machine) {
-  const requiredKeys = ['machineID', 'coils', 'lastModified', 'sensors'];
+  const requiredKeys = ['machineID', 'coils', 'sensors'];
   return requiredKeys.every(key => machine.hasOwnProperty(key)
     && machine[key] !== null
     && Object.keys(machine[key]).length !== 0);

@@ -11,13 +11,18 @@ import AuthContext from "./AuthContext";
 
 const Navbar = ({user, showProps = false}) => {
     const { isAdmin = false } = useContext(AuthContext) || {};
-    const theme = useTheme();
+    const theme = useTheme().palette;
     const colorMode = useContext(ColorModeContext);
 
     return (
-        <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2, backgroundColor: (theme.palette.mode === "dark") ? theme.palette.grey[900] : theme.palette.primary.main }}>
+        <Box sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 2,
+            backgroundColor: (theme.mode === "dark") ? theme.background.paper : theme.primary.main,
+        }}>
             <Box display="flex" height={50}>
-                {theme.palette.mode === 'dark' ? (
+                {theme.mode === 'dark' ? (
                     <img src="./logo-dark.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
                 ) : (
                     <img src="./logo-light.png" alt="logo" style={{ margin: 5 + 'px', marginBottom: 5 + 'px', objectFit: "cover" }} />
@@ -43,10 +48,10 @@ const Navbar = ({user, showProps = false}) => {
                 <IconButton
                     onClick={colorMode.toggleColorMode}
                     aria-label="Display Mode Toggle">
-                    {theme.palette.mode === 'dark' ? (
-                        <LightModeOutlinedIcon />
+                    {theme.mode === 'dark' ? (
+                        <LightModeOutlinedIcon/>
                     ) : (
-                        <DarkModeOutlinedIcon />
+                        <DarkModeOutlinedIcon/>
                     )}
                 </IconButton>
                 {user && showProps ? (

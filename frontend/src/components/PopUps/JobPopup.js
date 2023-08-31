@@ -1,24 +1,22 @@
 import React, { useState } from "react";
-import { Button, Box, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import styles from "../style.module.css";
 
 const JobPopup = ({ onClick, machineName, onClose }) => {
-	const [jobsQueueNum, setjobsQueue] = useState();
+	const [jobsQueueNum, setJobsQueue] = useState();
 	const theme = useTheme();
-
-	const machineID = machineName;
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		onClick(jobsQueueNum);
+		onClick(parseInt(jobsQueueNum));
 	};
 
-	const handlevalueChange = (event) => {
-		setjobsQueue(event.target.value);
+	const handleValueChange = (event) => {
+		setJobsQueue(event.target.value);
 	};
 
 	const handleClose = () => {
-		setjobsQueue(0);
+		setJobsQueue(0);
 		onClose(false);
 	};
 
@@ -50,11 +48,16 @@ const JobPopup = ({ onClick, machineName, onClose }) => {
 			>
 				<form onSubmit={handleSubmit}>
 					<h1 sx={{ marginBottom: 16 }}>Jobs Request Form</h1>
-					<h3>Machine ID: {machineID}</h3>
-					<label sx={{ display: "block", marginButtom: "8px" }}>
+					<h3>Machine ID: {machineName}</h3>
+					<label sx={{ display: "block", marginBottom: "8px" }}>
 						Number of Boxes:
 						<br />
-						<input sx={{ width: "100%", padding: "8px", border: "1px solid #a1a1a1", borderRadius: "4px" }} type="number" value={jobsQueueNum} onChange={handlevalueChange} />
+						<input
+							sx={{ width: "100%", padding: "8px", border: "1px solid #a1a1a1", borderRadius: "4px" }}
+							type="number"
+							value={jobsQueueNum}
+							onChange={handleValueChange}
+						/>
 						<br />
 					</label>
 					<Box
