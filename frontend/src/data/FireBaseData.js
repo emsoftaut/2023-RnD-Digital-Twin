@@ -98,23 +98,22 @@ export const getSingleUser = async (email) => {
   if (snapshot.exists()) {
     return snapshot.val().name;
   } else {
-    console.error('User does not exist');
     return null;
   }
 };
 
 export const getUsers = (callback) => {
   const usersRef = ref(appDb, "users");
-  console.log("Users Reference:", usersRef);
+  //console.log("Users Reference:", usersRef);
   const handleDataChange = (snapshot) => {
     const data = snapshot.val();
-    console.log("Raw data:", data);
+    //console.log("Raw data:", data);
     if (data) {
       const usersArray = Object.keys(data).map((key) => ({
         email: key.replace(',', '.'), // Replacing commas with dots
         name: data[key].name,
       }));
-      console.log(usersArray);
+      //console.log(usersArray);
       callback(usersArray);
     }
   };

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useTheme, Box } from "@mui/material";
 import { Link } from 'react-router-dom';
-import { createUser, getUsers, deleteUser } from '../../data/FireBaseData';
 import styles from "../style.module.css";
 import Navbar from '../Navbar';
 import NewUserForm from './NewUserForm';
@@ -19,18 +18,18 @@ const AdminPanel = ({ user }) => {
   const [users, setUsers] = useState([]);
   const { isAdmin = false } = useContext(AuthContext) || {};
   const theme = useTheme();
-
+  
   const functions = getFunctions();
   const toggleUserStatus = httpsCallable(functions, 'toggleUserStatus');
   const createUserClient = httpsCallable(functions, 'createUser');
   const deleteUserClient = httpsCallable(functions, 'deleteUser');
-
 
   const unsubscribeRef = useRef(null);
 
   const toggleUserStatusClient = async (user) => {
     try {
       console.log("Calling toggle user.");
+      console.log("User UID", user);
       const result = await toggleUserStatus({ uid: user.uid, status: !user.disabled });
       if (result.data.success) {
         // Find the index of the user and update their status
@@ -47,32 +46,22 @@ const AdminPanel = ({ user }) => {
     }
   }
 
-  const fetchAndMergeUsers = async () => {
+  const fetchAndSetUsers = async () => {
     try {
       const getAuths = httpsCallable(functions, 'getAllUsers');
       const authResult = await getAuths();
-      const authUsersMap = {};
-
-      authResult.data.users.forEach((user) => {
-        authUsersMap[user.email] = user;
-      });
-
-      unsubscribeRef.current = getUsers((usersArray) => { // Use ref to store unsubscribe function
-        const mergedUsers = usersArray.map((user) => ({
-          ...user,
-          ...authUsersMap[user.email],
-        }));
-
-        setUsers(mergedUsers);
-      });
+      if (authResult.data.users) {
+        //console.log(authResult.data.users);
+        setUsers(authResult.data.users);
+      }
     } catch (error) {
-      console.error("Error fetching and merging users:", error);
+      console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
     if (isAdmin) {
-      fetchAndMergeUsers();
+      fetchAndSetUsers();
     }
 
     return () => {
@@ -88,7 +77,6 @@ const AdminPanel = ({ user }) => {
     try {
       const result = await deleteUserClient({ uid: user.uid, email: user.email });
       if (result.data.success) {
-        deleteUser(user.email);  // Await removed however might re-visit
         const updatedUsers = users.filter(u => u.uid !== user.uid);
         setUsers(updatedUsers);
       }
@@ -105,10 +93,10 @@ const AdminPanel = ({ user }) => {
       return;
     }
 
-    createUserClient({ email, password })
+    createUserClient({ email, password, name })
       .then((result) => {
         if (result.data.success) {
-          createUser(email, name); //RTDB Call to create user as a Node
+          //createUser(email, name); //RTDB Call to create user as a Node
           console.log("User registered successfully");
           setRegisterMessage("User registered successfully!");
           setError("");
@@ -116,6 +104,7 @@ const AdminPanel = ({ user }) => {
           setEmail("");
           setPassword("");
           setConfirmPassword("");
+          fetchAndSetUsers();
         } else {
           setError("Error registering user: " + result.data.error);
           setRegisterMessage("");

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
 
-const AuthUserList = ({ users, toggleUserStatus, deleteUser }) => (
+const AuthUserList = ({ users, toggleUserStatus, deleteUser }) => {
+  return (
   <Box sx={{
     display: "flex",
     flexDirection: "column",
@@ -18,13 +19,14 @@ const AuthUserList = ({ users, toggleUserStatus, deleteUser }) => (
             <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Name</TableCell>
             <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Status</TableCell>
             <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Action</TableCell>
+            <TableCell style={{ fontWeight: 'bold', textAlign: 'center' }}>Modify</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {users && users.map((user, index) => (
+          {users && users.filter(user => user.displayName).map((user, index) => (
             <TableRow key={index}>
               <TableCell align='center'>{user.email}</TableCell>
-              <TableCell align='center'>{user.name}</TableCell>
+              <TableCell align='center'>{user.displayName}</TableCell>
               <TableCell align='center'>{user.disabled ? "Disabled" : "Enabled"}</TableCell>
               <TableCell align='center'>
                 <Button
@@ -51,5 +53,5 @@ const AuthUserList = ({ users, toggleUserStatus, deleteUser }) => (
     </Box>
   </Box>
 );
-
+          }
 export default AuthUserList;
