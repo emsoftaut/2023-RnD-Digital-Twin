@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ref, onValue, off, get, set } from "firebase/database";
+import { ref, onValue, off, get, set, remove } from "firebase/database";
 import { appDb } from "../firebaseConfig";
 
 export const useMachineData = () => {
@@ -58,6 +58,21 @@ export const setJQMachine = async (machID, JQ) => {
 	}
 }
 
+export const deleteUser = async (email) => {
+  // Define the database path where the user's data is stored
+  const sanitizedEmail = email.replace('.', ','); // Replace dot with comma to use as key
+  const databasePath = `users/${sanitizedEmail}`;
+  const databaseRef = ref(appDb, databasePath);
+  console.log("FireBaseData deleteuser");
+  try {
+    // Remove the user's data from the database
+    await remove(databaseRef);
+    console.log("User deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error; // Re-throw the error to be handled in the calling function
+  }
+};
 
 export const createUser = async (email, name) => {
   // Define the database path where the user's data will be stored
@@ -83,23 +98,22 @@ export const getSingleUser = async (email) => {
   if (snapshot.exists()) {
     return snapshot.val().name;
   } else {
-    console.error('User does not exist');
     return null;
   }
 };
 
 export const getUsers = (callback) => {
   const usersRef = ref(appDb, "users");
-  console.log("Users Reference:", usersRef);
+  //console.log("Users Reference:", usersRef);
   const handleDataChange = (snapshot) => {
     const data = snapshot.val();
-    console.log("Raw data:", data);
+    //console.log("Raw data:", data);
     if (data) {
       const usersArray = Object.keys(data).map((key) => ({
         email: key.replace(',', '.'), // Replacing commas with dots
         name: data[key].name,
       }));
-      console.log(usersArray);
+      //console.log(usersArray);
       callback(usersArray);
     }
   };

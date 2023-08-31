@@ -66,11 +66,36 @@ exports.getAllUsers = functions.https.onCall(async (data, context) => {
     }
   });
 
+  exports.deleteUser = functions.https.onCall(async (data, context) => {
+    // Check if the function is called by an admin
+    if (context.auth.uid !== functions.config().admin.uid) {
+      return { error: 'Permission denied: must be an administrator.' };
+    }
+  
+    // Retrieve the UID from the data object
+    const { uid } = data;
+  
+    if (!uid) {
+      return { error: 'UID must be provided.' };
+    }
+  
+    try {
+      // Delete the user
+      await admin.auth().deleteUser(uid);
+  
+      console.log('Successfully deleted user', uid);
+      return { success: true };
+    } catch (error) {
+      console.log('Error deleting user:', error);
+      return { error: error.message };
+    }
+  });
+
   exports.createUser = functions.https.onCall(async (data, context) => {
     if (context.auth.uid === functions.config().admin.uid) {
-      const { email, password } = data;
+      const { email, password, name } = data;
   
-      return admin.auth().createUser({ email, password })
+      return admin.auth().createUser({ email, password, displayName: name })
         .then(userRecord => {
           // See the UserRecord reference doc for the contents of userRecord
           console.log('Successfully created new user:', userRecord.uid);
