@@ -37,13 +37,13 @@ PROGRAM JadcupPLC
     M1Running AT %IX010.1 : BOOL := false;
   END_VAR
   VAR
-    M1JobStartedCheck : BOOL := false;
-    M1JobDoneCheck : BOOL := false;
-    M1WeightCheck : BOOL := false;
+    M1JobStartedCheck : BOOL := TRUE;
+    M1JobDoneCheck : BOOL := TRUE;
+    M1WeightCheck : BOOL := TRUE;
   END_VAR
   VAR
-    M1MachineOverride AT %QX10.1 : BOOL := false;
-    M1EmergencyStop AT %QX10.2 : BOOL := false;
+    M1MachineOverride AT %QX10.2 : BOOL := false;
+    M1EmergencyStop AT %QX10.3 : BOOL := false;
     M1TotalWeight AT %IW84 : INT := 0;
   END_VAR
   VAR
@@ -91,10 +91,14 @@ PROGRAM JadcupPLC
     M2Running AT %IX11.4 : BOOL := FALSE;
   END_VAR
   VAR
-    M2JobStartedCheck : BOOL := FALSE;
-    M2JobDoneCheck : BOOL := FALSE;
-    M2TimerSensorCheck : BOOL := FALSE;
-    M2WeightCheck : BOOL := FALSE;
+    M2JobStartedCheck : BOOL := TRUE;
+  END_VAR
+  VAR
+    M2JobDoneCheck AT %QX11.6 : BOOL := TRUE;
+  END_VAR
+  VAR
+    M2TimerSensorCheck : BOOL := TRUE;
+    M2WeightCheck : BOOL := TRUE;
   END_VAR
   VAR
     M2TotalWeight AT %IW94 : INT := 0;
@@ -186,15 +190,15 @@ PROGRAM JadcupPLC
         M1JOBSDONE := M1JOBSDONE +1;
         M1JOBDONECHECK := TRUE;
         END_IF;
+      IF (M1RETROFLECTIVESENSOR3 = TRUE) THEN
+        M1JOBDONECHECK := FALSE;
+        END_IF;
         
       (*RESET JOBS STARTED CHECK IF SENSOR ISNT TRIGGERED*)
       IF M1RETROFLECTIVESENSOR1 = TRUE then
         M1JOBSTARTEDCHECK :=FALSE;
         END_IF;
-      (*RESET JOBS DONE CHECK IF SENSOR ISNT TRIGGERED*)
-      IF M1RetroflectiveSensor3 = TRUE then
-        M1JOBDONECHECK := FALSE;
-        END_IF;
+
       M1TANKFILLVALVE1 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
       M1TANKDRAINVALVE1 := REAL_TO_INT(((SIN(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)*1000.0);
       M1TANKFILLVALVE2 := REAL_TO_INT((-(COS(INT_TO_REAL(M2LIGHTARRAY2)))/2.0)*1000.0);
@@ -241,40 +245,43 @@ PROGRAM JadcupPLC
         M2REMOVER  :=TRUE;
         END_IF;
         (*if there are still pending jobs M2Emitter is on otherwise turn off*)
-        IF M2JOBSQUEUED > M2JOBSSTARTED then
-          M2EMITTER := true;
-          ELSE
-          M2EMITTER := FALSE;
-          END_IF;
-        
-        (*M2Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
-        IF (M2RETROFLECTIVESENSOR1 = FALSE) AND (M2JOBSTARTEDCHECK = FALSE) THEN
-          M2JOBSTARTEDCHECK :=TRUE;
-          M2JOBSSTARTED := M2JOBSSTARTED + 1;
-          M2RealTimeClock(CDT => M2TrackedTimeStart);
-          END_IF;
-          (*track average speed of boxes passing through the conveyor*)
-        IF (NOT M2RETROFLECTIVESENSOR2) AND (NOT M2TIMERSENSORCHECK) THEN
-          M2RealTimeClock(CDT => M2TrackedTimeEnd);
-          M2TOTALTIME := ADD_TIME(M2TOTALTIME, SUB_DT_DT(M2TRACKEDTIMESTART, M2TRACKEDTIMEEND));
-          M2TIMERCOUNTER := M2TIMERCOUNTER +1;
-          M2AVERAGETIME := (TIME_TO_INT(M2TOTALTIME)/M2TIMERCOUNTER);
-          M2TIMERSENSORCHECK := TRUE;
-          END_IF;
-        IF (M2RETROFLECTIVESENSOR2) AND (M2TIMERSENSORCHECK) THEN
-          M2TIMERSENSORCHECK := FALSE;
-          END_IF;
+      IF M2JOBSQUEUED > M2JOBSSTARTED then
+        M2EMITTER := true;
+        ELSE
+        M2EMITTER := FALSE;
+        END_IF;
+      
+      (*M2Retroflectivesensor1 tracks new boxes entering the machine from the emitter*)
+      IF (M2RETROFLECTIVESENSOR1 = FALSE) AND (M2JOBSTARTEDCHECK = FALSE)  THEN
+        M2JOBSTARTEDCHECK :=TRUE;
+        M2JOBSSTARTED := M2JOBSSTARTED + 1;
+        M2RealTimeClock(CDT => M2TrackedTimeStart);
+        END_IF;
+        (*track average speed of boxes passing through the conveyor*)
+      IF (NOT M2RETROFLECTIVESENSOR2) AND (NOT M2TIMERSENSORCHECK) THEN
+        M2RealTimeClock(CDT => M2TrackedTimeEnd);
+        M2TOTALTIME := ADD_TIME(M2TOTALTIME, SUB_DT_DT(M2TRACKEDTIMESTART, M2TRACKEDTIMEEND));
+        M2TIMERCOUNTER := M2TIMERCOUNTER +1;
+        M2AVERAGETIME := (TIME_TO_INT(M2TOTALTIME)/M2TIMERCOUNTER);
+        M2TIMERSENSORCHECK := TRUE;
+        END_IF;
+      IF (M2RETROFLECTIVESENSOR2) AND (M2TIMERSENSORCHECK) THEN
+        M2TIMERSENSORCHECK := FALSE;
+        END_IF;
       (*RETROFLECTIVESENSOR3 tracts boxes leaving the machine into the remover*)
-      IF (M2RetroflectiveSensor3 = FALSE) AND (M2JOBDONECHECK = FALSE) THEN
+     IF (M2RetroflectiveSensor3 = false) AND (M2JOBDONECHECK = FALSE) THEN
         M2JOBSDONE := M2JOBSDONE +1;
         M2JOBDONECHECK := TRUE;
-        END_IF; 
+        END_IF;
+      IF (M2RETROFLECTIVESENSOR3 = TRUE) THEN
+        M2JOBDONECHECK := FALSE;
+        END_IF;
       (*RESET JOBS STARTED CHECK IF SENSOR ISNT TRIGGERED*)
       IF M2RETROFLECTIVESENSOR1 = TRUE then
         M2JOBSTARTEDCHECK :=FALSE;
         END_IF;
       (*RESET JOBS DONE CHECK IF SENSOR ISNT TRIGGERED*)
-      IF M2RETROFLECTIVESENSOR3 = TRUE then
+      IF M2RETROFLECTIVESENSOR3 AND M2JOBDONECHECK then
         M2JOBDONECHECK := FALSE;      
         END_IF;
       M2TANKFILLVALVE1 := REAL_TO_INT(((-(COS(INT_TO_REAL(M2LIGHTARRAY1)))/2.0)+0.5)*1000.0);
