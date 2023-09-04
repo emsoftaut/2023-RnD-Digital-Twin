@@ -1,6 +1,9 @@
+jest.mock('../config/LocalEnvConfig');
+
 const FirebaseService = require("../services/FirebaseService");
 const localConfig = require("../config/LocalEnvConfig");
 const getFactoryIOMachineModel = require("../models/baseMachine.js");
+
 describe("Friebase Service testing", () => {
   it("Logs into Firebase", () => {
     FirebaseService.setupFirebase(localConfig.email, localConfig.password);
@@ -14,10 +17,9 @@ describe("Friebase Service testing", () => {
       );
     });
     it("correctly acknowledge that a machine has been passed and ID is correct", () => {
-      let factoryIOMachineModels = [];
 
       const logSpy = jest.spyOn(global.console, "log");
-      let machine = localConfig.machines.Machine1;
+      let machine = localConfig.machines.machine1;
       let machineModel = getFactoryIOMachineModel(machine.machineName, 1, 1);
       machineModel.machineID = machine.machineID;
 
