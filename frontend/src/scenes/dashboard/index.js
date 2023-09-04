@@ -31,7 +31,6 @@ export const CancelAllButton = () => {
 const Homepage = () => {
     const theme = useTheme().palette;
     const [timestamp, setTimeStamp] = useState(new Date().toLocaleString('en-NZ'));
-
     useEffect(() => {
         const interval = setInterval(() => {
             setTimeStamp(new Date().toLocaleString('en-NZ'));

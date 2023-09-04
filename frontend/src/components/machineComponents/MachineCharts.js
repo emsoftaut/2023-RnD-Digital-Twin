@@ -3,30 +3,48 @@ import { useMachineData } from '../../data/FireBaseData';
 import TemperatureGauge from '../charts/TemperatureGauge';
 import JobsChart from '../charts/JobInfoChart';
 import BeltSpeedGauge from '../charts/BeltSpeedGauge';
+import WeightChart from '../charts/WeightChart';
 
-const MachineCharts = ({ machineID, mode }) => {
+const MachineCharts = ({ machineID, mode, machines }) => {
 
-  const { machineData } = useMachineData();
-  const currentMachine = machineData.find(machine => machine.machineID === machineID);
+  const currentMachine = machines.find(machine => machine.machineID === machineID);
 
   const jobsDone = currentMachine?.sensors.jobsDone;
   const jobsQueued = currentMachine?.coils.jobsQueued;
   const beltSpeed = currentMachine?.sensors.averageSpeed / 1000;
   const temperature = currentMachine?.sensors.waterLevel;
+  const totalWeight = currentMachine?.sensors.totalWeight;
+
+  const chartDiv = {
+    width: '100%',
+    height: 'auto',
+    padding: '10px',
+    borderRadius: '12px',
+    border: '2px solid #ccc'
+  }
+
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', height: 'auto', width: '100%' }}>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: '1fr 1fr 1fr 1fr', 
+        gridTemplateRows: '1fr', 
+        height: 'auto', 
+        width: 'auto',
+        padding: '10px',
+        gridGap: '2px',
+         }}>
 
-      <div style={{ width: '100%', height: '80%' }}>
+      <div style={chartDiv}>
         <JobsChart jobsDone={jobsDone} jobsQueued={jobsQueued} mode={mode} />
       </div>
-      <div style={{ width: '100%', height: '80%' }}>
-        <div />
+      <div style={chartDiv}>
+        <WeightChart totalWeight={totalWeight} />
       </div>
-      <div style={{ width: '100%', height: '80%' }}>
+      <div style={chartDiv}>
         <BeltSpeedGauge beltSpeed={beltSpeed}  mode={mode} />
       </div>
-      <div style={{ width: '100%', height: '80%' }}>
+      <div style={chartDiv}>
         <TemperatureGauge temperature={temperature} mode={mode} />
       </div>
     </div>

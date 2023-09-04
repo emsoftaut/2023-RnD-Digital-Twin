@@ -34,7 +34,7 @@ const defaultChartOptions = (beltSpeed) => ({
     plotBorderColor: null,
     plotBorderWidth: 0,
     plotShadow: false,
-    height: '50%'
+    height: 'auto'
   },
   title: { text: 'Belt Speed' },
   pane: {
@@ -104,7 +104,8 @@ const defaultChartOptions = (beltSpeed) => ({
       backgroundColor: 'gray',
       radius: 6
     }
-  }]
+  }],
+  credits: { enabled: false }
 });
 
 const BeltSpeedGauge = ({ beltSpeed, mode }) => {
