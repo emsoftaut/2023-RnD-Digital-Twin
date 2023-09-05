@@ -71,7 +71,7 @@ const gaugeOptions = {
             [0.9, '#DF5353'] // red
         ],
         min: 0,
-        max: 1000,
+        max: 100,
         lineWidth: 0,
         tickWidth: 0,
         minorTickInterval: null,

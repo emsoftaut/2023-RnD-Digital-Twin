@@ -80,9 +80,9 @@ const defaultChartOptions = (beltSpeed) => ({
   series: [{
     name: 'Speed',
     data: [beltSpeed],
-    tooltip: { valueSuffix: ' km/h' },
+    tooltip: { valueSuffix: ' rpm' },
     dataLabels: {
-      format: '{y} km/h',
+      format: '{y} rpm',
       borderWidth: 0,
       color: (
         Highcharts.defaultOptions.title &&

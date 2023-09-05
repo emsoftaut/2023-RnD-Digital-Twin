@@ -11,8 +11,8 @@ const MachineCharts = ({ machineID, mode, machines }) => {
 
   const jobsDone = currentMachine?.sensors.jobsDone;
   const jobsQueued = currentMachine?.coils.jobsQueued;
-  const beltSpeed = currentMachine?.sensors.averageSpeed / 1000;
-  const temperature = currentMachine?.sensors.waterLevel;
+  const beltSpeed = currentMachine?.sensors.averageSpeed / 10;
+  const temperature = Math.round((currentMachine?.sensors.waterLevel * 7) * 100) / 100;
   const totalWeight = currentMachine?.sensors.totalWeight;
 
   const chartDiv = {

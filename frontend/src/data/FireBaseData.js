@@ -32,6 +32,20 @@ export const useMachineData = () => {
   return { machineData, error };
 };
 
+export const setEstopMachine = async (machID, boolean) => {
+  const databasePath = `factory_io/data/${machID}/coils/estop`;
+	const databaseRef = ref(appDb, databasePath);
+
+  try {
+    const snapshot = await get(databaseRef);
+    set(databaseRef, boolean);
+    console.log("set estop called");
+
+  } catch (error) {
+    console.error("Error within estop" + error);
+  }
+
+}
 
 export const setJQMachine = async (machID, JQ) => {
 	// Get the reference to the database path where "jobsQueued" variable is stored
@@ -130,19 +144,19 @@ export const getUsers = (callback) => {
 * Function to flip the value of 'running' within the current machine
 *
 */
-export const toggleMachine = async (machID) => {
+export const toggleMachine = async (machID, boolean) => {
   // Get the reference to the database path where "running" variable is stored
   const databasePath = `factory_io/data/${machID}/coils/override`;
   const databaseRef = ref(appDb, databasePath);
 
   try {
     // Read the current status from the database
-    const snapshot = await get(databaseRef);
-    const currentStatus = snapshot.val();
+    //const snapshot = await get(databaseRef);
+    //const currentStatus = snapshot.val();
 
     // Calculate the new status (toggle the status) and update the database
-    const newStatus = !currentStatus;
-    set(databaseRef, newStatus)
+    //const newStatus = !currentStatus;
+    set(databaseRef, boolean)
       .then(() => {
         console.log("Machine status updated successfully!");
       })
