@@ -38,7 +38,6 @@ export const MachineButton = (props) => {
 
 	const handleClick = () => {
 		method === "toggle" ? toggleMachine(machID) : cancelFunction();
-		console.log("We clicked");
 	};
 
 	const cancelFunction = () => {

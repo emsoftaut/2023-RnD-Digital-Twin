@@ -14,7 +14,6 @@ const WarningPopUp = ({ machID, onCancel, onClose }) => {
 	};
 
 	const handleClose = () => {
-		console.log("Closing popup");
 		onClose();
 	};
 
