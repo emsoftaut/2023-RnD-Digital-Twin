@@ -1,5 +1,5 @@
 import React from "react";
-import { setJQMachine } from "../../data/FireBaseData";
+import { setJQMachine, toggleMachine } from "../../data/FireBaseData";
 import styles from "../style.module.css";
 import { Button, Box, useTheme } from "@mui/material";
 
@@ -8,6 +8,7 @@ const WarningPopUp = ({ machID, onCancel, onClose }) => {
 
 	const handleCancel = () => {
 		setJQMachine(machID, 0);
+		toggleMachine(machID);
 		console.log("Cancelling jobs");
 		onCancel();
 	};
