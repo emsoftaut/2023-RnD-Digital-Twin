@@ -22,6 +22,8 @@ let base = {
                 {
                     if (this.sensors[sensor].variableType == "f")
                         this.sensors[sensor].value = values[reg] / 100;
+                    else if (this.sensors[sensor].variableType == "b")
+                        this.sensors[sensor].value = Boolean(values[reg]);
                     else
                         this.sensors[sensor].value = values[reg];
                 }
