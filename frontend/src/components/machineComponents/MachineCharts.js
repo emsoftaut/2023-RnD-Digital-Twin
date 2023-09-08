@@ -9,6 +9,10 @@ const MachineCharts = ({ machineID, mode, machines }) => {
 
   const currentMachine = machines.find(machine => machine.machineID === machineID);
 
+
+
+
+
   const jobsDone = currentMachine?.sensors.jobsDone;
   const jobsQueued = currentMachine?.coils.jobsQueued;
   const beltSpeed = currentMachine?.sensors.averageSpeed / 10;
@@ -22,6 +26,8 @@ const MachineCharts = ({ machineID, mode, machines }) => {
     borderRadius: '12px',
     border: '2px solid #ccc'
   }
+
+
 
 
   return (
@@ -39,7 +45,7 @@ const MachineCharts = ({ machineID, mode, machines }) => {
         <JobsChart jobsDone={jobsDone} jobsQueued={jobsQueued} mode={mode} />
       </div>
       <div style={chartDiv}>
-        <WeightChart totalWeight={totalWeight} />
+        <WeightChart totalWeight={totalWeight} mode={mode} key={machineID} machineId={machineID} />
       </div>
       <div style={chartDiv}>
         <BeltSpeedGauge beltSpeed={beltSpeed}  mode={mode} />
