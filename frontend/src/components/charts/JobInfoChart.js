@@ -23,11 +23,15 @@ const initialChartOptions = (jobsDone, jobsQueued, theme) => {
     title: { text: 'Jobs Overview', style: {color: colors.textColor} },
     xAxis: { categories: ['Jobs Done', 'Jobs Queued'], labels: { style: { color: colors.textColor } }, gridLineColor: colors.gridLineColor },
     yAxis: {
-      title: { text: 'Number of Jobs' },
+      title: { 
+        text: 'Job Count',
+        style: { color: colors.textColor }
+      },
       labels: { style: { fontSize: '14px', color: colors.textColor } },
       gridLineColor: colors.gridLineColor
     },
-    series: [{ data: [jobsDone, jobsQueued] }]
+    series: [{ data: [jobsDone, jobsQueued] }],
+    credits: { enabled: false }
   };
 };
 

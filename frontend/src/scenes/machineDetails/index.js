@@ -3,7 +3,7 @@ import MachineTabs from "../../components/machineComponents/MachineTabs";
 import Header from "../../components/Header";
 import * as React from 'react';
 
-const MachineDetails = ({title}) => {
+const MachineDetails = ({title, machines}) => {
     const theme = useTheme().palette;
     return (
         <Box sx={{
@@ -21,7 +21,7 @@ const MachineDetails = ({title}) => {
                     <Header title="Machine Details" subtitle={"Machine #"+title} />
                     <Button sx={{ height: 50 }} variant="contained" color="error">stop</Button>
                 </Box>
-                <MachineTabs machineID={title} mode={theme}/>
+                <MachineTabs machineID={title} mode={theme} machines={machines}/>
             </Box>
         </Box>
     );

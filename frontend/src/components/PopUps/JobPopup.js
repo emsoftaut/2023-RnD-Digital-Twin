@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import styles from "../style.module.css";
 
-const JobPopup = ({ onClick, machineName, onClose }) => {
+const JobPopup = ({ onClick, machineName, onClose, setEStop }) => {
 	const [jobsQueueNum, setJobsQueue] = useState();
 	const theme = useTheme();
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
+		setEStop(machineName, false);
 		onClick(parseInt(jobsQueueNum));
 	};
 

@@ -36,7 +36,7 @@ const gaugeOptions = {
         plotBackgroundImage: null,
         plotBorderWidth: 0,
         plotShadow: false,
-        height: '50%'
+        height: 'auto'
     },
 
     title: { text: 'Temperature' },
@@ -70,6 +70,8 @@ const gaugeOptions = {
             [0.5, '#DDDF0D'], // yellow
             [0.9, '#DF5353'] // red
         ],
+        min: 0,
+        max: 100,
         lineWidth: 0,
         tickWidth: 0,
         minorTickInterval: null,
@@ -98,7 +100,6 @@ const TemperatureGauge = ({ temperature, mode }) => {
     const theme = useTheme().palette;
     useEffect(() => {
         const colors = getChartColors(mode, theme);
-        console.log('Setting colors to:', colors);
         setChartOptions({
             ...gaugeOptions, // Spread the existing gaugeOptions
             chart: {
@@ -132,18 +133,20 @@ const TemperatureGauge = ({ temperature, mode }) => {
                 data: [temperature],
                 dataLabels: {
                     format:
-                    '<div style="text-align:center">' +
+                    `<div style="text-align:center;color:${colors.textColor}">` +
                     '<span style="font-size:25px">{y}</span><br/>' +
-                    '<span style="font-size:12px;opacity:0.4">°C</span>' +
+                    '<span style="font-size:20px;opacity:0.4">°C</span>' +
                     '</div>',
                     style: { color: colors.gridLineColor }
                 },
                 tooltip: {
-                    valueSuffix: ' °C'
+                    valueSuffix: ' °C',
+                    style: { color: colors.tooltipTextColor } 
                 }
-            }]
+            }],
+            credits: { enabled: false }
         });
-    }, [mode, temperature]);
+    }, [mode, temperature, theme]);
   
     return (
       <HighchartsReact highcharts={Highcharts} options={chartOptions} />

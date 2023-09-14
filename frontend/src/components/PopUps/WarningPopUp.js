@@ -3,13 +3,13 @@ import { setJQMachine, toggleMachine } from "../../data/FireBaseData";
 import styles from "../style.module.css";
 import { Button, Box, useTheme } from "@mui/material";
 
-const WarningPopUp = ({ machID, onCancel, onClose }) => {
+const WarningPopUp = ({ machID, onCancel, onClose, setEStop }) => {
 	const theme = useTheme();
 
 	const handleCancel = () => {
 		setJQMachine(machID, 0);
-		toggleMachine(machID);
-		console.log("Cancelling jobs");
+		toggleMachine(machID, true);
+		setEStop(machID, true);
 		onCancel();
 	};
 

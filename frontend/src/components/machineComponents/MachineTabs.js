@@ -3,7 +3,7 @@ import { Box, useTheme, Tab, Tabs } from "@mui/material";
 import { tokens } from "../../theme";
 import MachineCharts from "./MachineCharts";
 
-const MachineTabs = ({ machineID, mode }) => {
+const MachineTabs = ({ machineID, mode, machines }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [value, setValue] = React.useState('visualize');
@@ -34,7 +34,7 @@ const MachineTabs = ({ machineID, mode }) => {
             {value === "visualize" && (
                 <Box>
                     {value === "visualize" && (
-                        <MachineCharts machineID={machineID} mode={mode}/>
+                        <MachineCharts machineID={machineID} mode={mode} machines={machines}/>
                     )}
                 </Box>
             )}

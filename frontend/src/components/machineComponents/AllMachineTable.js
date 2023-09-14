@@ -5,7 +5,7 @@ import JobPopup from "../PopUps/JobPopup";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import { toggleMachine, useMachineData, setJQMachine } from "../../data/FireBaseData";
+import { toggleMachine, useMachineData, setJQMachine, setEstopMachine } from "../../data/FireBaseData";
 import WarningPopUp from "../PopUps/WarningPopUp";
 
 export const PopUpButton = ({ machID, showpop }) => {
@@ -25,19 +25,26 @@ export const PopUpButton = ({ machID, showpop }) => {
 	return (
 		<Button variant="contained" onClick={() => setshowPopup(true)}>
 			Order
-			{showPopup && <JobPopup onClick={handlePopupClick} machineName={machID} onClose={handlePopupClose} />}
+			{showPopup && <JobPopup 
+			onClick={handlePopupClick} 
+			machineName={machID} 
+			onClose={handlePopupClose} 
+			setEStop={setEstopMachine} 
+			toggleMachine={toggleMachine}/>}
 		</Button>
 	);
 };
 
 export const MachineButton = (props) => {
 	let { machID, running, method, jQ } = props;
-	let innerIcon = method === "toggle" ? running ? <PauseIcon /> : <PlayArrowIcon /> : <StopIcon />;
-	let innerText = method === "toggle" ? (running ? "Pause" : "Resume") : "Stop";
+	let innerIcon = method === "toggle" ? running ? <PlayArrowIcon /> : <PauseIcon /> : <StopIcon />;
+	let innerText = method === "toggle" ? (running ? "Resume" : "Pause" ) : "Stop";
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+	//const notRunning = running ? false : true;
+
 	const handleClick = () => {
-		method === "toggle" ? toggleMachine(machID) : cancelFunction();
+		method === "toggle" ? toggleMachine(machID, !running) : cancelFunction();
 		console.log("We clicked");
 	};
 
@@ -50,7 +57,13 @@ export const MachineButton = (props) => {
 	return (
 		<Button color="inherit" startIcon={innerIcon} variant="contained" onClick={handleClick} disabled={jQ > 0 ? false : true} sx={{ width: 100 }}>
 			<Typography variant="p">{innerText}</Typography>
-			{isPopupOpen && method !== "toggle" && <WarningPopUp machID={machID} onCancel={() => setIsPopupOpen(false)} onClose={() => setIsPopupOpen(false)} />}
+			{isPopupOpen && method !== "toggle" && 
+				<WarningPopUp 
+				machID={machID} 
+				onCancel={() => setIsPopupOpen(false)} 
+				onClose={() => setIsPopupOpen(false)} 
+				setEStop={setEstopMachine} 
+				/>}
 		</Button>
 	);
 };
@@ -124,7 +137,7 @@ const AllMachineTable = () => {
 									{machine.machID}
 								</Link>
 							</StyledTableCell>
-							<StyledTableCell>{machine.coils.override === true ? "Running" : "Not Running"}</StyledTableCell>
+							<StyledTableCell>{machine.sensors.running === true ? "Running" : "Not Running"}</StyledTableCell>
 							<StyledTableCell>{machine.lastModified}</StyledTableCell>
 							<StyledTableCell>
 								<ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} />

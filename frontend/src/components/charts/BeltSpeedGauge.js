@@ -34,7 +34,7 @@ const defaultChartOptions = (beltSpeed) => ({
     plotBorderColor: null,
     plotBorderWidth: 0,
     plotShadow: false,
-    height: '50%'
+    height: 'auto'
   },
   title: { text: 'Belt Speed' },
   pane: {
@@ -80,9 +80,9 @@ const defaultChartOptions = (beltSpeed) => ({
   series: [{
     name: 'Speed',
     data: [beltSpeed],
-    tooltip: { valueSuffix: ' km/h' },
+    tooltip: { valueSuffix: ' rpm' },
     dataLabels: {
-      format: '{y} km/h',
+      format: '{y} rpm',
       borderWidth: 0,
       color: (
         Highcharts.defaultOptions.title &&
@@ -104,7 +104,8 @@ const defaultChartOptions = (beltSpeed) => ({
       backgroundColor: 'gray',
       radius: 6
     }
-  }]
+  }],
+  credits: { enabled: false }
 });
 
 const BeltSpeedGauge = ({ beltSpeed, mode }) => {
