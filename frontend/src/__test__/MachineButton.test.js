@@ -24,16 +24,16 @@ describe("Machine Button (Toggle)", () => {
         expect(buttonSpy).toHaveBeenCalled();
     });
 
-    test("Inner text should be 'pause' when there running = true", () => {
+    test("Inner text should be 'resume' when there running = true", () => {
         const { getByRole } = render(<MachineButton machID={"13"} running={true} method={"toggle"} jQ={123123} />);
         const button = getByRole(`button`);
-        expect(button.textContent).toBe("Pause");
+        expect(button.textContent).toBe("Resume");
     });
 
-    test("Inner text should be 'resume' when there running = false", () => {
+    test("Inner text should be 'pause' when there running = false", () => {
         const { getByRole } = render(<MachineButton machID={"13"} running={false} method={"toggle"} jQ={123123} />);
         const button = getByRole(`button`);
-        expect(button.textContent).toBe("Resume");
+        expect(button.textContent).toBe("Pause");
     });
 });
 

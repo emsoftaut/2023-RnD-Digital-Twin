@@ -25,7 +25,7 @@ describe('NewUserForm Component', () => {
 
     it('renders without crashing', () => {
         render(<NewUserForm {...baseProps} />);
-        const header = screen.getByText('Add a new user below');
+        const header = screen.getByText('Add new user');
         expect(header).toBeInTheDocument();
     });
 
