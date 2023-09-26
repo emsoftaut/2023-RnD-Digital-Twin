@@ -1,20 +1,20 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import  AuthContext  from '../components/AuthContext';
+import AuthContext from '../components/AuthContext';
 import DropdownProfile from '../components/DropdownProfile';
-import { getSingleUser } from "../data/FireBaseData";
-
-// Mocking the firebase call
-jest.mock('../data/FireBaseData', () => ({
-  getSingleUser: jest.fn(),
-}));
 
 describe('DropdownProfile Component', () => {
 
   const mockUser = {
     email: 'test@example.com',
+    displayName: 'John Doe'
   };
+
+  const adminUser = {
+    email: 'Admin',
+    displayName : 'Admin'
+  }
 
   const mockHandleLogout = jest.fn();
 
@@ -30,10 +30,8 @@ describe('DropdownProfile Component', () => {
     jest.resetAllMocks();
   });
 
-  it('Displays the correct username/email fields', async () => {
-    getSingleUser.mockResolvedValueOnce('John Doe');
-
-    const { findByText } = render(
+  it('Displays the correct username and role when isAdmin is false', () => {
+    const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
         <MockAuthProvider>
           <DropdownProfile user={mockUser} isAdmin={false} />
@@ -41,13 +39,35 @@ describe('DropdownProfile Component', () => {
       </ThemeProvider>
     );
 
-    expect(await findByText('John Doe')).toBeInTheDocument();
-    expect(await findByText('test@example.com')).toBeInTheDocument();
+    expect(getByText('John Doe')).toBeInTheDocument();
+    expect(getByText('User')).toBeInTheDocument();
+  });
+
+  it('Displays "Admin" as username when isAdmin is true', () => {
+    const { getByText } = render(
+      <ThemeProvider theme={createTheme()}>
+        <MockAuthProvider>
+          <DropdownProfile user={adminUser} isAdmin={true} />
+        </MockAuthProvider>
+      </ThemeProvider>
+    );
+
+    expect(getByText((content, element) => content === 'Admin' && element.tagName.toLowerCase() === 'h6')).toBeInTheDocument();
+  });
+
+  it('Displays the correct email', () => {
+    const { getByText } = render(
+      <ThemeProvider theme={createTheme()}>
+        <MockAuthProvider>
+          <DropdownProfile user={mockUser} isAdmin={false} />
+        </MockAuthProvider>
+      </ThemeProvider>
+    );
+
+    expect(getByText('test@example.com')).toBeInTheDocument();
   });
 
   it('Has a Settings button', () => {
-    getSingleUser.mockResolvedValueOnce('John Doe');
-
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
         <MockAuthProvider>
@@ -60,8 +80,6 @@ describe('DropdownProfile Component', () => {
   });
 
   it('Has a Help button', () => {
-    getSingleUser.mockResolvedValueOnce('John Doe');
-
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
         <MockAuthProvider>
@@ -73,9 +91,7 @@ describe('DropdownProfile Component', () => {
     expect(getByText('Help')).toBeInTheDocument();
   });
 
-  it('Logout button works', async () => {
-    getSingleUser.mockResolvedValueOnce('John Doe');
-
+  it('Logout button works', () => {
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
         <MockAuthProvider>
@@ -89,4 +105,3 @@ describe('DropdownProfile Component', () => {
   });
 
 });
-

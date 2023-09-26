@@ -12,7 +12,7 @@ describe('BeltSpeedGauge Component', () => {
 
     it('displays the correct belt speed', () => {
         const { getByText } = render(<BeltSpeedGauge beltSpeed={100} mode={{mode: "dark"}} />);
-        expect(getByText('100 km/h')).toBeInTheDocument();
+        expect(getByText('100 rpm')).toBeInTheDocument();
     });
 
 });

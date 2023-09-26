@@ -4,9 +4,12 @@ import userEvent from "@testing-library/user-event";
 import JobPopup from "../components/PopUps/JobPopup";
 import * as FireBaseDataModule from "../data/FireBaseData";
 
+
+const mockSetEStop = jest.fn();
+
 describe("JobPopup Component", () => {
 	it("renders the job popup properly", () => {
-		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} />);
+		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} setEStop={mockSetEStop} />);
 
 		const popupTitle = screen.getByText("Jobs Request Form");
 		expect(popupTitle).toBeInTheDocument();
@@ -22,7 +25,7 @@ describe("JobPopup Component", () => {
 	});
 
 	it("resets the text box when close button is pressed", () => {
-		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} />);
+		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} setEStop={mockSetEStop} />);
 
 		const inputField = screen.getByLabelText("Number of Boxes:");
 		userEvent.type(inputField, "5");
@@ -35,7 +38,7 @@ describe("JobPopup Component", () => {
 
 	it("closes the popup when the close button is clicked", async () => {
 		const mockOnClose = jest.fn();
-		render(<JobPopup onClose={mockOnClose} onClick={() => {}} machineName="Machine123" />);
+		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={mockOnClose} setEStop={mockSetEStop} />);
 
 		const closeButton = screen.getByText("CLOSE");
 		userEvent.click(closeButton);
@@ -46,7 +49,7 @@ describe("JobPopup Component", () => {
 	});
 
 	it('handles input change correctly', () => {
-		render(<JobPopup />);
+		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} setEStop={mockSetEStop} />);
 		
 		const inputElement = screen.getByLabelText('Number of Boxes:');
 		fireEvent.change(inputElement, { target: { value: '5' } });
@@ -56,7 +59,7 @@ describe("JobPopup Component", () => {
 
 	  it('calls onClick when the form is submitted', () => {
 		const onClickMock = jest.fn();
-		render(<JobPopup onClick={onClickMock} />);
+		render(<JobPopup onClick={onClickMock} machineName="Machine123" onClose={() => {}} setEStop={mockSetEStop} />);
 		
 		const submitButton = screen.getByText('SUBMIT');
 		fireEvent.click(submitButton);
@@ -65,7 +68,7 @@ describe("JobPopup Component", () => {
 	  });
 
 	  it('handles valid positive integer input', () => {
-		render(<JobPopup />);
+		render(<JobPopup onClick={() => {}} machineName="Machine123" onClose={() => {}} setEStop={mockSetEStop} />);
 		
 		const inputElement = screen.getByLabelText('Number of Boxes:');
 	  

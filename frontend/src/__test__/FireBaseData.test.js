@@ -71,23 +71,13 @@ describe("getUsers", () => {
     });
   });
 
-describe("toggleMachine", () => {
-  it("toggles machine status", async () => {
-    get.mockResolvedValueOnce({
-      val: jest.fn(() => true)
+  describe("toggleMachine", () => {
+    it("sets machine status to the provided value", async () => {
+      set.mockResolvedValueOnce();
+  
+      await toggleMachine("machine123", true); // setting the machine status to true
+  
+      expect(set).toHaveBeenCalledWith(databaseRef, true);
     });
-    set.mockResolvedValueOnce();
-
-    await toggleMachine("machine123");
-
-    expect(set).toHaveBeenCalledWith(databaseRef, false);
-
-  });
-
-  it("handles error when reading machine status", async () => {
-    get.mockRejectedValueOnce(new Error("Firebase error"));
-
-    // Either update the mock error message or the expected error message.
-    await expect(toggleMachine("machine123")).rejects.toThrow("Firebase error");
-  });
 });
+
