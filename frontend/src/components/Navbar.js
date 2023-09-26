@@ -36,7 +36,7 @@ const Navbar = ({user, showProps = false}) => {
                             marginRight: "10px",
                         }}
                             label="Admin Panel"
-                            color="info"
+                            color="primary"
                             variant="contained"
                             type="submit"
                             aria-label="Admin Panel"
