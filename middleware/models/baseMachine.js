@@ -5,6 +5,7 @@ let base = {
     lastModified: "",
     sensorOffset: 0,
     coilOffset: 0,
+    error: {},
     getCoilValues: function() {
         Keys = Object.keys(this.coils);
         Values = [Keys.length];
@@ -61,6 +62,16 @@ let base = {
         {
             this.coils[key].value = firebaseModel.coils[key];
         }
+    },
+	validateModel: function() {
+		if ((this.coils.jobsQueued.value > 0) && (this.coils.override.value == true))
+		{
+			console.log("Validation failed");
+			this.error = { error: "Jobs cannot start until machine has started running"};
+		}
+
+		if (this.sensors.jobsDone.value > this.sensors.jobsStarted.value)
+			this.error = { error: "Jobs done exceeds jobs started."};
     }
 }
 

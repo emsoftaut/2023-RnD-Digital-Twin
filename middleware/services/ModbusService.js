@@ -34,10 +34,14 @@ function WriteToModbus(FactoryIOMachineModel)
       {
         if (coil.valueType == "BYTE")
         {
-          client.writeSingleRegister(coil.register, coil.value);
+          client.writeSingleRegister(coil.register, coil.value).then().catch((error) => {
+            HandleModbusError(error);
+          })
         }
         else {
-          client.writeSingleCoil(coil.register, coil.value);
+          client.writeSingleCoil(coil.register, coil.value).then().catch((error) => {
+            HandleModbusError(error);
+          });;
         }
       }
       console.log("done writing");
