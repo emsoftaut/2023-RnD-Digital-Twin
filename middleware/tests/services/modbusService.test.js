@@ -66,7 +66,6 @@ describe('Modbus Service', () => {
     console.log = jest.fn();
 
     SetupModbus(ip, port, offset);
-
     net.Socket().triggerEvent('close');
 
     expect(console.log.mock.calls[1][0]).toBe("Connection closed.");
@@ -80,13 +79,13 @@ describe('Modbus Service', () => {
   });
 
   it('should handle "writeToModbus" with correct calls to coils and registers', async () => {
-    // Input = machineMock
-    WriteToModbus(machineMock);
+    WriteToModbus(machineMock)
 
-    // Coils and Registers are defined in models/machineMock
     expect(clientMock.writeSingleCoil).toHaveBeenCalledWith(0, true);
     expect(clientMock.writeSingleRegister.mock.calls[0][0]).toBe(1, 10);
-    expect(clientMock.writeSingleRegister.mock.calls[1][0]).toBe(2, 5);
+    expect(clientMock.writeSingleRegister.mock.calls[1][0]).toBe(2, 5);        
+    
+    // Coils and Registers are defined in models/machineMock
   });
 
 
