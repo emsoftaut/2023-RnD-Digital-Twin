@@ -26,8 +26,32 @@ This is logic controller code for how a factory runs. Data set on the frontend i
 This solution includes multiple components that each require individual installation.
 
 ### Frontend Website
+The web application can be accessed by visiting https://digitaltwintest-83dbd.web.app . This will take you to a login page. 
+Access to the web application as a general user
+```
+user@user.com
+userpassword
+```
+Admin credentials can be provided upon request.
+The general user access allows for 
+- Viewing all machine data
+- Pausing / Cancelling / Stopping machine functions
+- View in depth individual machine data (Jobs Overview, Total weight over time, Belt speed, Temperature)
+
+The admin user access allows for
+- The above
+- Registering a user
+- Deleting a user
+- Disabling access for a user
 
 ### Firebase
+Access to the Firebase project will be given upon approved request.
+This particular project is hosted under the 'WebsiteHost' project container. 
+Upon approval the login credentials will allow you to view
+Authentication -> Handles authenticated users. Can remove / delete users from here if required.
+Realtime Database -> Data store which manages the schema on how we store and retrieve machine data.
+Functions -> Serverless functions which are configured for the Admin to use from the client side.
+Functions are responsible for assigning the admin with a unique user id. This is done from a developer and processed inside the command line. More information can be given on request due to privacy.
 
 ### Middleware
 
