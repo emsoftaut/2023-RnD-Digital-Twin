@@ -1,5 +1,5 @@
 import { appAuth } from "../firebaseConfig";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, browserLocalPersistence } from "firebase/auth";
 import React, { useContext, useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { TextField, Button, Box, Link, useTheme } from "@mui/material";
@@ -16,26 +16,13 @@ const Login = ({ user }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const functions = getFunctions();
-
-  const handleLogin = async (e) => { // <-- made it asynchronous
+  const { isAdmin = false } = useContext(AuthContext) || {};
+  const {handleLogin: handleLoginFromContext} = useContext(AuthContext);
+  
+  const localHandleLogin = async (e) => {
     e.preventDefault();
-  
-    const authInstance = getAuth(appAuth); // Initialize the authentication service
-    
-    try {
-      const userCredential = await signInWithEmailAndPassword(authInstance, email, password); // <-- await here
-      console.log(userCredential.user);
-      setUserManually(userCredential.user);
-  
-      const checkAdmin = httpsCallable(functions, 'checkAdmin');
-      const result = await checkAdmin(); // <-- await here
-      console.log('Is Admin Result:', result);
-      setIsAdmin(result.data.isAdmin);
-      navigate("/"); // Redirect to the desired route upon successful login
-    } catch (error) {
-      setError(`Invalid Username or Password.`);
-    }
-  };
+    handleLoginFromContext(email, password);
+  }
 
   return (
     <Box sx={{
@@ -56,7 +43,7 @@ const Login = ({ user }) => {
         <br />
         <Box
           component="form"
-          onSubmit={handleLogin}
+          onSubmit={localHandleLogin}
           sx={{
             display: "flex",
             flexDirection: "column",

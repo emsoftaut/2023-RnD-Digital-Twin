@@ -1,8 +1,8 @@
-import React, { createContext, useState } from "react";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import React, { createContext, useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, browserLocalPersistence, setUser } from "firebase/auth";
 import { appAuth } from "../firebaseConfig"; // Use 'auth' from firebaseConfig.js
-import { useNavigate } from "react-router-dom"; 
-
+import { useNavigate } from "react-router-dom";
+import { getFunctions, httpsCallable } from "firebase/functions";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,20 +10,54 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogin = (email, password) => {
-    const authInstance = getAuth(appAuth); // Initialize the authentication service
 
-    signInWithEmailAndPassword(authInstance, email, password)
-      .then(() => {
-        setUser(authInstance.currentUser); // Set the authenticated user
-        setError(null);
-        navigate("/"); // Redirect to the desired route upon successful login
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  };
+  useEffect(() => {
+    const authInstance = getAuth(appAuth);
+  
+    const unsubscribe = onAuthStateChanged(authInstance, async (authUser) => {
+      if (authUser) {
+        setUser(authUser);
+        await checkUserAdminStatus(authUser); 
+      } else {
+        setUser(null);
+        setIsAdmin(false);
+      }
+      setLoading(false);
+    });
+  
+    // Cleanup the listener on unmount
+    return () => unsubscribe();
+  }, []);
+
+  const checkUserAdminStatus = async (user) => {
+    if (user) {
+        const checkAdmin = httpsCallable(getFunctions(), 'checkAdmin');
+        const result = await checkAdmin();
+        console.log('Is Admin Result:', result);
+        setIsAdmin(result.data.isAdmin);
+    } else {
+        setIsAdmin(false);
+    }
+ };
+
+ const handleLogin = async (email, password) => {
+  const authInstance = getAuth(appAuth);
+  setPersistence(authInstance, browserLocalPersistence);
+  try {
+      const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
+      console.log(userCredential.user);
+      setUserManually(userCredential.user);
+
+      await checkUserAdminStatus(userCredential.user);  // Use the function here
+      
+      navigate("/"); // Redirect to the desired route upon successful login
+  } catch (error) {
+      setError(`Invalid Username or Password.`);
+  }
+};
+
 
   const setUserManually = (user) => {
     setUser(user);
@@ -53,6 +87,7 @@ export const AuthProvider = ({ children }) => {
         setUserManually,
         isAdmin,
         setIsAdmin,
+        loading
       }}
     >
       {children}

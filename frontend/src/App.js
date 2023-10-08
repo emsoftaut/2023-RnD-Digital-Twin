@@ -50,10 +50,10 @@ const App = () => {
         <AuthProvider>
           <CssBaseline />
           <Routes>
-            <Route path="/login" element={<Login user={user} />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/admin" element={<AdminPanel user={user}/>} />
-            <Route path="/" element={<PrivateRoute user={user} machines={machines} showProps={true} />}>
+            <Route path="/" element={<PrivateRoute machines={machines} showProps={true} />}>
               <Route index element={<Dashboard />} />
               {machines.map((machine) => (
                 <Route

@@ -13,13 +13,16 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const DropdownProfile = ({user, isAdmin}) => {
+const DropdownProfile = ({isAdmin}) => {
+  const { user } = useContext(AuthContext);
   const theme = useTheme();
   const { handleLogout } = useContext(AuthContext);
   const [userName, setUserName] = useState('Fetching...');
 
   useEffect(() => {
+
         isAdmin? setUserName("Admin") : setUserName(`${user.displayName}`);
+
   }, [user.email]);
 
   const handleLogoutClick = () => {
