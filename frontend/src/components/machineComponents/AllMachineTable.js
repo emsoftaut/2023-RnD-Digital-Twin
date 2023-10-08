@@ -9,31 +9,37 @@ import { toggleMachine, useMachineData, setJQMachine, setEstopMachine } from "..
 import WarningPopUp from "../PopUps/WarningPopUp";
 
 export const PopUpButton = ({ machID, showpop }) => {
-	const [showPopup, setshowPopup] = useState(showpop);
+  const [showPopup, setshowPopup] = useState(showpop);
 
-	const handlePopupClick = (jQ) => {
-		if (jQ > 0) {
-			setJQMachine(machID, parseInt(jQ));
-		}
-		setshowPopup(false);
-	};
+  const handlePopupClick = (jQ) => {
+    if (jQ > 0) {
+      setJQMachine(machID, parseInt(jQ));
+    }
+    setshowPopup(false);
+  };
 
-	const handlePopupClose = (popup) => {
-		setshowPopup(popup);
-	};
+  const handlePopupClose = () => {
+    setshowPopup(false);
+  };
 
-	return (
-		<Button variant="contained" onClick={() => setshowPopup(true)}>
-			Order
-			{showPopup && <JobPopup 
-			onClick={handlePopupClick} 
-			machineName={machID} 
-			onClose={handlePopupClose} 
-			setEStop={setEstopMachine} 
-			toggleMachine={toggleMachine}/>}
-		</Button>
-	);
+  return (
+    <>
+      <Button variant="contained" onClick={() => setshowPopup(true)}>
+        Order
+      </Button>
+      {showPopup && (
+        <JobPopup
+          onClick={handlePopupClick}
+          machineName={machID}
+          onClose={handlePopupClose}
+          setEStop={setEstopMachine}
+          toggleMachine={toggleMachine}
+        />
+      )}
+    </>
+  );
 };
+
 
 export const MachineButton = (props) => {
 	let { machID, running, method, jQ } = props;

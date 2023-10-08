@@ -1,85 +1,78 @@
 import React, { useState } from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box, Button, Input, Typography, useTheme } from "@mui/material";
 import styles from "../style.module.css";
 
 const JobPopup = ({ onClick, machineName, onClose, setEStop }) => {
-	const [jobsQueueNum, setJobsQueue] = useState();
-	const theme = useTheme();
+  const [jobsQueueNum, setJobsQueue] = useState("");
+  const theme = useTheme();
 
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		setEStop(machineName, false);
-		onClick(parseInt(jobsQueueNum));
-	};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setEStop(machineName, false);
+    onClick(parseInt(jobsQueueNum));
+  };
 
-	const handleValueChange = (event) => {
-		setJobsQueue(event.target.value);
-	};
+  const handleClose = () => {
+    setJobsQueue("");
+    onClose(false);
+  };
 
-	const handleClose = () => {
-		setJobsQueue(0);
-		onClose(false);
-	};
-
-	return (
-		<Box
-			sx={{
-				position: "fixed",
-				top: 0,
-				left: 0,
-				width: "100%",
-				height: "100%",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				zIndex: 10000,
-				cursor: "default",
-				backgroundColor: "rgba(0, 0, 0, 0.5)",
-			}}
-		>
-			<Box
-				sx={{
-					padding: "20px",
-					borderRadius: "8px",
-					boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.3)",
-					width: "500px",
-					color: theme.palette.text.primary,
-					background: theme.palette.background.default,
-				}}
-			>
-				<form onSubmit={handleSubmit}>
-					<h1 sx={{ marginBottom: 16 }}>Jobs Request Form</h1>
-					<h3>Machine ID: {machineName}</h3>
-					<label sx={{ display: "block", marginBottom: "8px" }}>
-						Number of Boxes:
-						<br />
-						<input
-							sx={{ width: "100%", padding: "8px", border: "1px solid #a1a1a1", borderRadius: "4px" }}
-							type="number"
-							value={jobsQueueNum}
-							onChange={handleValueChange}
-						/>
-						<br />
-					</label>
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "space-evenly",
-							alignItems: "center",
-							marginTop: "16px",
-						}}
-					>
-						<button className={styles.popbutton} variant="contained" type="submit">
-							SUBMIT
-						</button>
-						<button className={styles.popbutton} variant="contained" onClick={handleClose}>
-							CLOSE
-						</button>
-					</Box>
-				</form>
-			</Box>
-		</Box>
-	);
+  return (
+    <Box
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        zIndex: 10000,
+        cursor: "default",
+      }}
+    >
+      <Box
+        sx={{
+          padding: "20px",
+          borderRadius: "8px",
+          boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.3)",
+          width: "400px",
+          color: theme.palette.text.primary,
+          background: theme.palette.background.default,
+          textAlign: "center",
+        }}
+      >
+        <form onSubmit={handleSubmit}>
+          <Typography variant="h5" sx={{ marginBottom: 2 }}>Jobs Request Form</Typography>
+          <Typography variant="body1">Machine ID: {machineName}</Typography>
+          <Input
+            sx={{ width: "100%", padding: "8px", borderRadius: "4px", marginBottom: 2 }}
+            type="number"
+            placeholder="Number of Boxes"
+            value={jobsQueueNum}
+            onChange={(e) => setJobsQueue(e.target.value)}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button className={styles.popbutton} variant="contained" type="submit">
+              SUBMIT
+            </Button>
+            <Box sx={{ width: "10px" }} />
+            <Button className={styles.popbutton} variant="contained" onClick={handleClose}>
+              CLOSE
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Box>
+  );
 };
+
 
 export default JobPopup;
