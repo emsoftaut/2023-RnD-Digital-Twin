@@ -4,14 +4,11 @@ import TemperatureGauge from '../charts/TemperatureGauge';
 import JobsChart from '../charts/JobInfoChart';
 import BeltSpeedGauge from '../charts/BeltSpeedGauge';
 import WeightChart from '../charts/WeightChart';
+import { Box } from '@mui/material';
 
 const MachineCharts = ({ machineID, mode, machines }) => {
 
   const currentMachine = machines.find(machine => machine.machineID === machineID);
-
-
-
-
 
   const jobsDone = currentMachine?.sensors.jobsDone;
   const jobsQueued = currentMachine?.coils.jobsQueued;
@@ -28,32 +25,31 @@ const MachineCharts = ({ machineID, mode, machines }) => {
   }
 
 
-
-
   return (
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: '1fr 1fr 1fr 1fr', 
-        gridTemplateRows: '1fr', 
-        height: 'auto', 
-        width: 'auto',
-        padding: '10px',
-        gridGap: '2px',
-         }}>
+    <Box 
+    display="flex" 
+    flexWrap="nowrap"
+    flexDirection="row" 
+    justifyContent="space-between" 
+    alignItems="center"
+    padding="10px" 
+    gap="2px" 
+    width="25%" 
+    height="auto">
 
-      <div style={chartDiv}>
+      <Box sx={{...chartDiv, flexShrink: 0}}>
         <JobsChart jobsDone={jobsDone} jobsQueued={jobsQueued} mode={mode} />
-      </div>
-      <div style={chartDiv}>
+      </Box>
+      <Box sx={{...chartDiv, flexShrink: 0}}>
         <WeightChart totalWeight={totalWeight} mode={mode} key={machineID} machineId={machineID} />
-      </div>
-      <div style={chartDiv}>
+      </Box>
+      <Box sx={{...chartDiv, flexShrink: 0}}>
         <BeltSpeedGauge beltSpeed={beltSpeed}  mode={mode} />
-      </div>
-      <div style={chartDiv}>
+      </Box>
+      <Box sx={{...chartDiv, flexShrink: 0}}>
         <TemperatureGauge temperature={temperature} mode={mode} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

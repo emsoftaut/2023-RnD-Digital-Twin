@@ -31,7 +31,8 @@ const initialChartOptions = (jobsDone, jobsQueued, theme) => {
       gridLineColor: colors.gridLineColor
     },
     series: [{ data: [jobsDone, jobsQueued] }],
-    credits: { enabled: false }
+    credits: { enabled: false },
+    reflow: true
   };
 };
 
