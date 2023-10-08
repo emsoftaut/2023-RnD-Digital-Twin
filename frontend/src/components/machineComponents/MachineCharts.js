@@ -32,7 +32,7 @@ const MachineCharts = ({ machineID, mode, machines }) => {
     flexDirection="row" 
     justifyContent="space-between" 
     alignItems="center"
-    padding="10px" 
+    padding="1px" 
     gap="2px" 
     width="25%" 
     height="auto">
