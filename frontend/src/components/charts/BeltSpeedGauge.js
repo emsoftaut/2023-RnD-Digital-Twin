@@ -34,7 +34,8 @@ const defaultChartOptions = (beltSpeed) => ({
     plotBorderColor: null,
     plotBorderWidth: 0,
     plotShadow: false,
-    height: 'auto'
+    height: 'auto',
+    reflow: true
   },
   title: { text: 'Belt Speed' },
   pane: {
@@ -144,6 +145,8 @@ const BeltSpeedGauge = ({ beltSpeed, mode }) => {
       }]
     }));
   }, [mode, beltSpeed, theme]);
+
+  
 
   return (
     <HighchartsReact highcharts={Highcharts} options={chartOptions} />

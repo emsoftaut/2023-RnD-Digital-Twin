@@ -42,7 +42,8 @@ const initialChartOptions = (totalWeight, theme) => {
       name: 'Weight',
       data: totalWeight
     }],
-    credits: { enabled: false }
+    credits: { enabled: false },
+    reflow: true
   };
 };
 
