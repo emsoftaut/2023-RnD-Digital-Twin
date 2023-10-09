@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Box, Button, Input, Typography, useTheme } from "@mui/material";
 import styles from "../style.module.css";
-import { red } from "@mui/material/colors";
 
-const JobPopup = ({ onClick, machineName, onClose, setEStop }) => {
+const JobPopup = ({ onClick, machineName, onClose, setEStop, toggleMachine }) => {
 	const [jobsQueueNum, setJobsQueue] = useState("");
 	const theme = useTheme();
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		setEStop(machineName, false);
+		setEStop(machineName, false); 
 		onClick(parseInt(jobsQueueNum));
+		toggleMachine(machineName, true);
 	};
 
 	const handleClose = () => {

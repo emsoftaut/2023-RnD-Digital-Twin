@@ -8,7 +8,7 @@ import StopIcon from "@mui/icons-material/Stop";
 import { toggleMachine, useMachineData, setJQMachine, setEstopMachine } from "../../data/FireBaseData";
 import WarningPopUp from "../PopUps/WarningPopUp";
 
-export const PopUpButton = ({ machID, showpop }) => {
+export const PopUpButton = ({ machID, showpop, isDisabled }) => {
   const [showPopup, setshowPopup] = useState(showpop);
 
   const handlePopupClick = (jQ) => {
@@ -24,7 +24,7 @@ export const PopUpButton = ({ machID, showpop }) => {
 
   return (
     <>
-      <Button variant="contained" onClick={() => setshowPopup(true)}>
+      <Button variant="contained" onClick={() => setshowPopup(true)} disabled={isDisabled}>
         Order
       </Button>
       {showPopup && (
@@ -152,7 +152,7 @@ const AllMachineTable = () => {
 							<StyledTableCell align="right">{machine.sensors.waterLevel || "0"}</StyledTableCell>
 							<StyledTableCell>
 								<Box sx={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
-									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} />
+									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} isDisabled={machine.coils.jobsQueued > 0 ? true: false}/>
 									<MachineButton machID={machine.machineID} running={machine.coils.override} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
 									<MachineButton machID={machine.machineID} running={machine.coils.override} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
 								</Box>
