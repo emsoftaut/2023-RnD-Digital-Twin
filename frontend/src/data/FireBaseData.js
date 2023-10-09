@@ -68,8 +68,7 @@ export const setJQMachine = async (machID, JQ) => {
       // if we are trying to order the same amount of jobs as is currently set, set jobs to 0 then try again
       set(databaseRef, 0)
         .then(() => {
-          console.log("looping jobs queued");
-          setJQMachine(machID, JQ);
+          set(databaseRef, JQ);
         })
         .catch((error) => {
           console.error("Error updating machine status:", error);
