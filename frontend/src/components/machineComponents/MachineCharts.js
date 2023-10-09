@@ -6,7 +6,9 @@ import BeltSpeedGauge from '../charts/BeltSpeedGauge';
 import WeightChart from '../charts/WeightChart';
 import { Box } from '@mui/material';
 
-const MachineCharts = ({ machineID, mode, machines }) => {
+const MachineCharts = ({ machineID, mode }) => {
+
+  const {machineData: machines} = useMachineData();
 
   const currentMachine = machines.find(machine => machine.machineID === machineID);
 
@@ -23,7 +25,6 @@ const MachineCharts = ({ machineID, mode, machines }) => {
     borderRadius: '12px',
     border: '2px solid #ccc'
   }
-
 
   return (
     <Box 
