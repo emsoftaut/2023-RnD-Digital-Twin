@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box, Button, Input, Typography, useTheme } from "@mui/material";
 import styles from "../style.module.css";
+import { red } from "@mui/material/colors";
 
 const JobPopup = ({ onClick, machineName, onClose, setEStop }) => {
-	const [jobsQueueNum, setJobsQueue] = useState();
+	const [jobsQueueNum, setJobsQueue] = useState("");
 	const theme = useTheme();
 
 	const handleSubmit = (event) => {
@@ -12,12 +13,8 @@ const JobPopup = ({ onClick, machineName, onClose, setEStop }) => {
 		onClick(parseInt(jobsQueueNum));
 	};
 
-	const handleValueChange = (event) => {
-		setJobsQueue(event.target.value);
-	};
-
 	const handleClose = () => {
-		setJobsQueue(0);
+		setJobsQueue("");
 		onClose(false);
 	};
 
@@ -32,9 +29,9 @@ const JobPopup = ({ onClick, machineName, onClose, setEStop }) => {
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center",
+				backgroundColor: "rgba(0, 0, 0, 0.5)",
 				zIndex: 10000,
 				cursor: "default",
-				backgroundColor: "rgba(0, 0, 0, 0.5)",
 			}}
 		>
 			<Box
@@ -42,39 +39,38 @@ const JobPopup = ({ onClick, machineName, onClose, setEStop }) => {
 					padding: "20px",
 					borderRadius: "8px",
 					boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.3)",
-					width: "500px",
+					width: "400px",
 					color: theme.palette.text.primary,
 					background: theme.palette.background.default,
+					textAlign: "center",
 				}}
 			>
 				<form onSubmit={handleSubmit}>
-					<h1 sx={{ marginBottom: 16 }}>Jobs Request Form</h1>
-					<h3>Machine ID: {machineName}</h3>
-					<label sx={{ display: "block", marginBottom: "8px" }}>
-						Number of Boxes:
-						<br />
-						<input
-							sx={{ width: "100%", padding: "8px", border: "1px solid #a1a1a1", borderRadius: "4px" }}
-							type="number"
-							value={jobsQueueNum}
-							onChange={handleValueChange}
-						/>
-						<br />
-					</label>
+					<Typography variant="h5" sx={{ marginBottom: 2 }}>
+						Jobs Request Form
+					</Typography>
+					<Typography variant="body1">Machine ID: {machineName}</Typography>
+					<Input
+						sx={{ width: "100%", padding: "8px", borderRadius: "4px", marginBottom: 2 }}
+						type="number"
+						placeholder="Number of Boxes"
+						value={jobsQueueNum}
+						onChange={(e) => setJobsQueue(e.target.value)}
+					/>
 					<Box
 						sx={{
 							display: "flex",
-							justifyContent: "space-evenly",
-							alignItems: "center",
-							marginTop: "16px",
+							justifyContent: "space-between",
+							marginTop: "2",
 						}}
 					>
-						<button className={styles.popbutton} variant="contained" type="submit">
+						<Button className={styles.popbutton} variant="contained" type="submit">
 							SUBMIT
-						</button>
-						<button className={styles.popbutton} variant="contained" onClick={handleClose}>
+						</Button>
+						<Box sx={{ width: "10px" }} />
+						<Button className={styles.popbutton} variant="contained" onClick={handleClose}>
 							CLOSE
-						</button>
+						</Button>
 					</Box>
 				</form>
 			</Box>

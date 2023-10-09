@@ -4,6 +4,8 @@ import WarningPopUp from '../components/PopUps/WarningPopUp';
 
 jest.mock('../data/FireBaseData', () => ({
     setJQMachine: jest.fn(),
+    toggleMachine: jest.fn(),
+    setEStop: jest.fn(),
   }));
 
 describe('WarningPopUp component', () => {
@@ -21,7 +23,11 @@ describe('WarningPopUp component', () => {
 
   it('calls onCancel when "Yes" button is clicked', () => {
     const onCancelMock = jest.fn();
-    render(<WarningPopUp onCancel={onCancelMock} />);
+    const onCloseMock = jest.fn();
+    const setEStopMock = jest.fn();
+    const machID = "Machine";
+    render(<WarningPopUp machID={machID} onCancel={onCancelMock} onClose={onCloseMock} setEStop={setEStopMock} />);
+
     
     const yesButton = screen.getByText('Yes');
     fireEvent.click(yesButton);
@@ -43,8 +49,9 @@ describe('WarningPopUp component', () => {
     const machID = 'Machine123';
     const onCancelMock = jest.fn();
     const onCloseMock = jest.fn();
+    const setEStop = jest.fn();
   
-    render(<WarningPopUp machID={machID} onCancel={onCancelMock} onClose={onCloseMock} />);
+    render(<WarningPopUp machID={machID} onCancel={onCancelMock} onClose={onCloseMock} setEStop={setEStop}/>);
     
     const yesButton = await screen.findByText('Yes');
     fireEvent.click(yesButton);

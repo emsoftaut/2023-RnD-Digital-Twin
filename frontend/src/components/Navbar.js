@@ -9,7 +9,8 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AuthContext from "./AuthContext";
 
-const Navbar = ({user, showProps = false}) => {
+const Navbar = ({showProps = false}) => {
+    const { user } = useContext(AuthContext);
     const { isAdmin = false } = useContext(AuthContext) || {};
     const theme = useTheme().palette;
     const colorMode = useContext(ColorModeContext);
@@ -36,7 +37,7 @@ const Navbar = ({user, showProps = false}) => {
                             marginRight: "10px",
                         }}
                             label="Admin Panel"
-                            color="info"
+                            color="primary"
                             variant="contained"
                             type="submit"
                             aria-label="Admin Panel"

@@ -44,10 +44,16 @@ function SetupListeners()
   console.log("Setting up listeners");
   for (let i = 0; i < firebaseMachineConnections.length; i++)
   {
-    FirebaseService.ListenFirebaseChanges(firebaseMachineConnections[i], factoryIOMachineModels[i], handleFirebaseChanges);
-    ListenModbusChanges(firebaseMachineConnections[i], factoryIOMachineModels[i]);
+    try {
+      FirebaseService.ListenFirebaseChanges(firebaseMachineConnections[i], factoryIOMachineModels[i], handleFirebaseChanges);
+      ListenModbusChanges(firebaseMachineConnections[i], factoryIOMachineModels[i]);  
+    } catch(error) {
+      console.log("Error with setting up listeners");
+      throw new Error(error);
+    }
   }
 }
+
 
 function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
   setInterval(function() {
@@ -56,12 +62,17 @@ function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
       
       if (newValues)
       {
-        console.log("New values detected in Modbus");
-        console.log(newValues);
-        factoryIOMachine.setSensorValues(newValues);
-        firebaseModel = factoryIOMachine.toFirebaseModel();
-        firebaseModel.lastModified = GetCurrentDateTime();
-        FirebaseService.updateMachine(firebaseModel, firebaseMachineConnection);
+        try {
+          console.log("New values detected in Modbus");
+          console.log(newValues);
+          factoryIOMachine.setSensorValues(newValues);
+          firebaseModel = factoryIOMachine.toFirebaseModel();
+          firebaseModel.lastModified = GetCurrentDateTime();
+          FirebaseService.updateMachine(firebaseModel, firebaseMachineConnection);  
+        } catch (error) {
+          console.log("Error attempting to send modbus changes");
+          throw new Error(error);
+        }
       }
     });
   }, pollFrequency);
@@ -102,6 +113,7 @@ function toFirebaseModel(sensorOffset, pollResponse)
 function handleFirebaseChanges(updatedValues, FactoryIOModel) {
   console.log("Firebase values changed");
   FactoryIOModel.toModbusModel(updatedValues.val());
+  FactoryIOModel.validateModel();
   FactoryIOModel.lastModified = GetCurrentDateTime();
   ModbusService.WriteToModbus(FactoryIOModel);
 }
@@ -111,5 +123,33 @@ function GetCurrentDateTime()
   var currentDateTime = new Date();
   return currentDateTime.toLocaleString() + " (NZT)";
 }
+
+function gracefulTerminate(error)
+{
+  console.log("Something bad happened. Terminating process");
+  for (let i = 0; i < firebaseMachineConnections.length; i++)
+  {
+    factoryIOMachineModels[i].toClearValuesModel();
+    let firebaseModel = factoryIOMachineModels[i].toFirebaseModel();
+    FirebaseService.updateMachine(firebaseModel, firebaseMachineConnections[i]); 
+  }
+}
+
+function handleError(type) {
+  return (error) => {
+    console.error(`Received ${type}. Logging error and performing cleanup...`);
+    console.error(error);
+    gracefulTerminate();
+    process.exit(1);
+  };
+}
+
+process.on('SIGINT', () => {
+  gracefulTerminate();
+  process.exit(1);
+});
+
+process.on('uncaughtException', handleError("Uncaught Exception"));
+process.on('unhandledRejection', handleError("Uncaught Exception"));
 
 Setup();

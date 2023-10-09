@@ -36,7 +36,8 @@ const gaugeOptions = {
         plotBackgroundImage: null,
         plotBorderWidth: 0,
         plotShadow: false,
-        height: 'auto'
+        height: 'auto',
+        reflow: true
     },
 
     title: { text: 'Temperature' },

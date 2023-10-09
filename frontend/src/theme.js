@@ -7,13 +7,13 @@ import { createTheme } from "@mui/material/styles";
 export const tokens = (mode) => ({
     ...(mode === 'dark'
         ? {
-            primary: '#43a047',
-            secondary: '#42a5f5',
+            primary: '#77C2FF',
+            secondary: '#6FDCA0',
             background: '#303030',
             paper: '#1e1e1e',
         } : {
-            primary: '#43a047',
-            secondary: '#42a5f5',
+            primary: '#008CFF',
+            secondary: '#00A047',
             background: '#eeeeee',
             paper: '#fff',
         }),
