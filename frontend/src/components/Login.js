@@ -1,28 +1,38 @@
-import { appAuth } from "../firebaseConfig";
-import { getAuth, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, browserLocalPersistence } from "firebase/auth";
 import React, { useContext, useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { TextField, Button, Box, Link, useTheme } from "@mui/material";
-import { getFunctions, httpsCallable } from "firebase/functions";
 import AuthContext from "./AuthContext";
 import Navbar from "./Navbar";
 
+const errorStyles = {
+  color: '#ffffff',
+  fontSize: '14px',
+  marginTop: '10px',
+  textAlign: 'center',
+  backgroundColor: '#ff0026',
+  border: '1px solid #ffffff',
+  padding: '8px',
+  borderRadius: '5px',
+  width: '300px',
+};
+
 const Login = ({ user }) => {
 
-  const { setUserManually, setIsAdmin } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const theme = useTheme();
-  const functions = getFunctions();
   const { isAdmin = false } = useContext(AuthContext) || {};
   const {handleLogin: handleLoginFromContext} = useContext(AuthContext);
   
   const localHandleLogin = async (e) => {
     e.preventDefault();
-    handleLoginFromContext(email, password);
-  }
+    const errorMessage = await handleLoginFromContext(email, password);
+    if (errorMessage) {
+        setError(errorMessage); // Set error locally in the Login component
+    }
+  };
+  
 
   return (
     <Box sx={{
@@ -75,7 +85,7 @@ const Login = ({ user }) => {
           <br />
           <Link component={RouterLink} onClick={() => navigate("/forgot-password")} to="/forgot-password">Forgot Password?</Link>
         </Box>
-        {error && <p sx={{ color: "error.main" }}>{error}</p>}
+        {error && <p sx={errorStyles}>{error}</p>}
       </Box>
     </Box>
   );
