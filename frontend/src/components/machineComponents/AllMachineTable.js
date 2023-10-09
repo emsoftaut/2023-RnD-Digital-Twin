@@ -86,8 +86,8 @@ export const ProgressBar = ({ done, queued }) => {
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
-		backgroundColor: `${theme.palette.mode === "dark" ? theme.palette.common.white : theme.palette.primary.main}`,
-		color: theme.palette.primary.contrastText,
+		backgroundColor: `${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.primary.main}`,
+		color: `${theme.palette.mode === "dark" ? theme.palette.common.white : theme.palette.primary.contrastText}`,
 	},
 	[`&.${tableCellClasses.body}`]: {
 		fontSize: 14,
