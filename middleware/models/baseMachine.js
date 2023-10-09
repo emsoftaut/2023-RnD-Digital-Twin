@@ -72,6 +72,27 @@ let base = {
 
 		if (this.sensors.jobsDone.value > this.sensors.jobsStarted.value)
 			this.error = { error: "Jobs done exceeds jobs started."};
+    },
+    toClearValuesModel: function() {
+        for (const key in this.coils)
+        {
+            if (this.coils[key].variableType == "b")
+            {
+                this.coils[key].value = false;
+            } else {
+                this.coils[key].value = 0;
+            }
+        }
+
+        for (const key in this.sensors)
+        {
+            if (this.sensors[key].variableType == "b")
+            {
+                this.sensors[key].value = false;
+            } else {
+                this.sensors[key].value = 0;
+            }
+        }
     }
 }
 

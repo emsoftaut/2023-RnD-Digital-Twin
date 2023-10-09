@@ -87,7 +87,4 @@ describe('Modbus Service', () => {
     
     // Coils and Registers are defined in models/machineMock
   });
-
-
-
 });

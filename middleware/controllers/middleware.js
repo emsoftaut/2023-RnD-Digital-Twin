@@ -54,6 +54,7 @@ function SetupListeners()
   }
 }
 
+
 function ListenModbusChanges(firebaseMachineConnection, factoryIOMachine) {
   setInterval(function() {
     ModbusService.ReadFromModbus(factoryIOMachine).then((pollResponse) => {
@@ -113,7 +114,6 @@ function handleFirebaseChanges(updatedValues, FactoryIOModel) {
   console.log("Firebase values changed");
   FactoryIOModel.toModbusModel(updatedValues.val());
   FactoryIOModel.validateModel();
-  //console.log(FactoryIOModel);
   FactoryIOModel.lastModified = GetCurrentDateTime();
   ModbusService.WriteToModbus(FactoryIOModel);
 }
@@ -123,5 +123,33 @@ function GetCurrentDateTime()
   var currentDateTime = new Date();
   return currentDateTime.toLocaleString() + " (NZT)";
 }
+
+function gracefulTerminate(error)
+{
+  console.log("Something bad happened. Terminating process");
+  for (let i = 0; i < firebaseMachineConnections.length; i++)
+  {
+    factoryIOMachineModels[i].toClearValuesModel();
+    let firebaseModel = factoryIOMachineModels[i].toFirebaseModel();
+    FirebaseService.updateMachine(firebaseModel, firebaseMachineConnections[i]); 
+  }
+}
+
+function handleError(type) {
+  return (error) => {
+    console.error(`Received ${type}. Logging error and performing cleanup...`);
+    console.error(error);
+    gracefulTerminate();
+    process.exit(1);
+  };
+}
+
+process.on('SIGINT', () => {
+  gracefulTerminate();
+  process.exit(1);
+});
+
+process.on('uncaughtException', handleError("Uncaught Exception"));
+process.on('unhandledRejection', handleError("Uncaught Exception"));
 
 Setup();
