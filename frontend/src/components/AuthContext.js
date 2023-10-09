@@ -54,7 +54,8 @@ export const AuthProvider = ({ children }) => {
       
       navigate("/"); // Redirect to the desired route upon successful login
   } catch (error) {
-      setError(`Invalid Username or Password.`);
+    setError(error.message);
+    return error.message; 
   }
 };
 

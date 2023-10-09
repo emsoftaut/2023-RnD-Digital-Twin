@@ -11,31 +11,23 @@ describe('DropdownProfile Component', () => {
     displayName: 'John Doe'
   };
 
-  const adminUser = {
-    email: 'Admin',
-    displayName : 'Admin'
-  }
-
   const mockHandleLogout = jest.fn();
-
-  const mockContextValue = {
-    handleLogout: mockHandleLogout,
-  };
-
-  const MockAuthProvider = ({ children }) => (
-    <AuthContext.Provider value={mockContextValue}>{children}</AuthContext.Provider>
-  );
 
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
   it('Displays the correct username and role when isAdmin is false', () => {
+    const mockContextValue = {
+      user: mockUser,
+      handleLogout: mockHandleLogout,
+    };
+
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
-        <MockAuthProvider>
-          <DropdownProfile user={mockUser} isAdmin={false} />
-        </MockAuthProvider>
+        <AuthContext.Provider value={mockContextValue}>
+          <DropdownProfile isAdmin={false} />
+        </AuthContext.Provider>
       </ThemeProvider>
     );
 
@@ -44,11 +36,20 @@ describe('DropdownProfile Component', () => {
   });
 
   it('Displays "Admin" as username when isAdmin is true', () => {
+    const adminUser = {
+      email: 'Admin',
+      displayName: 'Admin'
+    };
+    const mockContextValue = {
+      user: adminUser,
+      handleLogout: mockHandleLogout,
+    };
+
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
-        <MockAuthProvider>
-          <DropdownProfile user={adminUser} isAdmin={true} />
-        </MockAuthProvider>
+        <AuthContext.Provider value={mockContextValue}>
+          <DropdownProfile isAdmin={true} />
+        </AuthContext.Provider>
       </ThemeProvider>
     );
 
@@ -56,11 +57,16 @@ describe('DropdownProfile Component', () => {
   });
 
   it('Displays the correct email', () => {
+    const mockContextValue = {
+      user: mockUser,
+      handleLogout: mockHandleLogout,
+    };
+
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
-        <MockAuthProvider>
-          <DropdownProfile user={mockUser} isAdmin={false} />
-        </MockAuthProvider>
+        <AuthContext.Provider value={mockContextValue}>
+          <DropdownProfile isAdmin={false} />
+        </AuthContext.Provider>
       </ThemeProvider>
     );
 
@@ -68,11 +74,16 @@ describe('DropdownProfile Component', () => {
   });
 
   it('Has a Settings button', () => {
+    const mockContextValue = {
+      user: mockUser,
+      handleLogout: mockHandleLogout,
+    };
+
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
-        <MockAuthProvider>
-          <DropdownProfile user={mockUser} isAdmin={false} />
-        </MockAuthProvider>
+        <AuthContext.Provider value={mockContextValue}>
+          <DropdownProfile isAdmin={false} />
+        </AuthContext.Provider>
       </ThemeProvider>
     );
 
@@ -80,11 +91,16 @@ describe('DropdownProfile Component', () => {
   });
 
   it('Has a Help button', () => {
+    const mockContextValue = {
+      user: mockUser,
+      handleLogout: mockHandleLogout,
+    };
+
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
-        <MockAuthProvider>
-          <DropdownProfile user={mockUser} isAdmin={false} />
-        </MockAuthProvider>
+        <AuthContext.Provider value={mockContextValue}>
+          <DropdownProfile isAdmin={false} />
+        </AuthContext.Provider>
       </ThemeProvider>
     );
 
@@ -92,16 +108,20 @@ describe('DropdownProfile Component', () => {
   });
 
   it('Logout button works', () => {
+    const mockContextValue = {
+      user: mockUser,
+      handleLogout: mockHandleLogout,
+    };
+
     const { getByText } = render(
       <ThemeProvider theme={createTheme()}>
-        <MockAuthProvider>
-          <DropdownProfile user={mockUser} isAdmin={false} />
-        </MockAuthProvider>
+        <AuthContext.Provider value={mockContextValue}>
+          <DropdownProfile isAdmin={false} />
+        </AuthContext.Provider>
       </ThemeProvider>
     );
 
     fireEvent.click(getByText('Logout'));
     expect(mockHandleLogout).toHaveBeenCalled();
   });
-
 });
