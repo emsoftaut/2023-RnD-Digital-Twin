@@ -9,7 +9,8 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AuthContext from "./AuthContext";
 
-const Navbar = ({user, showProps = false}) => {
+const Navbar = ({showProps = false}) => {
+    const { user } = useContext(AuthContext);
     const { isAdmin = false } = useContext(AuthContext) || {};
     const theme = useTheme().palette;
     const colorMode = useContext(ColorModeContext);

@@ -12,7 +12,7 @@ const MachineTabs = ({ machineID, mode, machines }) => {
     };
 
     return (
-        <Box sx={{ width: '100%', height: '100%', overflowX: "scroll" }} justifyContent={"space-between"}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: 'auto', height: 'auto', overflowX: "auto"}}>
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -32,7 +32,7 @@ const MachineTabs = ({ machineID, mode, machines }) => {
                 <Tab value="inout" label="Input/Output" />
             </Tabs>
             {value === "visualize" && (
-                <Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', width: 'auto', height: 'auto', overflowX: "auto"}}>
                     {value === "visualize" && (
                         <MachineCharts machineID={machineID} mode={mode} machines={machines}/>
                     )}

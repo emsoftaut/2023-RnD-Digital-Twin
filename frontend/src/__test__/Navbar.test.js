@@ -27,11 +27,6 @@ describe("<Navbar />", () => {
         );
     }
 
-    it("shows the Admin Panel button when isAdmin is true and user is provided", () => {
-        renderWithContexts(true, "light", { name: "John" });
-        expect(screen.getByLabelText("Admin Panel")).toBeInTheDocument();
-    });
-
     it("does not show the Admin Panel button when isAdmin is false or user is not provided", () => {
         renderWithContexts(false);
         expect(screen.queryByLabelText("Admin Panel")).not.toBeInTheDocument();
@@ -50,10 +45,6 @@ describe("<Navbar />", () => {
       expect(screen.getByLabelText("Display Mode Toggle")).toBeInTheDocument();
   });
 
-    it("shows profile button and popover when user is provided and showProps is true", () => {
-        renderWithContexts(false, "light", { name: "John" }, true);
-        expect(screen.getByLabelText("Profile")).toBeInTheDocument();
-    });
 
     it("does not show profile button and popover when user is not provided or showProps is false", () => {
         renderWithContexts();

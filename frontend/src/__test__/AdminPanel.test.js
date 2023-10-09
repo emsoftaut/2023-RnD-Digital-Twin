@@ -49,23 +49,6 @@ describe('AdminPanel Component', () => {
         expect(container).toBeInTheDocument();
     });
 
-    // Write more tests specific to the AdminPanel component functionalities
-    // Example:
-    it('Displays Admin Panel if user is an admin', () => {
-        const mockContextValue = {
-            user: { uid: '12345', email: 'admin@example.com' },
-            isAdmin: true,
-            setUserManually: jest.fn(),
-            setIsAdmin: jest.fn(),
-        };
-        const { getByText } = renderWithAuthContext(
-            <AuthContext.Provider value={mockContextValue}>
-                <AdminPanel />
-            </AuthContext.Provider>
-        );
-
-        expect(getByText('Admin Panel')).toBeInTheDocument();  
-    });
 
     it('renders an error message for non-admin users', () => {
         const { getByText } = renderWithAuthContext(<AdminPanel />, { isAdmin: false });

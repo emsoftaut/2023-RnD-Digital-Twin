@@ -9,7 +9,8 @@ import NewUserForm from './NewUserForm';
 import AuthUserList from './AuthUserList';
 import AuthContext from '../AuthContext';
 
-const AdminPanel = ({ user }) => {
+const AdminPanel = () => {
+  const { user } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
