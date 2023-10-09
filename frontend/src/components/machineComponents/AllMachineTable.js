@@ -47,7 +47,6 @@ export const MachineButton = (props) => {
 	let innerText = method === "toggle" ? (running ? "Resume" : "Pause" ) : "Stop";
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-	//const notRunning = running ? false : true;
 
 	const handleClick = () => {
 		method === "toggle" ? toggleMachine(machID, !running) : cancelFunction();
