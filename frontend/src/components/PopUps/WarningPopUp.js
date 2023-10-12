@@ -8,7 +8,7 @@ const WarningPopUp = ({ machID, onCancel, onClose, setEStop }) => {
 
 	const handleCancel = () => {
 		setJQMachine(machID, 0);
-		toggleMachine(machID, true);
+		toggleMachine(machID, false);
 		setEStop(machID, true);
 		onCancel();
 	};
@@ -40,7 +40,7 @@ const WarningPopUp = ({ machID, onCancel, onClose, setEStop }) => {
 					borderRadius: "15px",
 					boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
 					textAlign: "center",
-					color: "red",
+					color: "white",
 					background: theme.palette.background.default,
 				}}
 			>

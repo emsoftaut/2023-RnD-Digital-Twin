@@ -27,7 +27,7 @@ import {
 } from "../../data/FireBaseData";
 import WarningPopUp from "../PopUps/WarningPopUp";
 
-export const PopUpButton = ({ machID, showpop }) => {
+export const PopUpButton = ({ machID, showpop, isDisabled }) => {
   const [showPopup, setshowPopup] = useState(showpop);
 
   const handlePopupClick = (jQ) => {
@@ -44,7 +44,7 @@ export const PopUpButton = ({ machID, showpop }) => {
 
   return (
     <>
-      <Button variant="contained" onClick={() => setshowPopup(true)}>
+      <Button variant="contained" onClick={() => setshowPopup(true)} disabled={isDisabled}>
         Order
       </Button>
       {showPopup && (
@@ -61,53 +61,35 @@ export const PopUpButton = ({ machID, showpop }) => {
 };
 
 export const MachineButton = (props) => {
-  let { machID, running, method, jQ } = props;
-  let innerIcon =
-    method === "toggle" ? (
-      running ? (
-        <PlayArrowIcon />
-      ) : (
-        <PauseIcon />
-      )
-    ) : (
-      <StopIcon />
-    );
-  let innerText = method === "toggle" ? (running ? "Resume" : "Pause") : "Stop";
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+	let { machID, running, method, jQ } = props;
+	let innerIcon = method === "toggle" ? running ? <PlayArrowIcon /> : <PauseIcon /> : <StopIcon />;
+	let innerText = method === "toggle" ? (running ? "Resume" : "Pause" ) : "Stop";
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  //const notRunning = running ? false : true;
 
-  const handleClick = () => {
-    method === "toggle" ? toggleMachine(machID, !running) : cancelFunction();
-    console.log("We clicked");
-  };
+	const handleClick = () => {
+		method === "toggle" ? toggleMachine(machID, !running) : cancelFunction();
+		console.log("We clicked");
+	};
 
-  const cancelFunction = () => {
-    if (method !== "toggle" && !isPopupOpen) {
-      setIsPopupOpen(true);
-    }
-  };
+	const cancelFunction = () => {
+		if (method !== "toggle" && !isPopupOpen) {
+			setIsPopupOpen(true);
+		}
+	};
 
-  return (
-    <Button
-      color="inherit"
-      startIcon={innerIcon}
-      variant="contained"
-      onClick={handleClick}
-      disabled={jQ > 0 ? false : true}
-      sx={{ width: 100 }}
-    >
-      <Typography variant="p">{innerText}</Typography>
-      {isPopupOpen && method !== "toggle" && (
-        <WarningPopUp
-          machID={machID}
-          onCancel={() => setIsPopupOpen(false)}
-          onClose={() => setIsPopupOpen(false)}
-          setEStop={setEstopMachine}
-        />
-      )}
-    </Button>
-  );
+	return (
+		<Button color="inherit" startIcon={innerIcon} variant="contained" onClick={handleClick} disabled={jQ > 0 ? false : true} sx={{ width: 100 }}>
+			<Typography variant="p">{innerText}</Typography>
+			{isPopupOpen && method !== "toggle" && 
+				<WarningPopUp 
+				machID={machID} 
+				onCancel={() => setIsPopupOpen(false)} 
+				onClose={() => setIsPopupOpen(false)} 
+				setEStop={setEstopMachine} 
+				/>}
+		</Button>
+	);
 };
 
 export const ProgressBar = ({ done, queued }) => {
@@ -162,89 +144,57 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const AllMachineTable = () => {
   const { machineData } = useMachineData();
-  const [showPopup] = useState(false);
-  const theme = useTheme();
-  const [error, setError] = useState("");
+	const [showPopup] = useState(false);
+	const theme = useTheme();
+	const [error, setError] = useState("");
 
-  if (error) {
-    setError(error);
-    return <p>Error: {error}</p>;
-  }
+	if (error) {
+		setError(error);
+		return <p>Error: {error}</p>;
+	}
 
-  return (
-    <Box sx={{ overflowX: "scroll" }}>
-      <Table size="small" stickyHeader width="max-content">
-        <TableHead
-          sx={{
-            backgroundColor: theme.mode === "dark" ? "auto" : theme.primary,
-          }}
-        >
-          <StyledTableRow>
-            <StyledTableCell>Machine #</StyledTableCell>
-            <StyledTableCell>Job Status</StyledTableCell>
-            <StyledTableCell>Last Modified</StyledTableCell>
-            <StyledTableCell>Job Progress</StyledTableCell>
-            <StyledTableCell align="right">Belt Speed</StyledTableCell>
-            <StyledTableCell align="right">Temperature</StyledTableCell>
-            <StyledTableCell align="center">Job Actions</StyledTableCell>
-          </StyledTableRow>
-        </TableHead>
-        <TableBody>
-          {machineData.map((machine) => (
-            <StyledTableRow>
-              <StyledTableCell>
-                <Link component={RouterLink} to={"/" + machine.machID}>
-                  {machine.machID}
-                </Link>
-              </StyledTableCell>
-              <StyledTableCell>
-                {machine.sensors.running === true ? "Running" : "Not Running"}
-              </StyledTableCell>
-              <StyledTableCell>{machine.lastModified}</StyledTableCell>
-              <StyledTableCell>
-                <ProgressBar
-                  done={machine.sensors.jobsDone}
-                  queued={machine.coils.jobsQueued || "0"}
-                />
-              </StyledTableCell>
-              <StyledTableCell align="right">
-                {machine.sensors.averageSpeed || "0"}
-              </StyledTableCell>
-              <StyledTableCell align="right">
-                {machine.sensors.waterLevel || "0"}
-              </StyledTableCell>
-              <StyledTableCell>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                  }}
-                >
-                  <PopUpButton
-                    machID={machine.machineID}
-                    onClick={() => showPopup(false)}
-                  />
-                  <MachineButton
-                    machID={machine.machineID}
-                    running={machine.coils.override}
-                    method={"toggle"}
-                    jQ={machine.coils.jobsQueued || "0"}
-                  />
-                  <MachineButton
-                    machID={machine.machineID}
-                    running={machine.coils.override}
-                    method={"cancel"}
-                    jQ={machine.coils.jobsQueued || "0"}
-                  />
-                </Box>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Box>
-  );
+	return (
+		<Box sx={{ overflowX: "scroll" }}>
+			<Table size="small" stickyHeader width="max-content">
+				<TableHead sx={{ backgroundColor: theme.mode === "dark" ? "auto" : theme.primary }}>
+					<StyledTableRow>
+						<StyledTableCell>Machine #</StyledTableCell>
+						<StyledTableCell>Job Status</StyledTableCell>
+						<StyledTableCell>Last Modified</StyledTableCell>
+						<StyledTableCell>Job Progress</StyledTableCell>
+						<StyledTableCell align="right">Belt Speed</StyledTableCell>
+						<StyledTableCell align="right">Temperature</StyledTableCell>
+						<StyledTableCell align="center">Job Actions</StyledTableCell>
+					</StyledTableRow>
+				</TableHead>
+				<TableBody>
+					{machineData.map((machine) => (
+						<StyledTableRow>
+							<StyledTableCell>
+								<Link component={RouterLink} to={"/" + machine.machID}>
+									{machine.machID}
+								</Link>
+							</StyledTableCell>
+							<StyledTableCell>{machine.sensors.running === true ? "Running" : "Not Running"}</StyledTableCell>
+							<StyledTableCell>{machine.lastModified}</StyledTableCell>
+							<StyledTableCell>
+								<ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} />
+							</StyledTableCell>
+							<StyledTableCell align="right">{machine.sensors.averageSpeed || "0"}</StyledTableCell>
+							<StyledTableCell align="right">{machine.sensors.waterLevel || "0"}</StyledTableCell>
+							<StyledTableCell>
+								<Box sx={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} isDisabled={machine.coils.jobsQueued > 0 ? true: false}/>
+									<MachineButton machID={machine.machineID} running={machine.coils.override} method={"toggle"} jQ={machine.coils.jobsQueued || "0"} />
+									<MachineButton machID={machine.machineID} running={machine.coils.override} method={"cancel"} jQ={machine.coils.jobsQueued || "0"} />
+								</Box>
+							</StyledTableCell>
+						</StyledTableRow>
+					))}
+				</TableBody>
+			</Table>
+		</Box>
+	);
 };
 
 export default AllMachineTable;

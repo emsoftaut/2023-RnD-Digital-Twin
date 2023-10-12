@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme, Box, Button, Paper } from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
 import Header from "../../components/Header";
 import AllMachineTable from "../../components/machineComponents/AllMachineTable";
 import { useMachineData, toggleMachine, setJQMachine, setEstopMachine } from "../../data/FireBaseData"
@@ -10,11 +10,12 @@ export const CancelAllButton = () => {
         return <p>Error: {error.message}</p>; // Adjust error display as needed
     }
     const allOff = (machineData.every((machine) => machine.coils.override === false) ? true : false);
-    
     const handleClick = () => {
-        machineData.filter((m) => m.coils.override === false).map(filteredM => toggleMachine(filteredM.machineID));
-        machineData.map(m => setJQMachine(m.machineID, 0)); //replace w cancelJobs function
-        machineData.map(m => setEstopMachine(m.machineID, true));
+        const res = machineData.map((m) => {
+            setJQMachine(m.machineID, 0);
+            setEstopMachine(m.machineID, true);
+            toggleMachine(m.machineID, false); //replace w cancelJobs function
+        });
         console.log('all machines stopped');
     }
 
@@ -30,7 +31,6 @@ export const CancelAllButton = () => {
 }
 
 const Homepage = ({machines}) => {
-    const theme = useTheme().palette;
     const [timestamp, setTimeStamp] = useState(new Date().toLocaleString('en-NZ'));
     useEffect(() => {
         const interval = setInterval(() => {
