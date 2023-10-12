@@ -1,15 +1,18 @@
 import React from "react";
-import { setJQMachine, toggleMachine } from "../../data/FireBaseData";
+import { setJQMachine, toggleMachine, setEstopMachine } from "../../data/FireBaseData";
 import styles from "../style.module.css";
 import { Button, Box, useTheme } from "@mui/material";
 
-const WarningPopUp = ({ machID, onCancel, onClose, setEStop }) => {
+const WarningPopUp = ({ machID, onCancel, onClose, onConfirm }) => {
 	const theme = useTheme();
 
 	const handleCancel = () => {
+		if (onConfirm) {
+			onConfirm();
+		}
 		setJQMachine(machID, 0);
 		toggleMachine(machID, false);
-		setEStop(machID, true);
+		setEstopMachine(machID, true);
 		onCancel();
 	};
 
@@ -40,7 +43,7 @@ const WarningPopUp = ({ machID, onCancel, onClose, setEStop }) => {
 					borderRadius: "15px",
 					boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
 					textAlign: "center",
-					color: "white",
+					color: theme.palette.text.primary,
 					background: theme.palette.background.default,
 				}}
 			>
