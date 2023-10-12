@@ -58,6 +58,16 @@ let jadcupSimulationPLC = {
 			variableType: "f"
 		}
 	},
+	validateModel: function() {
+		if ((this.coils.jobsQueued > 0) && (this.override == true))
+		{
+			console.log("Validation failed");
+			this.error = { error: "Jobs cannot start until machine has started running"};
+		}
+
+		if (this.sensors.jobsDone > this.sensors.jobsStarted)
+			this.error = { error: "Jobs done exceeds jobs started."};
+    }
 };
 
 module.exports = function createModelInstance() {

@@ -13,8 +13,20 @@ const clientMock = {
             }
         }
     }),
-    writeSingleRegister: jest.fn(),
-    writeSingleCoil: jest.fn()
+    writeSingleRegister: jest.fn().mockResolvedValue({
+        response:{
+            body:{
+                valuesAsArray: [0, 1, 0, 1]
+            }
+        }
+    }),
+    writeSingleCoil: jest.fn().mockResolvedValue({
+        response:{
+            body:{
+                valuesAsArray: [3, 0, 3, 0]
+            }
+        }
+    }),
 }
 
 
