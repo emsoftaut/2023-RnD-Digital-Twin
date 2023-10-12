@@ -8,9 +8,9 @@ const JobPopup = ({ onClick, machineName, onClose, setEStop, toggleMachine }) =>
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		setEStop(machineName, false); 
 		onClick(parseInt(jobsQueueNum));
-		toggleMachine(machineName, true);
+		setEStop(machineName, false);
+		toggleMachine(machineName, false);
 	};
 
 	const handleClose = () => {
