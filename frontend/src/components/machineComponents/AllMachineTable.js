@@ -61,52 +61,35 @@ export const PopUpButton = ({ machID, showpop, isDisabled }) => {
 };
 
 export const MachineButton = (props) => {
-  let { machID, running, method, jQ } = props;
-  let innerIcon =
-    method === "toggle" ? (
-      running ? (
-        <PlayArrowIcon />
-      ) : (
-        <PauseIcon />
-      )
-    ) : (
-      <StopIcon />
-    );
-  let innerText = method === "toggle" ? (running ? "Resume" : "Pause") : "Stop";
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+	let { machID, running, method, jQ } = props;
+	let innerIcon = method === "toggle" ? running ? <PlayArrowIcon /> : <PauseIcon /> : <StopIcon />;
+	let innerText = method === "toggle" ? (running ? "Resume" : "Pause" ) : "Stop";
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
 
-  const handleClick = () => {
-    method === "toggle" ? toggleMachine(machID, !running) : cancelFunction();
-    console.log("We clicked");
-  };
+	const handleClick = () => {
+		method === "toggle" ? toggleMachine(machID, !running) : cancelFunction();
+		console.log("We clicked");
+	};
 
-  const cancelFunction = () => {
-    if (method !== "toggle" && !isPopupOpen) {
-      setIsPopupOpen(true);
-    }
-  };
+	const cancelFunction = () => {
+		if (method !== "toggle" && !isPopupOpen) {
+			setIsPopupOpen(true);
+		}
+	};
 
-  return (
-    <Button
-      color="inherit"
-      startIcon={innerIcon}
-      variant="contained"
-      onClick={handleClick}
-      disabled={jQ > 0 ? false : true}
-      sx={{ width: 100 }}
-    >
-      <Typography variant="p">{innerText}</Typography>
-      {isPopupOpen && method !== "toggle" && (
-        <WarningPopUp
-          machID={machID}
-          onCancel={() => setIsPopupOpen(false)}
-          onClose={() => setIsPopupOpen(false)}
-          setEStop={setEstopMachine}
-        />
-      )}
-    </Button>
-  );
+	return (
+		<Button color="inherit" startIcon={innerIcon} variant="contained" onClick={handleClick} disabled={jQ > 0 ? false : true} sx={{ width: 100 }}>
+			<Typography variant="p">{innerText}</Typography>
+			{isPopupOpen && method !== "toggle" && 
+				<WarningPopUp 
+				machID={machID} 
+				onCancel={() => setIsPopupOpen(false)} 
+				onClose={() => setIsPopupOpen(false)} 
+				setEStop={setEstopMachine} 
+				/>}
+		</Button>
+	);
 };
 
 export const ProgressBar = ({ done, queued }) => {
@@ -161,14 +144,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const AllMachineTable = () => {
   const { machineData } = useMachineData();
-  const [showPopup] = useState(false);
-  const theme = useTheme();
-  const [error, setError] = useState("");
+	const [showPopup] = useState(false);
+	const theme = useTheme();
+	const [error, setError] = useState("");
 
-  if (error) {
-    setError(error);
-    return <p>Error: {error}</p>;
-  }
+	if (error) {
+		setError(error);
+		return <p>Error: {error}</p>;
+	}
 
 	return (
 		<Box sx={{ overflowX: "scroll" }}>
