@@ -59,9 +59,16 @@ function updateMachine(values, dbref) {
 
 function ListenFirebaseChanges(firebaseMachineConnection, FactoryIOMachineModel1, handleFirebaseChanges) {
     console.log("Setting up listen");
-    firebaseMachineConnection.on('value', updatedValues => {
-        handleFirebaseChanges(updatedValues, FactoryIOMachineModel1, firebaseMachineConnection);
-    });
+    try {
+        firebaseMachineConnection.on('value', updatedValues => {
+            handleFirebaseChanges(updatedValues, FactoryIOMachineModel1, firebaseMachineConnection);
+        }, error => {
+            console.error(error);
+        });
+    } catch (error) {
+        console.log("Error occurred trying to listen to firebase changes");
+        throw new Error(error);
+    }
 }
 
 function GetCurrentDateTime()

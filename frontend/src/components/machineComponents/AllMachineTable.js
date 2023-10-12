@@ -1,11 +1,30 @@
 import { useState } from "react";
-import { Box, Button, Table, TableBody, TableHead, TableRow, TableCell, tableCellClasses, LinearProgress, Typography, Link, useTheme, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+  tableCellClasses,
+  LinearProgress,
+  Typography,
+  Link,
+  useTheme,
+  styled,
+} from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import JobPopup from "../PopUps/JobPopup";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import { toggleMachine, useMachineData, setJQMachine, setEstopMachine } from "../../data/FireBaseData";
+import {
+  toggleMachine,
+  useMachineData,
+  setJQMachine,
+  setEstopMachine,
+} from "../../data/FireBaseData";
 import WarningPopUp from "../PopUps/WarningPopUp";
 
 export const PopUpButton = ({ machID, showpop, isDisabled }) => {
@@ -13,6 +32,7 @@ export const PopUpButton = ({ machID, showpop, isDisabled }) => {
 
   const handlePopupClick = (jQ) => {
     if (jQ > 0) {
+      setEstopMachine(machID, false);
       setJQMachine(machID, parseInt(jQ));
     }
     setshowPopup(false);
@@ -39,7 +59,6 @@ export const PopUpButton = ({ machID, showpop, isDisabled }) => {
     </>
   );
 };
-
 
 export const MachineButton = (props) => {
 	let { machID, running, method, jQ } = props;
@@ -74,43 +93,57 @@ export const MachineButton = (props) => {
 };
 
 export const ProgressBar = ({ done, queued }) => {
-	let convertValue = (done / queued) * 100;
-	return (
-		<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-			<Box sx={{ width: "100%", mr: 1 }}>
-				<LinearProgress variant="determinate" value={convertValue} />
-			</Box>
-			<Box sx={{ minWidth: 60 }}>
-				<Typography variant="p">
-					{done} / {queued}
-				</Typography>
-			</Box>
-		</Box>
-	);
+  let convertValue = (done / queued) * 100;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" value={convertValue} />
+      </Box>
+      <Box sx={{ minWidth: 60 }}>
+        <Typography variant="p">
+          {done} / {queued}
+        </Typography>
+      </Box>
+    </Box>
+  );
 };
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-	[`&.${tableCellClasses.head}`]: {
-		backgroundColor: `${theme.palette.mode === "dark" ? theme.palette.common.black : theme.palette.primary.main}`,
-		color: `${theme.palette.mode === "dark" ? theme.palette.common.white : theme.palette.primary.contrastText}`,
-	},
-	[`&.${tableCellClasses.body}`]: {
-		fontSize: 14,
-	},
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: `${
+      theme.palette.mode === "dark"
+        ? theme.palette.common.black
+        : theme.palette.primary.main
+    }`,
+    color: `${
+      theme.palette.mode === "dark"
+        ? theme.palette.common.white
+        : theme.palette.primary.contrastText
+    }`,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-	"&:nth-of-type(odd)": {
-		backgroundColor: theme.palette.action.hover,
-	},
-	// hide last border
-	"&:last-child td, &:last-child th": {
-		border: 0,
-	},
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
 }));
 
 const AllMachineTable = () => {
-	const { machineData } = useMachineData();
+  const { machineData } = useMachineData();
 	const [showPopup] = useState(false);
 	const theme = useTheme();
 	const [error, setError] = useState("");
