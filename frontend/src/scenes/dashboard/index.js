@@ -6,7 +6,13 @@ import { useMachineData, toggleMachine, setJQMachine, setEstopMachine } from "..
 import WarningPopUp from "../../components/PopUps/WarningPopUp";
 
 export const CancelAllButton = () => {
-	const [showWarning, setShowWarning] = useState(false); // State to control showing the WarningPopUp
+	const [showWarning, setShowWarning] = useState(false);
+
+	const { machineData, error } = useMachineData();
+	if (error) {
+		return <p>Error: {error.message}</p>; // Adjust error display as needed
+	}
+	const allOff = machineData.every((machine) => machine.coils.estop === true) ? true : false;
 
 	const handleShowWarning = () => {
 		setShowWarning(true);
@@ -16,27 +22,21 @@ export const CancelAllButton = () => {
 		setShowWarning(false);
 	};
 
-	const { machineData, error } = useMachineData();
-	if (error) {
-		return <p>Error: {error.message}</p>; // Adjust error display as needed
-	}
-	const allOff = machineData.every((machine) => machine.coils.override === false) ? true : false;
-
-	const handleClick = () => {
+	const handleStopAllMachines = () => {
 		const res = machineData.map((m) => {
 			setJQMachine(m.machineID, 0);
+			toggleMachine(m.machineID, false);
 			setEstopMachine(m.machineID, true);
-			toggleMachine(m.machineID, false); //replace w cancelJobs function
 		});
-		console.log("all machines stopped");
+		handleHideWarning();
 	};
 
 	return (
 		<>
-			<Button sx={{ height: 50 }} variant="contained" color="error" disabled={allOff} onClick={handleClick}>
+			<Button sx={{ height: 50 }} variant="contained" color="error" disabled={allOff} onClick={handleShowWarning}>
 				STOP ALL MACHINES
 			</Button>
-			{showWarning && <WarningPopUp onCancel={handleShowWarning} onClose={handleHideWarning} />}
+			{showWarning && <WarningPopUp onCancel={handleHideWarning} onClose={handleHideWarning} onConfirm={handleStopAllMachines} />}
 		</>
 	);
 };
