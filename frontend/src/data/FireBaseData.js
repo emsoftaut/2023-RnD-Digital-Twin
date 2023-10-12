@@ -34,47 +34,54 @@ export const useMachineData = () => {
 
 export const setEstopMachine = async (machID, boolean) => {
   const databasePath = `factory_io/data/${machID}/coils/estop`;
-	const databaseRef = ref(appDb, databasePath);
+  const databaseRef = ref(appDb, databasePath);
 
   try {
     const snapshot = await get(databaseRef);
     set(databaseRef, boolean);
     console.log("set estop called");
-
   } catch (error) {
     console.error("Error within estop" + error);
   }
-
-}
+};
 
 export const setJQMachine = async (machID, JQ) => {
-	// Get the reference to the database path where "jobsQueued" variable is stored
-	const databasePath = `factory_io/data/${machID}/coils/jobsQueued`;
-	const databaseRef = ref(appDb, databasePath);
+  // Get the reference to the database path where "jobsQueued" variable is stored
+  const databasePath = `factory_io/data/${machID}/coils/jobsQueued`;
+  const databaseRef = ref(appDb, databasePath);
 
-	try {
-		// Read the current status from the database
-		const snapshot = await get(databaseRef);
-		const currentStatus = snapshot.val();
+  try {
+    // Read the current status from the database
+    const snapshot = await get(databaseRef);
+    const currentStatus = snapshot.val();
 
-		// Calculate the new status (toggle the status) and update the database
-		if (JQ !== currentStatus) {
-			set(databaseRef, JQ)
-				.then(() => {
-					console.log("Machine status updated successfully!");
-				})
-				.catch((error) => {
-					console.error("Error updating machine status:", error);
-				});
-		}
-	} catch (error) {
-		console.error("Error reading machine status:", error);
-	}
-}
+    // Calculate the new status (toggle the status) and update the database
+    if (JQ !== currentStatus) {
+      set(databaseRef, JQ)
+        .then(() => {
+          console.log("Machine status updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error updating machine status:", error);
+        });
+    } else {
+      // if we are trying to order the same amount of jobs as is currently set, set jobs to 0 then try again
+      set(databaseRef, 0)
+        .then(() => {
+          set(databaseRef, JQ);
+        })
+        .catch((error) => {
+          console.error("Error updating machine status:", error);
+        });
+    }
+  } catch (error) {
+    console.error("Error reading machine status:", error);
+  }
+};
 
 export const deleteUser = async (email) => {
   // Define the database path where the user's data is stored
-  const sanitizedEmail = email.replace('.', ','); // Replace dot with comma to use as key
+  const sanitizedEmail = email.replace(".", ","); // Replace dot with comma to use as key
   const databasePath = `users/${sanitizedEmail}`;
   const databaseRef = ref(appDb, databasePath);
   console.log("FireBaseData deleteuser");
@@ -90,7 +97,7 @@ export const deleteUser = async (email) => {
 
 export const createUser = async (email, name) => {
   // Define the database path where the user's data will be stored
-  const sanitizedEmail = email.replace('.', ','); // Replace dot with comma to use as key
+  const sanitizedEmail = email.replace(".", ","); // Replace dot with comma to use as key
   const databasePath = `users/${sanitizedEmail}`;
   const databaseRef = ref(appDb, databasePath);
 
@@ -105,9 +112,9 @@ export const createUser = async (email, name) => {
 };
 
 export const getSingleUser = async (email) => {
-  const sanitizedEmail = email.replace('.', ',');
+  const sanitizedEmail = email.replace(".", ",");
   const userRef = ref(appDb, `users/${sanitizedEmail}`);
-  
+
   const snapshot = await get(userRef);
   if (snapshot.exists()) {
     return snapshot.val().name;
@@ -124,7 +131,7 @@ export const getUsers = (callback) => {
     //console.log("Raw data:", data);
     if (data) {
       const usersArray = Object.keys(data).map((key) => ({
-        email: key.replace(',', '.'), // Replacing commas with dots
+        email: key.replace(",", "."), // Replacing commas with dots
         name: data[key].name,
       }));
       //console.log(usersArray);
@@ -140,10 +147,10 @@ export const getUsers = (callback) => {
 };
 
 /*
-*
-* Function to flip the value of 'running' within the current machine
-*
-*/
+ *
+ * Function to flip the value of 'running' within the current machine
+ *
+ */
 export const toggleMachine = async (machID, boolean) => {
   // Get the reference to the database path where "running" variable is stored
   const databasePath = `factory_io/data/${machID}/coils/override`;
@@ -167,11 +174,14 @@ export const toggleMachine = async (machID, boolean) => {
     console.error("Error reading machine status:", error);
     throw error;
   }
-}
+};
 
 function validateMachineData(machine) {
-  const requiredKeys = ['machineID', 'coils', 'sensors'];
-  return requiredKeys.every(key => machine.hasOwnProperty(key)
-    && machine[key] !== null
-    && Object.keys(machine[key]).length !== 0);
+  const requiredKeys = ["machineID", "coils", "sensors"];
+  return requiredKeys.every(
+    (key) =>
+      machine.hasOwnProperty(key) &&
+      machine[key] !== null &&
+      Object.keys(machine[key]).length !== 0
+  );
 }
