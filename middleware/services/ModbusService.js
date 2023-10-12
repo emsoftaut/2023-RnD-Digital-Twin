@@ -34,10 +34,14 @@ function WriteToModbus(FactoryIOMachineModel)
       {
         if (coil.valueType == "BYTE")
         {
-          client.writeSingleRegister(coil.register, coil.value);
+          client.writeSingleRegister(coil.register, coil.value).then().catch((error) => {
+            HandleModbusError(error);
+          })
         }
         else {
-          client.writeSingleCoil(coil.register, coil.value);
+          client.writeSingleCoil(coil.register, coil.value).then().catch((error) => {
+            HandleModbusError(error);
+          });;
         }
       }
       console.log("done writing");
@@ -82,8 +86,10 @@ function HandleModbusError(error) {
   }
 }
 
-let OfflineErrorMessage = "ModbusService could not connect. Please make sure your scene is active, and you've chosen the correct port and IP in Modbus Service.\n";
-OfflineErrorMessage += "If you are using FactoryIO, you can find your IP and Port in FactoryIO -> Drivers -> Configuration";
+let OfflineErrorMessage = "ModbusService could not connect. Please make sure your scene is active, and you've chosen the correct port and IP in your LocalEnvConfig.\n";
+OfflineErrorMessage += "If you are using FactoryIO, you can find your IP and Port in FactoryIO -> Drivers -> Configuration.\n";
+OfflineErrorMessage += "If you are using OpenPLC, you can find your IP and Port in localhost:8080.";
+OfflineErrorMessage += "The default for this should be port 502 then this machine's IP";
 
 module.exports = {
   WriteToModbus,
