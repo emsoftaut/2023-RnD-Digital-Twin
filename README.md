@@ -45,6 +45,13 @@ The admin user access allows for
 - Disabling access for a user
 
 ### Firebase
+
+Important : For certain Firebase functions to work. The project needs to be under a "Blaze" plan. This requires a credit card information.
+The current credit card will be removed upon project completion. 
+The Blaze plan is a Pay-as-you-go plan, meaning you only pay for functions that require payment, or you overload the data usage.
+Fortunately, the functions this project uses do not cost money, however it still requires the Blaze plan.
+Furthermore, the amount of data the project uses is well under the limit as it is only one JSON file being updated.
+
 Access to the Firebase project will be given upon approved request.
 This particular project is hosted under the 'WebsiteHost' project container. 
 Upon approval the login credentials will allow you to view
@@ -173,9 +180,7 @@ Once you have done this, you can load the FactoryIO scenes from ExternalFiles/Fa
 Once you have it loaded, you will need to set FactoryIO to a Modbus TCP Server. this can be done in the top left file -> drivers.
 After that, the configuration should be set. You can turn your factory on.
 
-## Components
-
-## User Authentication
+## Demo
 
 ## Main Functionalities
 
