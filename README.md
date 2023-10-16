@@ -52,7 +52,7 @@ The Blaze plan is a Pay-as-you-go plan, meaning you only pay for functions that 
 Fortunately, the functions this project uses do not cost money, however it still requires the Blaze plan.
 Furthermore, the amount of data the project uses is well under the limit as it is only one JSON file being updated.
 
-Access to the Firebase project will be given upon approved request.
+Access to the Firebase project will be given upon approved request or can be found in the OneDrive portfolio.
 This particular project is hosted under the 'WebsiteHost' project container. 
 Upon approval the login credentials will allow you to view
 - Authentication -> Handles authenticated users. Can remove / delete users from here if required.
