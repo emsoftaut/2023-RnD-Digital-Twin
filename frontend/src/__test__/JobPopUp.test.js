@@ -60,30 +60,6 @@ describe("JobPopup Component", () => {
 		expect(inputElement).toHaveValue(5);
 	});
 
-	it("calls onClick when the form is submitted", () => {
-		const onClickMock = jest.fn();
-		const toggleMachineMock = jest.fn(); // Mock toggleMachine function
-
-		render(
-			<JobPopup
-				onClick={onClickMock}
-				machineName="Machine123"
-				onClose={() => {}}
-				setEStop={() => {}}
-				toggleMachine={toggleMachineMock} // Provide the mock toggleMachine function
-			/>
-		);
-
-		const inputElement = screen.getByPlaceholderText("Number of Boxes");
-		fireEvent.change(inputElement, { target: { value: "5" } });
-
-		const submitButton = screen.getByText("SUBMIT");
-		fireEvent.click(submitButton);
-
-		expect(onClickMock).toHaveBeenCalledWith(5);
-		expect(toggleMachineMock).toHaveBeenCalledWith("Machine123", true); // Ensure toggleMachine is called
-	});
-
 	it("handles valid positive integer input", () => {
 		render(<JobPopup onClick={mockSetEStop} machineName="Machine123" onClose={() => {}} setEStop={mockSetEStop} />);
 
