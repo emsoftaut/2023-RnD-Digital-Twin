@@ -37,6 +37,11 @@ function SetupModelsAndConnections(machines)
     coilOffset += machineOffset;
     counter++;
   }
+
+  for (let i = 0; i < factoryIOMachineModels.length; i++)
+  {    
+    FirebaseService.setOnDisconnect(factoryIOMachineModels[i], firebaseMachineConnections[i]);
+  }
 }
 
 function SetupListeners()
