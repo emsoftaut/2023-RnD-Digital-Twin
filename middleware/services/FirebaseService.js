@@ -46,6 +46,13 @@ function getMachineRecord(machine = null, machineModbusConnection = null) {
     }
 }
 
+function setOnDisconnect(machine, dbref) {
+    machine.toClearValuesModel();
+    let clearModel = machine.toFirebaseModel();
+    clearModel["lastModified"] = GetCurrentDateTime();
+    dbref.onDisconnect().set(clearModel);
+}
+
 function setMachine(machine, dbref) {
     throw new Error("Set Machine Not Implemented");
 }
@@ -83,4 +90,5 @@ module.exports = {
     updateMachine,
     setupFirebase,
     ListenFirebaseChanges,
+    setOnDisconnect,
 };
