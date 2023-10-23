@@ -137,7 +137,7 @@ const BeltSpeedGauge = ({ beltSpeed, mode }) => {
       series: [{
         ...prevOptions.series[0],
         data: [beltSpeed],
-        tooltip: { valueSuffix: ' km/h' },
+        tooltip: { valueSuffix: ' rpm' },
         dataLabels: {
           ...prevOptions.series[0].dataLabels,
           style: { color: colors.textColor }

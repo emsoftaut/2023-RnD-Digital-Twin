@@ -120,8 +120,8 @@ const AllMachineTable = () => {
 						<StyledTableCell>Job Status</StyledTableCell>
 						<StyledTableCell>Last Modified</StyledTableCell>
 						<StyledTableCell>Job Progress</StyledTableCell>
-						<StyledTableCell align="right">Belt Speed</StyledTableCell>
-						<StyledTableCell align="right">Temperature</StyledTableCell>
+						<StyledTableCell align="right">Belt Speed (rpm)</StyledTableCell>
+						<StyledTableCell align="right">Temperature (°C)</StyledTableCell>
 						<StyledTableCell align="center">Job Actions</StyledTableCell>
 					</StyledTableRow>
 				</TableHead>
@@ -138,8 +138,8 @@ const AllMachineTable = () => {
 							<StyledTableCell>
 								<ProgressBar done={machine.sensors.jobsDone} queued={machine.coils.jobsQueued || "0"} />
 							</StyledTableCell>
-							<StyledTableCell align="right">{machine.sensors.averageSpeed || "0"}</StyledTableCell>
-							<StyledTableCell align="right">{machine.sensors.waterLevel || "0"}</StyledTableCell>
+							<StyledTableCell align="right">{Math.floor(machine.sensors.averageSpeed*1000) || "0"}</StyledTableCell>
+							<StyledTableCell align="right">{Math.floor(machine.sensors.waterLevel*10) || "0"}</StyledTableCell>
 							<StyledTableCell>
 								<Box sx={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
 									<PopUpButton machID={machine.machineID} onClick={() => showPopup(false)} isDisabled={machine.coils.jobsQueued > 0 ? true : false} />
